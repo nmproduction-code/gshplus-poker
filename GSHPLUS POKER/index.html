@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>GSHPLUS POKER - โปกเกอร์การ์ดพลัง</title>
+<title>POWER POKER - โปกเกอร์การ์ดพลัง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -358,7 +358,7 @@
 
 <!-- ==================== 1. หน้าล็อบบี้ ==================== -->
 <div id="lobby-screen">
-  <div class="logo">♠️ GSHPLUS POKER ♥️</div>
+  <div class="logo">♠️ POWER POKER ♥️</div>
   <div class="subtitle">โปกเกอร์สายปั่น + การ์ดพลังพิเศษ (รอบวง 6 คน)</div>
   
   <div class="panel">
@@ -398,7 +398,7 @@
     <div class="table-oval" id="table-oval">
       <div class="pot-box">💰 ยอดเงินกองกลาง (POT): <span id="pot-amount">0</span> ชิป</div>
       <div class="community-cards" id="community-cards"></div>
-      <div class="log-banner" id="game-log">ยินดีต้อนรับสู่ GSHPLUS POKER!</div>
+      <div class="log-banner" id="game-log">ยินดีต้อนรับสู่ Power Poker!</div>
     </div>
   </div>
 
@@ -558,11 +558,11 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 // ============================================================================
-// 🃏 2. ตั้งค่าโฟลเดอร์ รูปหน้าไพ่ และรูปหลังการ์ด
+// 🃏 2. ตั้งค่าโฟลเดอร์ รูปหน้าไพ่ และรูปหลังการ์ด (รองรับทั้ง .png และ .PNG)
 // ============================================================================
-const POKER_CARD_FOLDER = 'poker-cards';
+const POKER_CARD_FOLDER = 'GSHPLUS POKER/poker-cards';
 const POKER_CARD_EXT = 'png';
-const POKER_CARD_BACK = 'poker-cards/back.png';
+const POKER_CARD_BACK = `${POKER_CARD_FOLDER}/back.png`;
 
 const SUIT_CODE = { '♠': 's', '♥': 'h', '♦': 'd', '♣': 'c' };
 
@@ -570,6 +570,22 @@ function getPokerCardImagePath(card) {
   const sCode = SUIT_CODE[card.suit] || 's';
   const vCode = String(card.val).toLowerCase();
   return `${POKER_CARD_FOLDER}/${vCode}${sCode}.${POKER_CARD_EXT}`;
+}
+
+function tryImageCaseFallback(imgEl, onFinalFail) {
+  if (!imgEl.dataset.triedUpper) {
+    imgEl.dataset.triedUpper = '1';
+    imgEl.src = imgEl.src.replace(/\.png(\?.*)?$/i, '.PNG$1');
+    return;
+  }
+  if (!imgEl.dataset.triedLower) {
+    imgEl.dataset.triedLower = '1';
+    imgEl.src = imgEl.src.replace(/\.PNG(\?.*)?$/i, '.png$1');
+    return;
+  }
+  if (typeof onFinalFail === 'function') {
+    onFinalFail(imgEl);
+  }
 }
 
 // ============================================================================
@@ -580,35 +596,35 @@ const POWER_CARDS_POOL = [
     id: 'peek',
     name: 'เนตรวงแหวน',
     desc: 'แอบดูไพ่บนมือของคู่แข่ง 1 คนตลอดทั้งตานี้',
-    image: 'cards/peek.png',
+    image: 'GSHPLUS POKER/cards/peek.png',
     needTarget: true
   },
   {
     id: 'swap',
     name: 'สลับชะตา',
     desc: 'สลับไพ่ 1 ใบแบบสุ่มบนมือคุณ กับไพ่ของเป้าหมาย 1 คน',
-    image: 'cards/swap.png',
+    image: 'GSHPLUS POKER/cards/swap.png',
     needTarget: true
   },
   {
     id: 'redraw_river',
     name: 'พลิกกระดาน',
     desc: 'ล้างไพ่กองกลางใบล่าสุด แล้วจั่วใบใหม่จากกองมาแทน!',
-    image: 'cards/redraw.png',
+    image: 'GSHPLUS POKER/cards/redraw.png',
     needTarget: false
   },
   {
     id: 'redraw_hand',
     name: 'จั่วใหม่ยกชุด',
     desc: 'ทิ้งไพ่บนมือตัวเองทั้ง 2 ใบ แล้วจั่วใหม่จากกองทันที',
-    image: 'cards/mulligan.png',
+    image: 'GSHPLUS POKER/cards/mulligan.png',
     needTarget: false
   },
   {
     id: 'tax',
     name: 'รีดไถชิป',
     desc: 'ขโมยชิปจากคู่แข่ง 1 คน 150 ชิป เข้ากองกลางทันที',
-    image: 'cards/tax.png',
+    image: 'GSHPLUS POKER/cards/tax.png',
     needTarget: true
   }
 ];
@@ -1162,15 +1178,17 @@ function finishHand(winner, handName = 'ชนะบาย (คนอื่น�
 // 🎨 7. ระบบแสดงผลหน้าจอ (UI Rendering)
 // ============================================================================
 function fallbackCardText(imgEl, val, suit) {
-  const parent = imgEl.parentElement;
-  parent.classList.remove('custom-img');
-  const isRed = suit === '♥' || suit === '♦';
-  if (isRed) parent.classList.add('red');
-  parent.innerHTML = `
-    <div class="card-top">${val}${suit}</div>
-    <div class="card-mid">${suit}</div>
-    <div class="card-bot">${val}${suit}</div>
-  `;
+  tryImageCaseFallback(imgEl, (finalImg) => {
+    const parent = finalImg.parentElement;
+    parent.classList.remove('custom-img');
+    const isRed = suit === '♥' || suit === '♦';
+    if (isRed) parent.classList.add('red');
+    parent.innerHTML = `
+      <div class="card-top">${val}${suit}</div>
+      <div class="card-mid">${suit}</div>
+      <div class="card-bot">${val}${suit}</div>
+    `;
+  });
 }
 
 function renderCardHTML(card, animate = false) {
@@ -1178,7 +1196,7 @@ function renderCardHTML(card, animate = false) {
   if (!card) {
     return `
       <div class="card custom-img ${animCls}">
-        <img src="${POKER_CARD_BACK}" alt="back" onerror="this.parentElement.classList.remove('custom-img'); this.parentElement.classList.add('empty'); this.remove();">
+        <img src="${POKER_CARD_BACK}" alt="back" onerror="tryImageCaseFallback(this, (el) => { el.parentElement.classList.remove('custom-img'); el.parentElement.classList.add('empty'); el.remove(); });">
       </div>
     `;
   }
@@ -1195,7 +1213,7 @@ function renderOpponentMiniCard(card, canSee) {
     const isRed = card.suit === '♥' || card.suit === '♦';
     return `<div class="mini-card revealed ${isRed ? 'red' : ''}">${card.val}${card.suit}</div>`;
   }
-  return `<div class="mini-card"><img src="${POKER_CARD_BACK}" alt="back" onerror="this.remove();"></div>`;
+  return `<div class="mini-card"><img src="${POKER_CARD_BACK}" alt="back" onerror="tryImageCaseFallback(this, (el) => el.remove());"></div>`;
 }
 
 function getFallbackSVG() {
@@ -1302,7 +1320,7 @@ function renderUI() {
   myPowerArea.innerHTML = (me.powerCards || []).map(pc => `
     <div class="power-card ${pc.used ? 'used' : ''} ${shouldDealAnim ? 'anim-deal' : ''}" onclick="onClickPowerCard('${pc.uid}')" title="${pc.desc}">
       <span class="p-badge">${pc.used ? 'ใช้แล้ว' : 'กดใช้'}</span>
-      <img src="${pc.image}" onerror="this.src='${getFallbackSVG()}'">
+      <img src="${pc.image}" onerror="tryImageCaseFallback(this, (el) => { el.src='${getFallbackSVG()}'; });">
       <div class="p-title">${pc.name}</div>
     </div>
   `).join('');
