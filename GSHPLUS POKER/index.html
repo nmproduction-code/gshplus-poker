@@ -429,6 +429,9 @@
     flex-direction: column;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 28px rgba(245, 185, 66, 0.25);
   }
+  .modal-box.wide-modal {
+    max-width: 780px;
+  }
   .modal-overlay.is-open .modal-box {
     animation: popupBounceIn 0.28s cubic-bezier(0.22, 1.25, 0.36, 1) both;
   }
@@ -457,8 +460,102 @@
   }
 
   .target-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; overflow-y: auto; text-align: left; }
-  .guide-card-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); }
-  .guide-card-thumb { width: 56px; height: 78px; border-radius: 8px; object-fit: cover; border: 1.5px solid #b388ff; flex-shrink: 0; background: #14082b; }
+
+  /* Big Showcase Cards Grid (กด 1 ครั้งขยาย+โชว์สกิล / กดอีกทีใช้สกิล) */
+  .big-skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 14px;
+    margin: 12px 0;
+    overflow-y: auto;
+    max-height: 430px;
+    padding-right: 4px;
+    text-align: center;
+  }
+  .big-skill-card {
+    background: rgba(12, 22, 36, 0.82);
+    border: 2px solid rgba(179, 136, 255, 0.45);
+    border-radius: 14px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .big-skill-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--gold);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+  .big-skill-card.is-expanded {
+    grid-column: span 2;
+    background: linear-gradient(155deg, rgba(49, 27, 146, 0.52), rgba(14, 42, 28, 0.92));
+    border-color: var(--gold-light);
+    box-shadow: 0 0 24px rgba(255, 229, 143, 0.45), 0 12px 28px rgba(0, 0, 0, 0.65);
+    transform: scale(1.02);
+  }
+  .big-skill-art {
+    width: 132px;
+    height: 184px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.28);
+    background: #14082b;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+    transition: width 0.22s ease, height 0.22s ease, border-color 0.2s ease;
+  }
+  .big-skill-card.is-expanded .big-skill-art {
+    width: 158px;
+    height: 220px;
+    border-color: var(--gold-light);
+    box-shadow: 0 0 18px rgba(255, 229, 143, 0.55);
+  }
+  .big-skill-name {
+    font-size: 1.04rem;
+    font-weight: 800;
+    color: var(--gold-light);
+  }
+  .big-skill-hint {
+    font-size: 0.76rem;
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .big-skill-detail {
+    display: none;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 229, 143, 0.4);
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: left;
+  }
+  .big-skill-card.is-expanded .big-skill-detail {
+    display: block;
+    animation: dealPop 0.2s ease both;
+  }
+  .big-skill-desc {
+    font-size: 0.88rem;
+    color: #f8fafc;
+    line-height: 1.45;
+    margin-bottom: 8px;
+  }
+  .big-skill-cta {
+    width: 100%;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, #ffe066, var(--gold));
+    color: #140d00;
+    font-size: 0.86rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
   .guide-tag { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 1px 7px; border-radius: 999px; margin-left: 6px; background: rgba(245, 185, 66, 0.22); color: var(--gold-light); border: 1px solid rgba(245, 185, 66, 0.45); }
   .rank-row-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 12px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
   .rank-num { width: 26px; height: 26px; border-radius: 999px; background: rgba(245,185,66,0.2); border: 1px solid var(--gold); color: var(--gold-light); font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -497,6 +594,10 @@
     .controls-row .btn { font-size: 0.82rem; padding: 7px 10px; }
     .raise-input { width: 68px; font-size: 0.82rem; }
     .rank-row-item { flex-direction: column; align-items: flex-start; }
+    .big-skills-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .big-skill-card.is-expanded { grid-column: span 2; }
+    .big-skill-art { width: 104px; height: 146px; }
+    .big-skill-card.is-expanded .big-skill-art { width: 126px; height: 176px; }
   }
 </style>
 </head>
@@ -610,14 +711,15 @@
 
 <!-- Popups -->
 <div class="modal-overlay" id="guide-modal" onclick="handleBackdropClick(event, closeGuideModal)">
-  <div class="modal-box">
+  <div class="modal-box wide-modal">
     <button class="popup-close-x" type="button" onclick="closeGuideModal()" aria-label="ปิด">✕</button>
     <h3 id="guide-popup-title" style="color:var(--gold); margin:0 0 6px; font-size:1.25rem; font-weight:700;">⚡ สกิลการ์ดพลังพิเศษ</h3>
+    <div id="guide-sub-hint" style="font-size:0.82rem; color:#cbd5e1; margin-bottom:2px;">กดที่การ์ด 1 ครั้งเพื่อขยายและดูรายละเอียดสกิล • กดซ้ำอีกครั้งเพื่อใช้สกิลทันที</div>
     <div class="admin-tabs">
       <button class="admin-tab-btn active" id="tab-guide-skills" onclick="switchGuideTab('skills')">⚡ สกิลการ์ดพลัง</button>
       <button class="admin-tab-btn" id="tab-guide-ranks" onclick="switchGuideTab('ranks')">🃏 ลำดับความใหญ่ของ Poker</button>
     </div>
-    <div class="target-list" id="guide-content-list" style="max-height:360px;"></div>
+    <div id="guide-content-list" style="max-height:430px; overflow-y:auto;"></div>
     <button class="btn btn-gold" style="margin-bottom:0;" onclick="closeGuideModal()">ปิดหน้าต่าง</button>
   </div>
 </div>
@@ -802,6 +904,7 @@ let currentGoogleUser = null;
 let isAdminUser = false;
 let activeAdminTab = 'rooms';
 let activeGuideTab = 'skills';
+let expandedGuideCardId = null;
 
 function checkIsAdmin(user) {
   if (!user || !user.email) return false;
@@ -867,31 +970,70 @@ const POKER_HAND_RANKS = [
 function openGuideModal(initialTab = 'skills') {
   playTone(620, 0.06, 'sine', 0, 0.08);
   activeGuideTab = initialTab;
+  expandedGuideCardId = null;
   showPopup('guide-modal');
   switchGuideTab(initialTab);
 }
 function closeGuideModal() {
+  expandedGuideCardId = null;
   hidePopup('guide-modal');
+}
+function handleBigSkillCardClick(cardId) {
+  playTone(660, 0.06, 'triangle', 0, 0.09);
+  if (expandedGuideCardId !== cardId) {
+    expandedGuideCardId = cardId;
+    switchGuideTab('skills');
+    return;
+  }
+  // กดซ้ำอีกครั้ง -> ใช้งานสกิลทันที
+  const cardDef = POWER_CARDS_POOL.find(c => c.id === cardId);
+  if (!cardDef) return;
+  closeGuideModal();
+  if (!gameState || !gameState.players) {
+    alert(`การ์ด [${cardDef.name}]: ${cardDef.desc} (เข้าเล่นในโต๊ะเพื่อกดใช้สกิลได้ทันที)`);
+    return;
+  }
+  const myIdx = gameState.players.findIndex(p => p.id === myPlayerId);
+  if (myIdx === -1) return;
+  const me = gameState.players[myIdx];
+  const ownedCard = (me.powerCards || []).find(c => c.id === cardId && !c.used);
+  if (ownedCard) {
+    onClickPowerCard(ownedCard.uid);
+  } else {
+    alert(`คุณยังไม่มีการ์ด [${cardDef.name}] ที่พร้อมใช้งานบนมือในตอนนี้ครับ`);
+  }
 }
 function switchGuideTab(tab) {
   activeGuideTab = tab;
   document.getElementById('tab-guide-skills').classList.toggle('active', tab === 'skills');
   document.getElementById('tab-guide-ranks').classList.toggle('active', tab === 'ranks');
   const titleEl = document.getElementById('guide-popup-title');
+  const hintEl = document.getElementById('guide-sub-hint');
   if (titleEl) {
     titleEl.innerText = tab === 'skills' ? '⚡ สกิลการ์ดพลังพิเศษ' : '🃏 ลำดับความใหญ่ของไพ่ Poker';
   }
+  if (hintEl) {
+    hintEl.style.display = tab === 'skills' ? 'block' : 'none';
+  }
   const listEl = document.getElementById('guide-content-list');
   if (tab === 'skills') {
-    listEl.innerHTML = POWER_CARDS_POOL.map(card => `
-      <div class="guide-card-item">
-        <img class="guide-card-thumb" src="${card.image}" alt="${card.name}" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.src='${getFallbackSVG()}'; });">
-        <div style="min-width:0;">
-          <div style="font-weight:700; color:var(--gold-light); font-size:0.98rem;">${card.name}<span class="guide-tag">${card.needTarget ? 'เลือกเป้าหมาย' : 'ใช้ได้ทันที'}</span></div>
-          <div style="font-size:0.84rem; color:#e5e7eb; margin-top:2px; line-height:1.35;">${card.desc}</div>
+    listEl.className = 'big-skills-grid';
+    listEl.innerHTML = POWER_CARDS_POOL.map(card => {
+      const isExpanded = expandedGuideCardId === card.id;
+      const modeLabel = card.needTarget ? 'เลือกเป้าหมาย' : 'ใช้ได้ทันที';
+      return `
+      <div class="big-skill-card ${isExpanded ? 'is-expanded' : ''}" onclick="handleBigSkillCardClick('${card.id}')">
+        <img class="big-skill-art" src="${card.image}" alt="${card.name}" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.src='${getFallbackSVG()}'; });">
+        <div class="big-skill-name">${card.name} <span class="guide-tag">${modeLabel}</span></div>
+        <div class="big-skill-hint">${isExpanded ? 'กดอีกครั้งเพื่อใช้สกิลนี้!' : 'กด 1 ครั้งเพื่อดูสกิล'}</div>
+        <div class="big-skill-detail">
+          <div class="big-skill-desc">${card.desc}</div>
+          <button type="button" class="big-skill-cta" onclick="event.stopPropagation(); handleBigSkillCardClick('${card.id}');">⚡ กดอีกครั้งเพื่อใช้สกิล [${card.name}]</button>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   } else {
+    listEl.className = 'target-list';
     listEl.innerHTML = POKER_HAND_RANKS.map(item => `
       <div class="rank-row-item">
         <div style="display:flex; align-items:center; gap:10px; min-width:0;">
@@ -1548,11 +1690,11 @@ function getLockBadgeHTML(p) {
 }
 function renderSeatBoxHTML(p, slotCls, options = {}) {
   const { isMe = false, isTurn = false, isWinner = false, canSeeCards = false, isShowdown = false, flipCards = false } = options;
-  const c0 = p.hand && p.hand[0] ? p.hand[0] : null;
-  const c1 = p.hand && p.hand[1] ? p.hand[1] : null;
+  const handList = Array.isArray(p.hand) ? p.hand : [];
+  const cardsHTML = handList.map(card => renderBoardMiniCard(card, canSeeCards, flipCards)).join('');
   const turnTag = isMe ? '' : (isTurn ? 'คิด...' : '');
   const tagText = isWinner ? 'WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag));
-  return `<div class="board-seat ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}"><div class="board-seat-cards">${renderBoardMiniCard(c0, canSeeCards, flipCards)}${renderBoardMiniCard(c1, canSeeCards, flipCards)}</div><div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}${getShieldBadgeHTML(p)}${getLockBadgeHTML(p)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}</div><div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div></div>`;
+  return `<div class="board-seat ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}"><div class="board-seat-cards">${cardsHTML}</div><div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}${getShieldBadgeHTML(p)}${getLockBadgeHTML(p)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}</div><div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div></div>`;
 }
 
 function renderUI() {
@@ -1601,10 +1743,11 @@ function renderUI() {
   const peeked = me.peekedPlayers || [];
 
   const seatSig = [
-    me.id, isNewHandStart ? handCounter : '', isShowdown ? 'SD' : '',
+    me.id, (me.hand || []).map(c => `${c.val}${c.suit}`).join('-'), isNewHandStart ? handCounter : '', isShowdown ? 'SD' : '',
     ...opponents.map(({ player: p, idx }) => {
       const canSee = (isShowdown && !p.folded) || peeked.includes(idx);
-      const cardsSig = canSee ? (p.hand || []).map(c => `${c.val}${c.suit}`).join('-') : (p.hand && p.hand.length ? 'BACK' : 'NONE');
+      const count = (p.hand || []).length;
+      const cardsSig = canSee ? (p.hand || []).map(c => `${c.val}${c.suit}`).join('-') : `BACK:${count}`;
       return `${p.id}:${cardsSig}:${p.folded ? 1 : 0}:${p.shieldActive ? 1 : 0}:${p.lockedChips || 0}`;
     })
   ].join('|');
