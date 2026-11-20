@@ -108,6 +108,1481 @@
     overflow: hidden;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     min-height: 100dvh; padding: 28px 24px 56px; text-align: center;
+    background: #1a5b50;
+  }
+  .lobby-bg-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
+  }
+  .lobby-bg-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(rgba(5, 28, 23, 0.14), rgba(5, 28, 23, 0.28));
+    pointer-events: none;
+  }
+  .lobby-logo-wrap { position: relative; z-index: 2; margin-bottom: 6px; display: flex; justify-content: center; align-items: center; }
+  .lobby-logo-img { max-width: 340px; width: 82%; max-height: 150px; height: auto; object-fit: contain; filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.65)); }
+  .logo { font-size: 2.8rem; font-weight: 800; color: var(--gold); text-shadow: 0 4px 16px rgba(0,0,0,0.65); margin-bottom: 4px; }
+  .subtitle { position: relative; z-index: 2; color: #f2fffb; text-shadow: 0 2px 10px rgba(0,0,0,0.75); margin-bottom: 18px; font-size: 1.05rem; font-weight: 500; }
+  .panel { position: relative; z-index: 2; background: rgba(6, 30, 25, 0.84); backdrop-filter: blur(6px); border: 2px solid rgba(245,185,66,0.48); border-radius: 20px; padding: 22px; width: 100%; max-width: 460px; box-shadow: 0 14px 36px rgba(0,0,0,0.6); }
+  input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #43a047; background: #092c1a; color: #fff; font-size: 1rem; font-weight: 500; margin-bottom: 12px; text-align: center; user-select: text; -webkit-user-select: text; }
+  .btn { width: 100%; padding: 11px 12px; border: none; border-radius: 11px; font-size: 0.96rem; font-weight: 700; cursor: pointer; transition: 0.18s; margin-bottom: 10px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-gold { background: linear-gradient(135deg, #ffe066, var(--gold) 55%, #d48806); color: #1a1100; box-shadow: 0 0 14px rgba(245, 185, 66, 0.55); }
+  .btn-gold:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-2px); box-shadow: 0 0 20px rgba(255, 229, 143, 0.85); }
+  .btn-green { background: #2e7d32; color: #fff; border: 1px solid #66bb6a; }
+  .btn-green:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-2px); }
+  .btn-blue { background: #1565c0; color: #fff; }
+  .btn-blue:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-2px); }
+  .btn-red { background: #c62828; color: #fff; }
+  .btn-red:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-2px); }
+  .btn-ghost { background: rgba(255,255,255,0.1); color: #e5e7eb; border: 1px solid rgba(255,255,255,0.22); }
+  .btn-ghost:hover:not(:disabled) { background: rgba(255,255,255,0.18); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .user-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255,255,255,0.07); border: 1px solid rgba(245,185,66,0.35); border-radius: 12px; padding: 10px 12px; margin-bottom: 14px; text-align: left; }
+  .user-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .user-avatar { width: 38px; height: 38px; border-radius: 999px; object-fit: cover; border: 1.5px solid var(--gold); background: #1b5e20; }
+  .user-name { font-size: 0.96rem; font-weight: 700; color: var(--gold-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-sub { font-size: 0.8rem; color: #a5d6a7; }
+
+  /* Game Screen: อยู่ในจอเดียวไม่ต้องเลื่อนลง */
+  #game-screen {
+    display: none;
+    flex-direction: column;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+    justify-content: space-between;
+    background: radial-gradient(ellipse at center, var(--bg-felt) 0%, var(--bg-felt-deep) 72%, var(--bg-dark) 100%);
+  }
+
+  .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 16px; background: rgba(0,0,0,0.82); border-bottom: 1px solid rgba(255,255,255,0.14); font-size: 0.88rem; z-index: 10; flex-shrink: 0; flex-wrap: wrap; }
+  .top-left-badges { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .room-badge { background: #134b3e; padding: 3px 12px; border-radius: 16px; border: 1.5px solid var(--gold); color: var(--gold-light); font-weight: 700; font-size: 0.84rem; box-shadow: 0 0 10px rgba(245, 185, 66, 0.35); }
+  .stage-badge { background: rgba(245,185,66,0.18); border: 1.5px solid rgba(245,185,66,0.5); color: var(--gold-light); padding: 3px 12px; border-radius: 12px; font-weight: 600; font-size: 0.82rem; }
+  .timer-badge { background: rgba(255, 193, 7, 0.18); border: 1.5px solid var(--gold); color: var(--gold-light); padding: 3px 12px; border-radius: 12px; font-weight: 700; font-size: 0.84rem; min-width: 98px; text-align: center; }
+  .timer-badge.danger { background: rgba(211, 47, 47, 0.35); border-color: #ff6e6e; color: #ffd6d6; animation: handBadgePop 0.8s infinite; }
+  .top-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .small-btn { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.28); color: #fff; border-radius: 7px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; font-weight: 500; }
+  .small-btn:hover { background: rgba(255,255,255,0.22); }
+
+  /* Board Canvas */
+  .board-stage-wrap {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 16px 4px;
+  }
+  .poker-board-canvas {
+    position: relative;
+    height: 100%;
+    max-height: 100%;
+    width: auto;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 14px;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #1b6956 0%, #0b352a 100%);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
+    border: 2px solid rgba(255, 255, 255, 0.18);
+  }
+  .poker-board-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; pointer-events: none; z-index: 1; }
+  .board-overlay { position: relative; width: 100%; height: 100%; z-index: 2; }
+
+  /* ยอด POT สีขาว ตัวใหญ่ ชัดเจน อยู่กลางกรอบสี่เหลี่ยมใต้คำว่า POT */
+  .board-pot-overlay {
+    position: absolute; left: 50%; top: var(--pot-top);
+    transform: translateX(-50%);
+    width: var(--pot-w); height: var(--pot-h); display: flex; align-items: center; justify-content: center;
+    font-size: clamp(1.05rem, 1.75vw, 1.55rem); font-weight: 800; color: #ffffff;
+    letter-spacing: 0.5px;
+  }
+
+  /* ไพ่กองกลาง 5 ใบ: ขยับเข้ากรอบสีขาวและใหญ่พอดี */
+  .board-community-overlay {
+    position: absolute; left: calc(50% + 1.4%); top: var(--comm-top);
+    transform: translateX(-50%);
+    width: var(--comm-w); height: var(--comm-h);
+    display: flex; align-items: center; justify-content: center;
+    gap: clamp(4px, 0.55vw, 8px);
+    padding: 2px 6px;
+  }
+  .board-community-overlay .flip-slot,
+  .board-community-overlay .card.empty {
+    height: 100%;
+    width: auto;
+    aspect-ratio: 5 / 7;
+    max-width: calc((100% - 32px) / 5);
+  }
+  .board-community-overlay .flip-face {
+    border-radius: 5px;
+  }
+  .board-community-overlay .flip-front.custom-img img {
+    width: 100%; height: 100%; object-fit: fill; background: #fff;
+  }
+  .board-community-overlay .card-top { font-size: clamp(0.44rem, 0.6vw, 0.66rem); }
+  .board-community-overlay .card-mid { font-size: clamp(0.74rem, 1vw, 0.98rem); }
+  .board-community-overlay .card-bot { font-size: clamp(0.44rem, 0.6vw, 0.66rem); }
+
+  .board-seat {
+    position: absolute;
+    border-radius: 8px; border: 1.5px solid transparent; background: transparent;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px;
+  }
+  .board-seat.seat-top-left    { left: var(--seat-tl-x); top: var(--seat-tl-y); width: var(--seat-tl-w); height: var(--seat-tl-h); }
+  .board-seat.seat-top-right   { left: var(--seat-tr-x); top: var(--seat-tr-y); width: var(--seat-tr-w); height: var(--seat-tr-h); }
+  .board-seat.seat-bot-left    { left: var(--seat-bl-x); top: var(--seat-bl-y); width: var(--seat-bl-w); height: var(--seat-bl-h); }
+  .board-seat.seat-bot-center  { left: var(--seat-bc-x); top: var(--seat-bc-y); width: var(--seat-bc-w); height: var(--seat-bc-h); }
+  .board-seat.seat-bot-right   { left: var(--seat-br-x); top: var(--seat-br-y); width: var(--seat-br-w); height: var(--seat-br-h); }
+
+  .board-seat.active-turn {
+    border-color: var(--gold-light);
+    background: rgba(255, 213, 79, 0.06);
+    box-shadow: 0 0 24px 5px rgba(255, 213, 79, 0.88), 0 0 42px 10px rgba(245, 185, 66, 0.52);
+  }
+  .board-seat.winner-seat {
+    border-color: var(--gold-light);
+    background: rgba(255, 229, 143, 0.09);
+    box-shadow: 0 0 28px 6px rgba(255, 229, 143, 0.95), 0 0 48px 12px rgba(245, 185, 66, 0.7);
+  }
+  .board-seat.folded { opacity: 0.45; filter: grayscale(0.5); }
+
+  .board-seat-cards {
+    width: 100%; height: 64%;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    perspective: 650px;
+  }
+  .board-mini-card {
+    height: 100%; aspect-ratio: 5 / 7; max-width: calc(50% - 3px);
+    border-radius: 4px; overflow: hidden; border: 1.5px solid #fff;
+    background: linear-gradient(135deg, #8e1414, #4f0707);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.55);
+  }
+  .board-mini-card.is-flipping { animation: cardFlip3D 0.34s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .board-mini-card img { width: 100%; height: 100%; object-fit: fill; background: #fff; display: block; }
+  .board-mini-card.back-card img { object-fit: fill; background: #5a0b0b; }
+  .board-mini-card.revealed { background: #fff; border-color: var(--gold-light); box-shadow: 0 0 10px rgba(255, 213, 79, 0.45), 0 4px 10px rgba(0,0,0,0.55); }
+
+  .board-seat-name,
+  .board-seat-chips {
+    flex: 0 0 auto;
+    width: 100%;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 2px 10px;
+  }
+  .board-seat-name {
+    background: rgba(0, 0, 0, 0.78);
+    font-size: clamp(0.62rem, 0.9vw, 0.88rem); font-weight: 700; color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .board-seat-chips {
+    background: rgba(0, 0, 0, 0.8);
+    font-size: clamp(0.68rem, 1vw, 0.95rem); font-weight: 800; color: var(--gold-light);
+    border: 1px solid rgba(245, 185, 66, 0.55);
+    box-shadow: 0 0 10px rgba(245, 185, 66, 0.35);
+    text-shadow: 0 0 8px rgba(255, 213, 79, 0.65);
+  }
+
+  .board-seat-tag {
+    background: linear-gradient(135deg, #fff099, #ffd54f 45%, var(--gold));
+    color: #140d00;
+    font-size: clamp(0.58rem, 0.82vw, 0.8rem); font-weight: 800;
+    padding: 1px 8px; border-radius: 999px; line-height: 1.3; flex-shrink: 0;
+    box-shadow: 0 0 10px rgba(255, 229, 143, 0.9), 0 0 16px rgba(245, 185, 66, 0.65);
+  }
+
+  .blind-badge { display: inline-block; padding: 0 6px; border-radius: 4px; font-size: 0.74em; font-weight: 800; line-height: 1.3; flex-shrink: 0; }
+  .blind-d { background: #ffd54f; color: #1a1100; box-shadow: 0 0 8px rgba(255, 213, 79, 0.8); }
+  .blind-sb { background: #29b6f6; color: #041926; }
+  .blind-bb { background: #ff7043; color: #fff; }
+
+  .log-banner {
+    margin-top: 5px;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.78);
+    border: 1px solid rgba(255, 224, 130, 0.45);
+    box-shadow: 0 0 12px rgba(245, 185, 66, 0.2);
+    padding: 4px 18px;
+    border-radius: 10px;
+    font-size: 0.86rem;
+    font-weight: 500;
+    color: var(--gold-light);
+    max-width: 960px;
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Player Area: กระชับพอดีจอ ไม่ต้องเลื่อนลง และขยายระยะด้านข้าง */
+  .player-area {
+    flex-shrink: 0;
+    background: rgba(0,0,0,0.92);
+    border-top: 2px solid rgba(245,185,66,0.55);
+    padding: 8px 24px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .player-area.my-turn { border-top-color: var(--gold-light); box-shadow: 0 -4px 20px rgba(245, 185, 66, 0.35); }
+  .player-area.winner-player { border-top-color: var(--gold-light); box-shadow: 0 -6px 26px rgba(255, 229, 143, 0.55); }
+
+  .my-hands-row { display: flex; justify-content: center; align-items: center; gap: 28px; flex-wrap: nowrap; }
+  .hand-group { display: flex; flex-direction: column; align-items: center; }
+  .hand-label { font-size: 0.84rem; color: #f5f5f5; margin-bottom: 4px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; }
+
+  .my-chip-pill {
+    background: linear-gradient(135deg, rgba(255, 229, 143, 0.34), rgba(245, 185, 66, 0.22));
+    border: 1.5px solid var(--gold-light); color: var(--gold-light);
+    padding: 2px 14px; border-radius: 999px; font-size: 0.92rem; font-weight: 800;
+    box-shadow: 0 0 10px rgba(255, 213, 79, 0.65);
+    text-shadow: 0 0 8px rgba(255, 229, 143, 0.75);
+  }
+  .my-bet-pill { background: rgba(46, 125, 50, 0.85); border: 1.5px solid #81c784; color: #fff; padding: 2px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
+  .hand-rank-pill {
+    background: linear-gradient(135deg, #fff099, #ffd54f 45%, #f57c00);
+    color: #140d00; padding: 2px 14px; border-radius: 999px; font-size: 0.82rem; font-weight: 800;
+    box-shadow: 0 0 12px rgba(255, 229, 143, 0.85);
+  }
+  .cards-row { display: flex; gap: 10px; align-items: center; justify-content: center; }
+
+  .power-card { width: var(--card-w); height: var(--card-h); border-radius: 8px; background: #14082b; border: 2px solid #b388ff; color: #fff; padding: 0; cursor: pointer; position: relative; overflow: hidden; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.6); }
+  .power-card:hover:not(.used) { transform: translateY(-4px) scale(1.03); border-color: var(--gold-light); box-shadow: 0 0 14px rgba(255, 229, 143, 0.8); }
+  .power-card.used { opacity: 0.35; pointer-events: none; filter: grayscale(1); }
+  .power-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .power-card .p-title { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 4px 3px; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.45) 65%, transparent 100%); font-size: 0.74rem; font-weight: 700; text-align: center; color: #fff; line-height: 1.1; }
+  .power-card .p-badge {
+    position: absolute; top: 3px; right: 3px;
+    background: linear-gradient(135deg, #fff099, #ffd54f 50%, var(--gold));
+    color: #140d00; font-size: 0.68rem; font-weight: 800; padding: 1px 7px; border-radius: 5px; z-index: 2;
+  }
+
+  .controls-row { display: flex; gap: 12px; justify-content: center; align-items: center; max-width: 900px; margin: 0 auto; width: 100%; flex-wrap: nowrap; }
+  .controls-row .btn { margin: 0; padding: 8px 16px; font-size: 0.9rem; font-weight: 700; border-radius: 10px; flex: 1 1 120px; }
+  .raise-box { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(245, 185, 66, 0.75); border-radius: 10px; padding: 4px 12px; flex: 1.7 1 260px; justify-content: center; }
+  .raise-input { width: 88px; padding: 6px 8px; margin: 0 !important; border-radius: 7px; border: 1px solid var(--gold); background: #071f13; color: var(--gold-light); font-size: 0.9rem; font-weight: 700; text-align: center; }
+  .quick-bet-btn { padding: 6px 10px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.12); color: #fff; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+  .quick-bet-btn:hover:not(:disabled) { background: rgba(245,185,66,0.28); }
+  .quick-bet-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .raise-box .btn-gold { flex: 1; padding: 7px 14px; font-size: 0.9rem; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+  .modal-box { background: #102e1e; border: 2px solid var(--gold); border-radius: 16px; padding: 22px; max-width: 580px; width: 100%; text-align: center; max-height: 88vh; display: flex; flex-direction: column; }
+  .target-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; overflow-y: auto; text-align: left; }
+  .guide-card-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); }
+  .guide-card-thumb { width: 56px; height: 78px; border-radius: 8px; object-fit: cover; border: 1.5px solid #b388ff; flex-shrink: 0; background: #14082b; }
+  .guide-tag { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 1px 7px; border-radius: 999px; margin-left: 6px; background: rgba(245, 185, 66, 0.22); color: var(--gold-light); border: 1px solid rgba(245, 185, 66, 0.45); }
+  .rank-row-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 12px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
+  .rank-num { width: 26px; height: 26px; border-radius: 999px; background: rgba(245,185,66,0.2); border: 1px solid var(--gold); color: var(--gold-light); font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .rank-sample { font-size: 0.84rem; font-weight: 700; color: #ffe58f; background: rgba(0,0,0,0.35); padding: 3px 8px; border-radius: 8px; white-space: nowrap; }
+  .log-history-list { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; overflow-y: auto; text-align: left; font-size: 0.88rem; max-height: 340px; background: rgba(0,0,0,0.35); border-radius: 10px; padding: 10px; }
+  .log-item { padding: 6px 8px; border-radius: 8px; background: rgba(255,255,255,0.05); border-left: 3px solid var(--gold); line-height: 1.35; }
+  .log-time { color: #9ca3af; font-size: 0.76rem; margin-right: 6px; }
+  .lb-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); }
+  .lb-row.top1 { border-color: #ffd54f; background: rgba(245, 185, 66, 0.16); box-shadow: 0 0 12px rgba(245, 185, 66, 0.35); }
+  .lb-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .lb-rank { width: 24px; font-weight: 700; color: var(--gold-light); text-align: center; }
+  .lb-avatar { width: 30px; height: 30px; border-radius: 999px; object-fit: cover; background: #1b5e20; }
+  .lb-name { font-weight: 600; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lb-sub { font-size: 0.76rem; color: #a5d6a7; }
+  .lb-score { font-weight: 700; color: var(--gold-light); font-size: 0.96rem; white-space: nowrap; }
+  .admin-tabs { display: flex; gap: 6px; margin: 10px 0; flex-wrap: wrap; }
+  .admin-tab-btn { flex: 1; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(245,185,66,0.4); background: rgba(255,255,255,0.08); color: #fff; font-weight: 600; font-size: 0.88rem; cursor: pointer; }
+  .admin-tab-btn.active { background: var(--gold); color: #140d00; box-shadow: 0 0 10px rgba(255, 213, 79, 0.6); }
+  .admin-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+  .admin-stat-box { background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 8px; }
+  .admin-stat-num { font-size: 1.15rem; font-weight: 700; color: var(--gold-light); }
+  .admin-stat-lbl { font-size: 0.76rem; color: #a5d6a7; }
+  .admin-item-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); font-size: 0.86rem; }
+  .mini-danger-btn { background: #c62828; color: #fff; border: none; border-radius: 7px; padding: 5px 10px; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+  .mini-gold-btn { background: var(--gold); color: #140d00; border: none; border-radius: 7px; padding: 5px 10px; font-size: 0.78rem; font-weight: 700; cursor: pointer; box-shadow: 0 0 8px rgba(245, 185, 66, 0.5); }
+
+  @media (max-width: 720px) {
+    :root { --card-w: 54px; --card-h: 76px; }
+    .poker-board-canvas { width: 100%; height: auto; max-height: 100%; aspect-ratio: 16 / 9; }
+    .log-banner { font-size: 0.78rem; }
+    .player-area { padding: 8px 14px 10px; }
+    .my-hands-row { gap: 12px; }
+    .controls-row { flex-wrap: wrap; gap: 8px; }
+    .controls-row .btn { font-size: 0.82rem; padding: 7px 10px; }
+    .raise-input { width: 68px; font-size: 0.82rem; }
+    .rank-row-item { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 1. หน้าล็อบบี้ -->
+<div id="lobby-screen">
+  <img src="./background.png" alt="" class="lobby-bg-img" draggable="false" onerror="tryImageCaseFallback(this, (el) => el.remove());">
+  <div class="lobby-bg-scrim"></div>
+  <div class="lobby-logo-wrap">
+    <img src="./logo.png" alt="GSHPLUS POKER" class="lobby-logo-img" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.style.display='none'; document.getElementById('lobby-logo-fallback').style.display='block'; });">
+    <div id="lobby-logo-fallback" class="logo" style="display:none;">♠️ GSHPLUS POKER ♥️</div>
+  </div>
+  <div class="subtitle">โปกเกอร์สายปั่น + การ์ดพลังพิเศษ (เล่น 5 คน)</div>
+  
+  <div class="panel">
+    <div class="user-card" id="google-user-card">
+      <div class="user-info">
+        <img id="google-avatar" class="user-avatar" draggable="false" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='100%25' height='100%25' fill='%231b5e20'/%3E%3Ctext x='50%25' y='55%25' font-size='18' text-anchor='middle' dominant-baseline='middle' fill='%23ffe58f'%3E%E2%99%A0%3C/text%3E%3C/svg%3E" alt="avatar">
+        <div>
+          <div class="user-name" id="google-display-name">ยังไม่ได้ล็อกอิน Google</div>
+          <div class="user-sub" id="google-status-sub">ล็อกอินเพื่อเก็บสถิติขึ้น Leaderboard</div>
+        </div>
+      </div>
+      <button class="small-btn" id="btn-google-auth" onclick="toggleGoogleLogin()">ล็อกอิน Google</button>
+    </div>
+
+    <input type="text" id="player-name" placeholder="ใส่ชื่อเล่นของคุณ..." maxlength="16" value="Player 1">
+    
+    <button class="btn btn-gold" onclick="startSoloBotMode()">🤖 เล่นโหมดทดสอบ (สู้กับบอท 4 ตัว • รวม 5 คน)</button>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-ghost" style="margin-bottom:0;" onclick="openGuideModal('skills')">📖 คู่มือสกิล & แรงค์ไพ่</button>
+      <button class="btn btn-ghost" style="margin-bottom:0;" onclick="openLeaderboardModal()">🏆 Leaderboard</button>
+      <button class="btn btn-ghost" id="btn-open-admin" style="display:none; margin-bottom:0; border-color:var(--gold); color:var(--gold-light);" onclick="openAdminModal()">🛠️ หลังบ้าน</button>
+    </div>
+    
+    <hr style="border-color: rgba(255,255,255,0.15); margin: 16px 0;">
+    <div style="font-size: 0.9rem; color: #a5d6a7; margin-bottom: 10px; font-weight: 500;">🟢 เชื่อมต่อ Firebase ออนไลน์พร้อมใช้งานแล้ว! (สูงสุด 5 คน)</div>
+    <button class="btn btn-green" onclick="createOnlineRoom()">🌐 สร้างห้องออนไลน์ใหม่</button>
+    <div style="display: flex; gap: 8px;">
+      <input type="text" id="room-code-input" placeholder="รหัสห้อง 4 หลัก" maxlength="4" style="margin:0; text-transform:uppercase;">
+      <button class="btn btn-blue" style="margin:0; width: 45%;" onclick="joinOnlineRoom()">เข้าห้อง</button>
+    </div>
+  </div>
+</div>
+
+<!-- 2. หน้าโต๊ะเกม -->
+<div id="game-screen">
+  <div class="top-bar">
+    <div class="top-left-badges">
+      <div class="room-badge" id="mode-badge">โหมดทดสอบ (5 คน)</div>
+      <div class="stage-badge" id="round-stage">WAITING</div>
+      <div class="stage-badge" id="blinds-badge">SB 50 / BB 100</div>
+      <div class="timer-badge" id="turn-timer">⏱️ 15s</div>
+    </div>
+    <div class="top-actions">
+      <button class="small-btn" onclick="openGuideModal('skills')">⚡ สกิลการ์ด</button>
+      <button class="small-btn" onclick="openGuideModal('ranks')">🃏 แรงค์ไพ่</button>
+      <button class="small-btn" onclick="openLogModal()">📜 ประวัติ Log (<span id="log-count-badge">0</span>)</button>
+      <button class="small-btn" onclick="openLeaderboardModal()">🏆 Leaderboard</button>
+      <button class="small-btn" id="btn-top-admin" style="display:none; border-color:var(--gold); color:var(--gold-light);" onclick="openAdminModal()">🛠️ หลังบ้าน</button>
+      <button class="small-btn" id="btn-sound" onclick="toggleSound()">🔊 เสียง: เปิด</button>
+      <button class="small-btn" onclick="location.reload()">ออก</button>
+    </div>
+  </div>
+
+  <div class="board-stage-wrap">
+    <div class="poker-board-canvas" id="table-oval">
+      <img src="./board.png" alt="GSH+ POKER Board" class="poker-board-img" draggable="false" onerror="tryImageCaseFallback(this, (el) => el.remove());">
+      <div class="board-overlay" id="board-overlay">
+        <div class="board-pot-overlay">
+          <span id="pot-amount">0</span>P
+        </div>
+        <div class="board-community-overlay" id="community-cards"></div>
+        <div id="opponents-area"></div>
+      </div>
+    </div>
+    <div class="log-banner" id="game-log">ยินดีต้อนรับสู่ GSHPLUS POKER!</div>
+  </div>
+
+  <div class="player-area" id="player-area">
+    <div class="my-hands-row">
+      <div class="hand-group">
+        <div class="hand-label">
+          <span id="my-name-label">คุณ</span>
+          <span id="my-blind-tag"></span>
+          <span class="my-chip-pill">💰 เงินคุณ: <span id="my-chips-display">5,000</span> ชิป</span>
+          <span class="my-bet-pill" id="my-bet-pill">ลงรอบนี้: 0</span>
+          <span class="hand-rank-pill" id="my-hand-rank">รอแจกไพ่</span>
+        </div>
+        <div class="cards-row" id="my-poker-cards"></div>
+      </div>
+
+      <div class="hand-group">
+        <div class="hand-label" style="color:#e1bee7;">⚡ การ์ดพลัง (กดใช้ในเทิร์นตัวเอง)</div>
+        <div class="cards-row" id="my-power-cards"></div>
+      </div>
+    </div>
+
+    <div class="controls-row" id="action-buttons">
+      <button class="btn btn-red" id="btn-fold" onclick="playerAction('fold')">หมอบ (Fold)</button>
+      <button class="btn btn-blue" id="btn-call" onclick="playerAction('call')">ตาม / เช็ค</button>
+      <div class="raise-box" id="raise-controls">
+        <button class="quick-bet-btn" type="button" onclick="addRaiseAmount(100)">+100</button>
+        <input type="number" id="raise-amount-input" class="raise-input" min="10" step="10" value="100" placeholder="ยอดเพิ่ม">
+        <button class="btn btn-gold" id="btn-raise" onclick="playerAction('raise')">เกทับ</button>
+      </div>
+      <button class="btn btn-green" id="btn-start-online" style="display:none;" onclick="startOnlineGame()">🚀 เริ่มแจกไพ่ (ครบคนแล้วกดเลย)</button>
+      <button class="btn btn-green" id="btn-next-round" style="display:none;" onclick="startNewHand()">แจกไพ่ตาถัดไป ▶</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modals -->
+<div class="modal-overlay" id="guide-modal">
+  <div class="modal-box">
+    <h3 style="color:var(--gold); margin:0 0 6px; font-size:1.25rem; font-weight:700;">📖 คู่มือสกิลการ์ด & แรงค์ Poker</h3>
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" id="tab-guide-skills" onclick="switchGuideTab('skills')">⚡ สกิลการ์ดพลัง</button>
+      <button class="admin-tab-btn" id="tab-guide-ranks" onclick="switchGuideTab('ranks')">🃏 ลำดับความใหญ่ของ Poker</button>
+    </div>
+    <div class="target-list" id="guide-content-list" style="max-height:360px;"></div>
+    <button class="btn btn-gold" style="margin-bottom:0;" onclick="closeGuideModal()">ปิดหน้าต่าง</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="target-modal">
+  <div class="modal-box">
+    <h3 id="modal-title" style="color:var(--gold); margin-top:0; font-size:1.25rem; font-weight:700;">เลือกเป้าหมาย</h3>
+    <p id="modal-desc" style="font-size:0.95rem; color:#ddd; font-weight:400;"></p>
+    <div class="target-list" id="modal-targets"></div>
+    <button class="btn btn-red" style="margin-bottom:0;" onclick="closeModal()">ยกเลิก</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="log-modal">
+  <div class="modal-box">
+    <h3 style="color:var(--gold); margin:0 0 6px; font-size:1.25rem; font-weight:700;">📜 ประวัติ Log ระหว่างเล่น</h3>
+    <div style="font-size:0.84rem; color:#a5d6a7;">บันทึกทุกการเดินเกมในตานี้แบบเรียลไทม์</div>
+    <div class="log-history-list" id="log-history-list"></div>
+    <button class="btn btn-gold" style="margin-bottom:0;" onclick="closeLogModal()">ปิดหน้าต่าง</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="leaderboard-modal">
+  <div class="modal-box">
+    <h3 style="color:var(--gold); margin:0 0 6px; font-size:1.25rem; font-weight:700;">🏆 ตารางอันดับ Leaderboard</h3>
+    <div style="font-size:0.84rem; color:#a5d6a7;">อันดับผู้เล่นจากบัญชี Google ที่ลงทะเบียนไว้</div>
+    <div class="target-list" id="leaderboard-list">
+      <div style="text-align:center; color:#ccc; padding:12px;">กำลังโหลดอันดับ...</div>
+    </div>
+    <button class="btn btn-gold" style="margin-bottom:0;" onclick="closeLeaderboardModal()">ปิดหน้าต่าง</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="admin-modal">
+  <div class="modal-box">
+    <h3 style="color:var(--gold); margin:0 0 4px; font-size:1.25rem; font-weight:700;">🛠️ ระบบหลังบ้าน (Admin Dashboard)</h3>
+    <div style="font-size:0.82rem; color:#a5d6a7;">จัดการห้องออนไลน์ ตารางคะแนน และบันทึกแอดมิน</div>
+    <div class="admin-stats-grid">
+      <div class="admin-stat-box"><div class="admin-stat-num" id="admin-rooms-count">0</div><div class="admin-stat-lbl">ห้องออนไลน์</div></div>
+      <div class="admin-stat-box"><div class="admin-stat-num" id="admin-players-count">0</div><div class="admin-stat-lbl">ผู้เล่นในระบบ</div></div>
+      <div class="admin-stat-box"><div class="admin-stat-num" id="admin-logs-count">0</div><div class="admin-stat-lbl">บันทึกระบบ</div></div>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" id="tab-admin-rooms" onclick="switchAdminTab('rooms')">ห้องออนไลน์</button>
+      <button class="admin-tab-btn" id="tab-admin-lb" onclick="switchAdminTab('leaderboard')">Leaderboard</button>
+      <button class="admin-tab-btn" id="tab-admin-logs" onclick="switchAdminTab('logs')">Admin Log</button>
+    </div>
+    <div class="target-list" id="admin-content-list" style="max-height:280px;"></div>
+    <button class="btn btn-gold" style="margin-bottom:0;" onclick="closeAdminModal()">ปิดหลังบ้าน</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<script>
+// ============================================================================
+// 🛡️ -1. ระบบป้องกันการก๊อปรูป / ลากรูป / คลิกขวา
+// ============================================================================
+document.addEventListener('contextmenu', (e) => e.preventDefault());
+document.addEventListener('dragstart', (e) => e.preventDefault());
+document.addEventListener('keydown', (e) => {
+  const key = (e.key || '').toLowerCase();
+  if (
+    key === 'f12' ||
+    ((e.ctrlKey || e.metaKey) && ['s', 'u', 'c', 'x'].includes(key) && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) ||
+    ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i', 'j', 'c'].includes(key))
+  ) {
+    e.preventDefault();
+  }
+});
+
+// ============================================================================
+// 🔊 0. ระบบเสียงเอฟเฟกต์
+// ============================================================================
+let soundEnabled = true;
+let audioCtx = null;
+
+function getAudioContext() {
+  if (!soundEnabled) return null;
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) audioCtx = new AudioContextClass();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+  return audioCtx;
+}
+
+function playTone(freq, duration, type = 'sine', delay = 0, gainPeak = 0.12) {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  const startTime = ctx.currentTime + delay;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, startTime);
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(gainPeak, startTime + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(startTime);
+  osc.stop(startTime + duration + 0.02);
+}
+
+const SFX = {
+  deal() { playTone(520, 0.07, 'triangle', 0, 0.1); playTone(680, 0.08, 'triangle', 0.07, 0.1); },
+  flip() { playTone(460, 0.06, 'sine', 0, 0.09); playTone(720, 0.08, 'triangle', 0.05, 0.11); },
+  call() { playTone(587.33, 0.09, 'sine', 0, 0.11); },
+  raise() { playTone(659.25, 0.08, 'triangle', 0, 0.12); playTone(880, 0.12, 'triangle', 0.07, 0.13); },
+  fold() { playTone(300, 0.14, 'sawtooth', 0, 0.07); playTone(210, 0.16, 'sawtooth', 0.08, 0.06); },
+  power() { playTone(440, 0.08, 'sine', 0, 0.12); playTone(659.25, 0.09, 'sine', 0.06, 0.12); playTone(987.77, 0.16, 'triangle', 0.12, 0.14); },
+  win() { playTone(523.25, 0.12, 'triangle', 0, 0.14); playTone(659.25, 0.12, 'triangle', 0.11, 0.14); playTone(783.99, 0.14, 'triangle', 0.22, 0.15); playTone(1046.5, 0.28, 'triangle', 0.34, 0.16); }
+};
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('btn-sound').innerText = soundEnabled ? '🔊 เสียง: เปิด' : '🔇 เสียง: ปิด';
+  if (soundEnabled) playTone(740, 0.08, 'sine', 0, 0.1);
+}
+
+function triggerAnim(elId, animClass) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.classList.remove(animClass);
+  void el.offsetWidth;
+  el.classList.add(animClass);
+}
+
+function formatMoney(num) { return Number(num || 0).toLocaleString('en-US'); }
+function formatTimeNow() { return new Date().toTimeString().slice(0, 8); }
+
+// ============================================================================
+// 🔧 1. FIREBASE
+// ============================================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyBABcBz4vb3h-oqI59Kil_37f_3t11kug4",
+  authDomain: "gshplus-poker.firebaseapp.com",
+  databaseURL: "https://gshplus-poker-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "gshplus-poker",
+  storageBucket: "gshplus-poker.firebasestorage.app",
+  messagingSenderId: "242121364149",
+  appId: "1:242121364149:web:41eb58b0d2076abeb3a4fc",
+  measurementId: "G-3VX4ZNBQ1Y"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const auth = firebase.auth();
+
+const MAX_PLAYERS = 5;
+const STARTING_CHIPS = 5000;
+const SMALL_BLIND = 50;
+const BIG_BLIND = 100;
+const ADMIN_EMAILS = ["natkamon11208@gmail.com"];
+
+let currentGoogleUser = null;
+let isAdminUser = false;
+let activeAdminTab = 'rooms';
+let activeGuideTab = 'skills';
+
+function checkIsAdmin(user) {
+  if (!user || !user.email) return false;
+  return ADMIN_EMAILS.map(e => e.toLowerCase()).includes(user.email.toLowerCase());
+}
+
+function updateGoogleAuthUI(user) {
+  currentGoogleUser = user || null;
+  isAdminUser = checkIsAdmin(user);
+
+  const nameEl = document.getElementById('google-display-name');
+  const subEl = document.getElementById('google-status-sub');
+  const avatarEl = document.getElementById('google-avatar');
+  const authBtn = document.getElementById('btn-google-auth');
+  const playerNameInput = document.getElementById('player-name');
+  const lobbyAdminBtn = document.getElementById('btn-open-admin');
+  const topAdminBtn = document.getElementById('btn-top-admin');
+
+  if (user) {
+    const cleanName = (user.displayName || 'Google Player').slice(0, 16);
+    nameEl.innerText = cleanName;
+    subEl.innerText = isAdminUser ? 'ล็อกอิน Google แล้ว • สิทธิ์แอดมิน (Admin)' : 'ล็อกอิน Google แล้ว • พร้อมบันทึก Leaderboard';
+    if (user.photoURL) avatarEl.src = user.photoURL;
+    authBtn.innerText = 'ออกจากระบบ';
+    if (playerNameInput && (playerNameInput.value === 'Player 1' || !playerNameInput.value.trim())) {
+      playerNameInput.value = cleanName;
+    }
+    ensureLeaderboardEntry(user, cleanName);
+  } else {
+    nameEl.innerText = 'ยังไม่ได้ล็อกอิน Google';
+    subEl.innerText = 'ล็อกอินเพื่อเก็บสถิติขึ้น Leaderboard';
+    authBtn.innerText = 'ล็อกอิน Google';
+  }
+
+  if (lobbyAdminBtn) lobbyAdminBtn.style.display = isAdminUser ? 'inline-flex' : 'none';
+  if (topAdminBtn) topAdminBtn.style.display = isAdminUser ? 'inline-block' : 'none';
+}
+
+auth.onAuthStateChanged((user) => updateGoogleAuthUI(user));
+
+async function toggleGoogleLogin() {
+  if (currentGoogleUser) { await auth.signOut(); return; }
+  const provider = new firebase.auth.GoogleAuthProvider();
+  try { await auth.signInWithPopup(provider); }
+  catch (err) { alert('ล็อกอิน Google ไม่สำเร็จ: ' + (err?.message || 'โปรดลองอีกครั้ง')); }
+}
+
+// ============================================================================
+// 📖 1.1 คู่มือสกิล & แรงค์ไพ่
+// ============================================================================
+const POKER_HAND_RANKS = [
+  { rankNo: 1, name: 'Straight Flush', th: 'สเตรทฟลัช', sample: '9♠ 8♠ 7♠ 6♠ 5♠', desc: 'ไพ่ 5 ใบเรียงลำดับกันและดอกเดียวกันทั้งหมด' },
+  { rankNo: 2, name: 'Four of a Kind', th: 'โฟร์การ์ด', sample: 'K♠ K♥ K♦ K♣ 4♠', desc: 'ไพ่แต้มเดียวกัน 4 ใบ' },
+  { rankNo: 3, name: 'Full House', th: 'ฟูลเฮาส์', sample: 'Q♠ Q♥ Q♦ 10♣ 10♠', desc: 'ไพ่ตอง 3 ใบ + ไพ่คู่ 2 ใบในชุดเดียว' },
+  { rankNo: 4, name: 'Flush', th: 'ฟลัช (สี)', sample: 'A♦ J♦ 9♦ 6♦ 2♦', desc: 'ไพ่ดอกเดียวกัน 5 ใบ (ไม่จำเป็นต้องเรียง)' },
+  { rankNo: 5, name: 'Straight', th: 'สเตรท (เรียง)', sample: '10♣ 9♦ 8♥ 7♠ 6♣', desc: 'ไพ่ 5 ใบเรียงแต้มต่อเนื่องกัน (A-2-3-4-5 ก็เรียง)' },
+  { rankNo: 6, name: 'Three of a Kind', th: 'ตอง', sample: '8♠ 8♥ 8♦ K♣ 3♠', desc: 'ไพ่แต้มเดียวกัน 3 ใบ' },
+  { rankNo: 7, name: 'Two Pair', th: 'สองคู่', sample: 'J♠ J♦ 7♥ 7♣ A♠', desc: 'ไพ่คู่ 2 ชุดในมือรวมกองกลาง' },
+  { rankNo: 8, name: 'One Pair', th: 'หนึ่งคู่', sample: 'A♠ A♥ K♦ 9♣ 4♦', desc: 'ไพ่แต้มเดียวกัน 2 ใบ' },
+  { rankNo: 9, name: 'High Card', th: 'ไพ่สูง', sample: 'A♠ Q♦ 10♥ 7♣ 2♠', desc: 'ไม่มีชุดใดเข้าเกณฑ์ วัดกันที่ใบแต้มสูงสุด (A ใหญ่สุด)' }
+];
+
+function openGuideModal(initialTab = 'skills') { activeGuideTab = initialTab; document.getElementById('guide-modal').style.display = 'flex'; switchGuideTab(initialTab); }
+function closeGuideModal() { document.getElementById('guide-modal').style.display = 'none'; }
+function switchGuideTab(tab) {
+  activeGuideTab = tab;
+  document.getElementById('tab-guide-skills').classList.toggle('active', tab === 'skills');
+  document.getElementById('tab-guide-ranks').classList.toggle('active', tab === 'ranks');
+  const listEl = document.getElementById('guide-content-list');
+  if (tab === 'skills') {
+    listEl.innerHTML = POWER_CARDS_POOL.map(card => `
+      <div class="guide-card-item">
+        <img class="guide-card-thumb" src="${card.image}" alt="${card.name}" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.src='${getFallbackSVG()}'; });">
+        <div style="min-width:0;">
+          <div style="font-weight:700; color:var(--gold-light); font-size:0.98rem;">${card.name}<span class="guide-tag">${card.needTarget ? 'เลือกเป้าหมาย' : 'ใช้ได้ทันที'}</span></div>
+          <div style="font-size:0.84rem; color:#e5e7eb; margin-top:2px; line-height:1.35;">${card.desc}</div>
+        </div>
+      </div>`).join('');
+  } else {
+    listEl.innerHTML = POKER_HAND_RANKS.map(item => `
+      <div class="rank-row-item">
+        <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+          <span class="rank-num">${item.rankNo}</span>
+          <div style="min-width:0;">
+            <div style="font-weight:700; color:#fff; font-size:0.92rem;">${item.name} <span style="color:#a5d6a7; font-weight:500;">(${item.th})</span></div>
+            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.3;">${item.desc}</div>
+          </div>
+        </div>
+        <div class="rank-sample">${item.sample}</div>
+      </div>`).join('');
+  }
+}
+
+// ============================================================================
+// 🛠️ 1.2 ระบบหลังบ้าน
+// ============================================================================
+function writeAdminAuditLog(actionText) { if (db) db.ref('adminLogs').push({ time: formatTimeNow(), actor: currentGoogleUser?.email || 'Admin', text: actionText, ts: Date.now() }); }
+function openAdminModal() { if (!isAdminUser) return alert('สำหรับบัญชีแอดมินเท่านั้นครับ'); document.getElementById('admin-modal').style.display = 'flex'; refreshAdminData(); }
+function closeAdminModal() { document.getElementById('admin-modal').style.display = 'none'; }
+function switchAdminTab(tab) { activeAdminTab = tab; document.getElementById('tab-admin-rooms').classList.toggle('active', tab === 'rooms'); document.getElementById('tab-admin-lb').classList.toggle('active', tab === 'leaderboard'); document.getElementById('tab-admin-logs').classList.toggle('active', tab === 'logs'); refreshAdminData(); }
+function refreshAdminData() {
+  if (!isAdminUser || !db) return;
+  const listEl = document.getElementById('admin-content-list');
+  listEl.innerHTML = '<div style="text-align:center; color:#ccc; padding:10px;">กำลังโหลดข้อมูลหลังบ้าน...</div>';
+  Promise.all([db.ref('rooms').once('value'), db.ref('leaderboard').once('value'), db.ref('adminLogs').limitToLast(40).once('value')])
+    .then(([roomsSnap, lbSnap, logsSnap]) => {
+      const rooms = []; roomsSnap.forEach(c => rooms.push({ code: c.key, ...c.val() }));
+      const players = []; lbSnap.forEach(c => players.push({ uid: c.key, ...c.val() }));
+      players.sort((a, b) => (b.chips || 0) - (a.chips || 0));
+      const logs = []; logsSnap.forEach(c => logs.push({ id: c.key, ...c.val() })); logs.reverse();
+      document.getElementById('admin-rooms-count').innerText = rooms.length;
+      document.getElementById('admin-players-count').innerText = players.length;
+      document.getElementById('admin-logs-count').innerText = logs.length;
+
+      if (activeAdminTab === 'rooms') {
+        listEl.innerHTML = rooms.length ? rooms.map(r => `
+          <div class="admin-item-row">
+            <div><div style="font-weight:700; color:var(--gold-light);">ห้อง ${r.code} (${STAGES[r.stageIndex] || 'WAITING'})</div>
+            <div style="font-size:0.78rem; color:#a5d6a7;">ผู้เล่น ${(Array.isArray(r.players) ? r.players.length : 0)}/${MAX_PLAYERS} คน • Pot ${formatMoney(r.pot || 0)}</div></div>
+            <button class="mini-danger-btn" onclick="adminDeleteRoom('${r.code}')">ลบห้อง</button>
+          </div>`).join('') : '<div style="text-align:center; color:#aaa; padding:12px;">ไม่มีห้องออนไลน์ที่เปิดอยู่</div>';
+      } else if (activeAdminTab === 'leaderboard') {
+        listEl.innerHTML = players.length ? players.map(p => `
+          <div class="admin-item-row">
+            <div><div style="font-weight:700;">${p.name || 'Player'}</div>
+            <div style="font-size:0.78rem; color:#a5d6a7;">💰 ${formatMoney(p.chips || 0)} • ชนะ ${Number(p.wins || 0)}</div></div>
+            <div style="display:flex; gap:6px;">
+              <button class="mini-gold-btn" onclick="adminAdjustChips('${p.uid}', '${(p.name || '').replace(/'/g, '')}', ${Number(p.chips || 0)})">+500</button>
+              <button class="mini-danger-btn" onclick="adminResetUser('${p.uid}', '${(p.name || '').replace(/'/g, '')}')">รีเซ็ต</button>
+            </div>
+          </div>`).join('') : '<div style="text-align:center; color:#aaa; padding:12px;">ยังไม่มีข้อมูล Leaderboard</div>';
+      } else {
+        listEl.innerHTML = logs.length
+          ? `<button class="mini-danger-btn" style="align-self:flex-end; margin-bottom:4px;" onclick="adminClearLogs()">ล้าง Admin Log</button>` +
+            logs.map(l => `<div class="log-item"><span class="log-time">[${l.time || '--:--:--'}]</span><span>${l.text || ''}</span></div>`).join('')
+          : '<div style="text-align:center; color:#aaa; padding:12px;">ยังไม่มีประวัติแอดมิน</div>';
+      }
+    });
+}
+function adminDeleteRoom(code) { if (isAdminUser && code) db.ref('rooms/' + code).remove().then(() => { writeAdminAuditLog(`ลบห้องออนไลน์รหัส ${code}`); refreshAdminData(); }); }
+function adminAdjustChips(uid, name, currentChips) { if (isAdminUser && uid) { const nextChips = (Number(currentChips) || 0) + 500; db.ref('leaderboard/' + uid).update({ chips: nextChips, updatedAt: Date.now() }).then(() => { writeAdminAuditLog(`เพิ่มชิป +500 ให้ ${name}`); refreshAdminData(); }); } }
+function adminResetUser(uid, name) { if (isAdminUser && uid) { db.ref('leaderboard/' + uid).update({ chips: STARTING_CHIPS, wins: 0, updatedAt: Date.now() }).then(() => { writeAdminAuditLog(`รีเซ็ตสถิติ ${name}`); refreshAdminData(); }); } }
+function adminClearLogs() { if (isAdminUser) db.ref('adminLogs').remove().then(() => refreshAdminData()); }
+
+// ============================================================================
+// 🏆 1.5 LEADERBOARD
+// ============================================================================
+function ensureLeaderboardEntry(user, displayName) {
+  if (!user || !db) return;
+  const ref = db.ref('leaderboard/' + user.uid);
+  ref.once('value', (snap) => {
+    const existing = snap.val();
+    if (!existing) ref.set({ uid: user.uid, name: displayName || user.displayName || 'Player', photoURL: user.photoURL || '', chips: STARTING_CHIPS, wins: 0, updatedAt: Date.now() });
+    else ref.update({ name: displayName || existing.name || user.displayName || 'Player', photoURL: user.photoURL || existing.photoURL || '', updatedAt: Date.now() });
+  });
+}
+function recordLeaderboardWin(winnerPlayer, potWon) {
+  if (!currentGoogleUser || !winnerPlayer || winnerPlayer.id !== myPlayerId || !db) return;
+  const ref = db.ref('leaderboard/' + currentGoogleUser.uid);
+  ref.transaction((curr) => {
+    const base = curr || { uid: currentGoogleUser.uid, name: winnerPlayer.name || currentGoogleUser.displayName || 'Player', photoURL: currentGoogleUser.photoURL || '', chips: STARTING_CHIPS, wins: 0 };
+    return { ...base, name: winnerPlayer.name || base.name, photoURL: currentGoogleUser.photoURL || base.photoURL || '', chips: Math.max(base.chips || 0, winnerPlayer.chips || 0), wins: (base.wins || 0) + 1, lastWinPot: potWon || 0, updatedAt: Date.now() };
+  });
+}
+function openLeaderboardModal() {
+  const modal = document.getElementById('leaderboard-modal');
+  const listEl = document.getElementById('leaderboard-list');
+  modal.style.display = 'flex';
+  listEl.innerHTML = '<div style="text-align:center; color:#ccc; padding:12px;">กำลังโหลดอันดับ...</div>';
+  db.ref('leaderboard').orderByChild('chips').limitToLast(20).once('value', (snap) => {
+    const items = []; snap.forEach((child) => items.push(child.val()));
+    items.sort((a, b) => (b.chips || 0) - (a.chips || 0) || (b.wins || 0) - (a.wins || 0));
+    if (!items.length) { listEl.innerHTML = '<div style="text-align:center; color:#ccc; padding:12px;">ยังไม่มีข้อมูลผู้เล่นใน Leaderboard</div>'; return; }
+    const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='100%25' height='100%25' fill='%231b5e20'/%3E%3Ctext x='50%25' y='55%25' font-size='15' text-anchor='middle' dominant-baseline='middle' fill='%23ffe58f'%3E%E2%99%A0%3C/text%3E%3C/svg%3E";
+    listEl.innerHTML = items.map((row, idx) => `
+      <div class="lb-row ${idx === 0 ? 'top1' : ''}">
+        <div class="lb-left">
+          <div class="lb-rank">${idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '#' + (idx + 1)}</div>
+          <img class="lb-avatar" src="${row.photoURL || defaultAvatar}" alt="avatar" draggable="false">
+          <div style="min-width:0;"><div class="lb-name">${row.name || 'Player'}</div><div class="lb-sub">ชนะสะสม ${Number(row.wins || 0)} ตา</div></div>
+        </div>
+        <div class="lb-score">💰 ${formatMoney(row.chips || 0)}</div>
+      </div>`).join('');
+  });
+}
+function closeLeaderboardModal() { document.getElementById('leaderboard-modal').style.display = 'none'; }
+
+// ============================================================================
+// 📜 1.8 LOG
+// ============================================================================
+function appendGameLog(state, message) {
+  if (!state) return;
+  if (!Array.isArray(state.logs)) state.logs = [];
+  state.logs.push({ time: formatTimeNow(), text: message });
+  if (state.logs.length > 100) state.logs = state.logs.slice(-100);
+  state.log = message;
+}
+function openLogModal() {
+  const modal = document.getElementById('log-modal');
+  const listEl = document.getElementById('log-history-list');
+  modal.style.display = 'flex';
+  const logs = (gameState && Array.isArray(gameState.logs)) ? gameState.logs : [];
+  listEl.innerHTML = logs.length
+    ? [...logs].reverse().map(item => `<div class="log-item"><span class="log-time">[${item.time || '--:--:--'}]</span><span>${item.text || ''}</span></div>`).join('')
+    : '<div style="text-align:center; color:#aaa; padding:12px;">ยังไม่มีประวัติ Log ในตานี้</div>';
+}
+function closeLogModal() { document.getElementById('log-modal').style.display = 'none'; }
+
+// ============================================================================
+// 🃏 2. รูปไพ่
+// ============================================================================
+const POKER_CARD_FOLDER = './poker-cards';
+const POKER_CARD_EXT = 'PNG';
+const POKER_CARD_BACK = './poker-cards/back.PNG';
+const SUIT_CODE = { '♠': 's', '♥': 'h', '♦': 'd', '♣': 'c' };
+
+function getPokerCardImagePath(card) { return `${POKER_CARD_FOLDER}/${String(card.val).toLowerCase()}${SUIT_CODE[card.suit] || 's'}.${POKER_CARD_EXT}`; }
+function tryImageCaseFallback(imgEl, onFinalFail) {
+  if (!imgEl.dataset.triedLower) { imgEl.dataset.triedLower = '1'; imgEl.src = imgEl.src.replace(/\.PNG(\?.*)?$/i, '.png$1'); return; }
+  if (!imgEl.dataset.triedUpper) { imgEl.dataset.triedUpper = '1'; imgEl.src = imgEl.src.replace(/\.png(\?.*)?$/i, '.PNG$1'); return; }
+  if (!imgEl.dataset.triedTitle) {
+    imgEl.dataset.triedTitle = '1';
+    const baseName = imgEl.src.split('/').pop().replace(/\.(png|jpg|jpeg|webp)$/i, '');
+    const titleName = baseName.charAt(0).toUpperCase() + baseName.slice(1).toLowerCase();
+    const extMatch = imgEl.src.match(/\.(png|jpg|jpeg|webp)$/i);
+    const ext = extMatch ? extMatch[1] : 'png';
+    imgEl.src = imgEl.src.replace(/[^/]+$/, `${titleName}.${ext}`);
+    return;
+  }
+  if (typeof onFinalFail === 'function') onFinalFail(imgEl);
+}
+
+// ============================================================================
+// ⚡ 3. การ์ดพลังพิเศษ
+// ============================================================================
+const POWER_CARDS_POOL = [
+  { id: 'peek', name: 'แง้ม', desc: 'แอบดูไพ่บนมือของคู่แข่ง 1 คนตลอดทั้งตานี้', image: './cards/peek.png', needTarget: true },
+  { id: 'swap', name: 'สลับไพ่', desc: 'สลับไพ่ 1 ใบแบบสุ่มบนมือคุณ กับไพ่ของเป้าหมาย 1 คน', image: './cards/swap.png', needTarget: true },
+  { id: 'redraw_river', name: 'บือออ', desc: 'ล้างไพ่กองกลางใบล่าสุด แล้วจั่วใบใหม่จากกองมาแทน!', image: './cards/redraw.png', needTarget: false },
+  { id: 'redraw_hand', name: 'มือไม่สวย', desc: 'ทิ้งไพ่บนมือตัวเองทั้ง 2 ใบ แล้วจั่วใหม่จากกองทันที', image: './cards/mulligan.png', needTarget: false },
+  { id: 'tax', name: 'ปล้น', desc: 'ขโมยชิปจากคู่แข่ง 1 คน 150 ชิป เข้ากองกลางทันที', image: './cards/tax.png', needTarget: true }
+];
+
+function applyPowerEffect(cardId, state, userIdx, targetIdx) {
+  const user = state.players[userIdx];
+  const target = targetIdx !== null ? state.players[targetIdx] : null;
+  if (cardId === 'peek') { if (!user.peekedPlayers) user.peekedPlayers = []; user.peekedPlayers.push(targetIdx); return `${user.name} ใช้ [แง้ม] แอบส่องไพ่ของ ${target.name}!`; }
+  if (cardId === 'swap') { const myIdx = Math.floor(Math.random() * 2); const opIdx = Math.floor(Math.random() * 2); const temp = user.hand[myIdx]; user.hand[myIdx] = target.hand[opIdx]; target.hand[opIdx] = temp; return `${user.name} ใช้ [สลับไพ่] สลับไพ่กับ ${target.name}!`; }
+  if (cardId === 'redraw_river') { if (state.community && state.community.length > 0 && state.deck && state.deck.length > 0) { state.community[state.community.length - 1] = state.deck.pop(); return `${user.name} ใช้ [บือออ] เปลี่ยนไพ่กองกลางใบล่าสุด!`; } return `${user.name} ใช้ [บือออ] แต่ยังไม่มีไพ่กองกลางให้เปลี่ยน!`; }
+  if (cardId === 'redraw_hand') { if (state.deck && state.deck.length >= 2) { user.hand = [state.deck.pop(), state.deck.pop()]; return `${user.name} ใช้ [มือไม่สวย] เปลี่ยนไพ่ในมือใหม่ทั้งหมด!`; } return `ไพ่ในกองไม่พอจั่วใหม่!`; }
+  if (cardId === 'tax') { const steal = Math.min(150, target.chips); target.chips -= steal; state.pot += steal; return `${user.name} ใช้ [ปล้น] ดึงเงิน ${target.name} ${formatMoney(steal)} ชิป ลงกองกลาง!`; }
+  return '';
+}
+
+// ============================================================================
+// ⏱️ 3.5 จับเวลา 15 วินาที
+// ============================================================================
+const TURN_DURATION = 15;
+let turnTimerInterval = null;
+let remainingSeconds = TURN_DURATION;
+let currentTurnKey = '';
+
+function clearTurnTimer() { if (turnTimerInterval) { clearInterval(turnTimerInterval); turnTimerInterval = null; } }
+function getTurnUniqueKey() { if (!gameState || !gameState.players || gameState.stageIndex >= 4) return ''; const p = gameState.players[gameState.turnIndex]; return p ? `${gameState.stageIndex}-${gameState.turnIndex}-${p.id}-${gameState.currentBet}` : ''; }
+function updateTimerDisplay() {
+  const topTimer = document.getElementById('turn-timer');
+  const isActiveTurn = gameState && gameState.stageIndex < 4 && gameState.players && gameState.players[gameState.turnIndex];
+  if (!topTimer) return;
+  if (!isActiveTurn) { topTimer.innerText = '⏱️ --s'; topTimer.classList.remove('danger'); return; }
+  const activePlayer = gameState.players[gameState.turnIndex];
+  topTimer.innerText = `⏱️ ${activePlayer.name}: ${remainingSeconds}s`;
+  topTimer.classList.toggle('danger', remainingSeconds <= 5);
+}
+function handleTurnTimeout() {
+  if (!gameState || gameState.stageIndex >= 4) return;
+  const pIdx = gameState.turnIndex;
+  const player = gameState.players[pIdx];
+  if (!player || player.folded || (isOnline && myPlayerId !== 'p0')) return;
+  const toCall = Math.max(0, (gameState.currentBet || 0) - (player.bet || 0));
+  const fallbackAction = toCall === 0 ? 'call' : 'fold';
+  appendGameLog(gameState, `⏰ ${player.name} หมดเวลา 15 วิ! ระบบ${fallbackAction === 'call' ? 'เช็คอัตโนมัติ' : 'หมอบอัตโนมัติ'}`);
+  executeAction(pIdx, fallbackAction, 0);
+}
+function syncTurnTimerWithState() {
+  const newKey = getTurnUniqueKey();
+  if (!newKey) { currentTurnKey = ''; remainingSeconds = TURN_DURATION; clearTurnTimer(); updateTimerDisplay(); return; }
+  if (newKey !== currentTurnKey) {
+    currentTurnKey = newKey; remainingSeconds = TURN_DURATION; clearTurnTimer(); updateTimerDisplay();
+    turnTimerInterval = setInterval(() => {
+      if (!gameState || gameState.stageIndex >= 4) { clearTurnTimer(); updateTimerDisplay(); return; }
+      remainingSeconds = Math.max(0, remainingSeconds - 1); updateTimerDisplay();
+      if (remainingSeconds <= 0) { clearTurnTimer(); handleTurnTimeout(); }
+    }, 1000);
+  } else updateTimerDisplay();
+}
+
+// ============================================================================
+// 🎲 4. ระบบหลักของเกม
+// ============================================================================
+const SUITS = ['♠', '♥', '♦', '♣'];
+const VALUES = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+const STAGES = ['PRE-FLOP', 'FLOP', 'TURN', 'RIVER', 'SHOWDOWN', 'WAITING'];
+
+let isOnline = false, roomCode = '', myPlayerId = 'p0', gameState = null, handCounter = 0;
+let lastRenderedStage = -1, lastRenderedCommunityCount = 0, lastRenderedHandSignature = '', lastRenderedPowerSignature = '', renderRafId = null;
+
+function createDeck() {
+  let deck = [];
+  for (let s of SUITS) for (let i = 0; i < VALUES.length; i++) deck.push({ suit: s, val: VALUES[i], rank: i + 2 });
+  return deck.sort(() => Math.random() - 0.5);
+}
+function drawPowerCards(count = 2) {
+  let cards = [];
+  for (let i = 0; i < count; i++) { const template = POWER_CARDS_POOL[Math.floor(Math.random() * POWER_CARDS_POOL.length)]; cards.push({ ...template, uid: Math.random().toString(36).substr(2, 6), used: false }); }
+  return cards;
+}
+function addRaiseAmount(addVal) { const input = document.getElementById('raise-amount-input'); if (input) input.value = Math.max(10, (Number(input.value) || 0) + addVal); }
+function getCustomRaiseAdd() { const input = document.getElementById('raise-amount-input'); const raw = input ? Number(input.value) : 100; return (!Number.isFinite(raw) || raw < 10) ? 10 : Math.floor(raw); }
+
+function startSoloBotMode() {
+  getAudioContext(); isOnline = false; handCounter = 0;
+  const myName = document.getElementById('player-name').value.trim() || (currentGoogleUser?.displayName || 'คุณ');
+  const botNames = ['บอทสมชาย', 'บอทเจ๊ไฝ', 'บอทเสี่ยช้าง', 'บอทน้องแพรว'];
+  let players = [{ id: 'p0', name: myName, chips: STARTING_CHIPS, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '' }];
+  botNames.forEach((bName, idx) => players.push({ id: 'p' + (idx + 1), name: bName, chips: STARTING_CHIPS, isBot: true, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '' }));
+  gameState = { players, deck: [], community: [], pot: 0, currentBet: 0, dealerIndex: -1, sbIndex: -1, bbIndex: -1, turnIndex: 0, stageIndex: 0, winnerId: null, logs: [], log: 'เริ่มเกม 5 คน!' };
+  appendGameLog(gameState, `เริ่มเกมโหมดทดสอบ 5 คน (ชิปตั้งต้น ${formatMoney(STARTING_CHIPS)} • SB ${SMALL_BLIND} / BB ${BIG_BLIND})`);
+  document.getElementById('lobby-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'flex';
+  startNewHand();
+}
+
+function startOnlineGame() { if (gameState.players.length < 2) return alert('ต้องมีผู้เล่นในห้องอย่างน้อย 2 คนขึ้นไปครับ!'); startNewHand(); }
+
+function startNewHand() {
+  SFX.flip(); handCounter++;
+  const n = gameState.players.length;
+  const dealerIdx = handCounter === 1 ? 0 : ((typeof gameState.dealerIndex === 'number' && gameState.dealerIndex >= 0 ? gameState.dealerIndex : 0) + 1) % n;
+  const sbIdx = n === 2 ? dealerIdx : (dealerIdx + 1) % n;
+  const bbIdx = n === 2 ? (dealerIdx + 1) % n : (dealerIdx + 2) % n;
+  const firstTurnIdx = n === 2 ? sbIdx : (bbIdx + 1) % n;
+
+  gameState.deck = createDeck(); gameState.community = []; gameState.pot = 0; gameState.currentBet = 0;
+  gameState.dealerIndex = dealerIdx; gameState.sbIndex = sbIdx; gameState.bbIndex = bbIdx; gameState.stageIndex = 0; gameState.winnerId = null;
+
+  gameState.players.forEach((p, idx) => {
+    if (p.chips <= 0) p.chips = STARTING_CHIPS;
+    p.bet = 0; p.folded = false; p.raisesInStage = 0; p.finalHandName = ''; p.peekedPlayers = [];
+    p.blindRole = idx === dealerIdx ? 'D' : (idx === sbIdx ? 'SB' : (idx === bbIdx ? 'BB' : ''));
+    p.hand = [gameState.deck.pop(), gameState.deck.pop()];
+    p.powerCards = drawPowerCards(2);
+  });
+
+  const sbPlayer = gameState.players[sbIdx], bbPlayer = gameState.players[bbIdx];
+  const sbPaid = Math.min(SMALL_BLIND, sbPlayer.chips); sbPlayer.chips -= sbPaid; sbPlayer.bet = sbPaid; gameState.pot += sbPaid;
+  const bbPaid = Math.min(BIG_BLIND, bbPlayer.chips); bbPlayer.chips -= bbPaid; bbPlayer.bet = bbPaid; gameState.pot += bbPaid;
+  gameState.currentBet = Math.max(sbPlayer.bet, bbPlayer.bet, BIG_BLIND);
+  gameState.turnIndex = firstTurnIdx;
+
+  appendGameLog(gameState, `ตาที่ ${handCounter}: ${sbPlayer.name} ลง SB ${formatMoney(sbPaid)}, ${bbPlayer.name} ลง BB ${formatMoney(bbPaid)} — ตาของ ${gameState.players[firstTurnIdx].name}`);
+  syncAndRender(); checkBotTurn();
+}
+
+function playerAction(action) {
+  const pIdx = gameState.turnIndex;
+  const player = gameState.players[pIdx];
+  if (player.id !== myPlayerId || gameState.stageIndex >= 4) return;
+  executeAction(pIdx, action, action === 'raise' ? getCustomRaiseAdd() : 0);
+}
+
+function executeAction(pIdx, action, customRaiseAdd = 100) {
+  const player = gameState.players[pIdx];
+  if (action === 'fold') { SFX.fold(); player.folded = true; appendGameLog(gameState, `${player.name} หมอบ (Fold)`); }
+  else if (action === 'call') {
+    SFX.call();
+    const toCall = Math.max(0, gameState.currentBet - player.bet);
+    const actualPay = Math.min(toCall, player.chips);
+    player.chips -= actualPay; player.bet += actualPay; gameState.pot += actualPay;
+    appendGameLog(gameState, actualPay > 0 ? `${player.name} ตาม (Call) ${formatMoney(actualPay)} ชิป` : `${player.name} ผ่าน (Check)`);
+  } else if (action === 'raise') {
+    SFX.raise();
+    const toCall = Math.max(0, gameState.currentBet - player.bet);
+    const actualRaiseAdd = Math.min(customRaiseAdd, Math.max(0, player.chips - toCall));
+    const totalPay = Math.min(player.chips, toCall + actualRaiseAdd);
+    player.chips -= totalPay; player.bet += totalPay;
+    if (player.bet > gameState.currentBet) gameState.currentBet = player.bet;
+    gameState.pot += totalPay;
+    appendGameLog(gameState, `${player.name} เกทับ (Raise) เพิ่ม ${formatMoney(actualRaiseAdd)} เป็นยอดลง ${formatMoney(player.bet)} ชิป!`);
+  }
+  advanceTurn();
+}
+
+function advanceTurn() {
+  const activePlayers = gameState.players.filter(p => !p.folded);
+  if (activePlayers.length === 1) { finishHand(activePlayers[0]); return; }
+  let nextIdx = (gameState.turnIndex + 1) % gameState.players.length;
+  while (gameState.players[nextIdx].folded) nextIdx = (nextIdx + 1) % gameState.players.length;
+  const firstActiveIdx = gameState.players.findIndex(p => !p.folded);
+  const allMatched = activePlayers.every(p => p.bet === gameState.currentBet || p.chips === 0);
+  if (nextIdx === firstActiveIdx && allMatched) nextStage();
+  else { gameState.turnIndex = nextIdx; syncAndRender(); checkBotTurn(); }
+}
+
+function nextStage() {
+  gameState.stageIndex++; gameState.players.forEach(p => { p.bet = 0; p.raisesInStage = 0; }); gameState.currentBet = 0;
+  if (!gameState.community) gameState.community = [];
+  if (gameState.stageIndex === 1) { SFX.flip(); gameState.community.push(gameState.deck.pop(), gameState.deck.pop(), gameState.deck.pop()); appendGameLog(gameState, 'เปิดไพ่ FLOP 3 ใบ!'); }
+  else if (gameState.stageIndex === 2) { SFX.flip(); gameState.community.push(gameState.deck.pop()); appendGameLog(gameState, 'เปิดไพ่ TURN ใบที่ 4!'); }
+  else if (gameState.stageIndex === 3) { SFX.flip(); gameState.community.push(gameState.deck.pop()); appendGameLog(gameState, 'เปิดไพ่ RIVER ใบสุดท้าย!'); }
+  else if (gameState.stageIndex === 4) { evaluateShowdown(); return; }
+  gameState.turnIndex = gameState.players.findIndex(p => !p.folded); syncAndRender(); checkBotTurn();
+}
+
+function checkBotTurn() {
+  if (isOnline || gameState.stageIndex >= 4) return;
+  const currentP = gameState.players[gameState.turnIndex];
+  if (!currentP.isBot) return;
+  if (typeof currentP.raisesInStage !== 'number') currentP.raisesInStage = 0;
+  setTimeout(() => {
+    if (!gameState || gameState.stageIndex >= 4 || gameState.players[gameState.turnIndex]?.id !== currentP.id) return;
+    const unusedPower = currentP.powerCards.find(c => !c.used);
+    if (unusedPower && Math.random() < 0.2) {
+      SFX.power(); triggerAnim('table-oval', 'anim-flash'); unusedPower.used = true;
+      const validTargets = gameState.players.map((p, i) => i).filter(i => i !== gameState.turnIndex && !gameState.players[i].folded);
+      appendGameLog(gameState, '⚡ ' + applyPowerEffect(unusedPower.id, gameState, gameState.turnIndex, validTargets[Math.floor(Math.random() * validTargets.length)]));
+      syncAndRender();
+    }
+    setTimeout(() => {
+      if (!gameState || gameState.stageIndex >= 4 || gameState.players[gameState.turnIndex]?.id !== currentP.id) return;
+      const toCall = Math.max(0, (gameState.currentBet || 0) - (currentP.bet || 0));
+      const hasGoodHand = evaluateBestCards([...(currentP.hand || []), ...(gameState.community || [])]).totalScore >= 100;
+      const canAffordRaise = currentP.chips > toCall + 100 && currentP.raisesInStage < 1;
+      const r = Math.random();
+      if (toCall > 350 && !hasGoodHand && r < 0.65) executeAction(gameState.turnIndex, 'fold');
+      else if (canAffordRaise && ((hasGoodHand && r < 0.22) || (!hasGoodHand && r < 0.06))) { currentP.raisesInStage += 1; executeAction(gameState.turnIndex, 'raise', hasGoodHand ? 100 : 50); }
+      else executeAction(gameState.turnIndex, 'call');
+    }, 800);
+  }, 900);
+}
+
+// ============================================================================
+// ⚡ 5. การ์ดพลัง
+// ============================================================================
+let pendingPowerCardUid = null;
+function onClickPowerCard(uid) {
+  const myIdx = gameState.players.findIndex(p => p.id === myPlayerId);
+  if (gameState.turnIndex !== myIdx || gameState.stageIndex >= 4) return alert('ใช้การ์ดพลังได้เฉพาะในเทิร์นของคุณเท่านั้น!');
+  const me = gameState.players[myIdx];
+  const card = me.powerCards.find(c => c.uid === uid);
+  if (!card || card.used) return;
+  if (card.needTarget) {
+    pendingPowerCardUid = uid;
+    document.getElementById('modal-title').innerText = `⚡ ${card.name}`;
+    document.getElementById('modal-desc').innerText = card.desc;
+    const list = document.getElementById('modal-targets'); list.innerHTML = '';
+    gameState.players.forEach((p, idx) => {
+      if (idx !== myIdx && !p.folded) {
+        const btn = document.createElement('button'); btn.className = 'btn btn-gold';
+        btn.innerText = `${p.name} (เงิน: ${formatMoney(p.chips)} ชิป)`;
+        btn.onclick = () => confirmPowerTarget(idx); list.appendChild(btn);
+      }
+    });
+    document.getElementById('target-modal').style.display = 'flex';
+  } else {
+    SFX.power(); triggerAnim('table-oval', 'anim-flash'); card.used = true;
+    appendGameLog(gameState, '⚡ ' + applyPowerEffect(card.id, gameState, myIdx, null)); syncAndRender();
+  }
+}
+function confirmPowerTarget(targetIdx) {
+  const myIdx = gameState.players.findIndex(p => p.id === myPlayerId);
+  const card = gameState.players[myIdx].powerCards.find(c => c.uid === pendingPowerCardUid);
+  if (card) { SFX.power(); triggerAnim('table-oval', 'anim-flash'); card.used = true; appendGameLog(gameState, '⚡ ' + applyPowerEffect(card.id, gameState, myIdx, targetIdx)); }
+  closeModal(); syncAndRender();
+}
+function closeModal() { document.getElementById('target-modal').style.display = 'none'; pendingPowerCardUid = null; }
+
+// ============================================================================
+// 🏆 6. คำนวณแต้ม
+// ============================================================================
+function evaluateBestCards(cards) {
+  if (!cards || cards.length === 0) return { totalScore: 0, handName: 'รอแจกไพ่', shortName: 'รอแจกไพ่' };
+  const ranks = cards.map(c => c.rank).sort((a, b) => b - a);
+  const suits = {}, counts = {};
+  cards.forEach(c => { suits[c.suit] = (suits[c.suit] || 0) + 1; counts[c.rank] = (counts[c.rank] || 0) + 1; });
+  const isFlush = cards.length >= 5 && Object.values(suits).some(v => v >= 5);
+  const uniqueRanks = [...new Set(ranks)];
+  let isStraight = false;
+  if (uniqueRanks.length >= 5) {
+    for (let i = 0; i <= uniqueRanks.length - 5; i++) if (uniqueRanks[i] - uniqueRanks[i + 4] === 4) isStraight = true;
+    if (uniqueRanks.includes(14) && [2,3,4,5].every(r => uniqueRanks.includes(r))) isStraight = true;
+  }
+  const freq = Object.entries(counts).map(([r, c]) => ({ rank: Number(r), count: c })).sort((a, b) => b.count - a.count || b.rank - a.rank);
+  let score = 0, handName = 'High Card (ไพ่สูง)', shortName = 'High Card';
+  if (isFlush && isStraight) { score = 800; handName = 'Straight Flush!'; shortName = 'Straight Flush'; }
+  else if (freq[0].count === 4) { score = 700; handName = 'Four of a Kind (โฟร์การ์ด)'; shortName = 'Four of a Kind'; }
+  else if (freq[0].count === 3 && freq[1]?.count >= 2) { score = 600; handName = 'Full House (ฟูลเฮาส์)'; shortName = 'Full House'; }
+  else if (isFlush) { score = 500; handName = 'Flush (สี)'; shortName = 'Flush'; }
+  else if (isStraight) { score = 400; handName = 'Straight (เรียง)'; shortName = 'Straight'; }
+  else if (freq[0].count === 3) { score = 300; handName = 'Three of a Kind (ตอง)'; shortName = 'Three of a Kind'; }
+  else if (freq[0].count === 2 && freq[1]?.count === 2) { score = 200; handName = 'Two Pair (สองคู่)'; shortName = 'Two Pair'; }
+  else if (freq[0].count === 2) { score = 100; handName = 'One Pair (หนึ่งคู่)'; shortName = 'One Pair'; }
+  const tieBreaker = freq.reduce((acc, f, i) => acc + f.rank * Math.pow(0.05, i + 1), 0);
+  return { totalScore: score + tieBreaker, handName, shortName };
+}
+function evaluateShowdown() {
+  gameState.stageIndex = 4; let bestPlayer = null, bestEval = { totalScore: -1, handName: '' };
+  gameState.players.forEach(p => { if (!p.folded) { const res = evaluateBestCards([...(p.hand || []), ...(gameState.community || [])]); p.finalHandName = res.shortName; if (res.totalScore > bestEval.totalScore) { bestEval = res; bestPlayer = p; } } });
+  finishHand(bestPlayer, bestEval.handName);
+}
+function finishHand(winner, handName = 'ชนะบาย (คนอื่นหมอบหมด)') {
+  SFX.win(); triggerAnim('table-oval', 'anim-flash'); gameState.stageIndex = 4; gameState.winnerId = winner ? winner.id : null;
+  const potWon = gameState.pot || 0;
+  if (winner) { winner.chips += potWon; appendGameLog(gameState, `🏆 ผู้ชนะคือ ${winner.name} (${handName}) รับเงินกองกลาง ${formatMoney(potWon)} ชิป!`); recordLeaderboardWin(winner, potWon); }
+  else appendGameLog(gameState, `🏆 จบตา! เงินกองกลาง ${formatMoney(potWon)} ชิป`);
+  gameState.pot = 0; syncAndRender();
+}
+
+// ============================================================================
+// 🎨 7. แสดงผลหน้าจอ
+// ============================================================================
+const BOARD_SLOT_FOR_ME = 'seat-bot-center';
+const BOARD_OPPONENT_SLOTS = ['seat-top-left', 'seat-bot-left', 'seat-bot-right', 'seat-top-right'];
+
+function fallbackCardText(imgEl, val, suit) {
+  tryImageCaseFallback(imgEl, (finalImg) => {
+    const parent = finalImg.parentElement; parent.classList.remove('custom-img');
+    if (suit === '♥' || suit === '♦') parent.classList.add('red');
+    parent.innerHTML = `<div class="card-top">${val}${suit}</div><div class="card-mid">${suit}</div><div class="card-bot">${val}${suit}</div>`;
+  });
+}
+function renderCardHTML(card, options = {}) {
+  const { flip = false, delayMs = 0 } = options;
+  if (!card) return `<div class="card empty"></div>`;
+  const flipStyle = flip && delayMs > 0 ? `style="animation-delay:${delayMs}ms;"` : '';
+  return `<div class="flip-slot"><div class="flip-inner ${flip ? 'is-flipping' : ''}" ${flipStyle}><div class="flip-face flip-front custom-img"><img src="${getPokerCardImagePath(card)}" alt="${card.val}${card.suit}" draggable="false" onerror="fallbackCardText(this, '${card.val}', '${card.suit}')"></div></div></div>`;
+}
+function renderBoardMiniCard(card, canSee, flip = false) {
+  if (canSee && card) return `<div class="board-mini-card revealed ${flip ? 'is-flipping' : ''}"><img src="${getPokerCardImagePath(card)}" alt="${card.val}${card.suit}" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.parentElement.innerHTML='<span style=\\'font-weight:800;color:#111;font-size:0.78rem;\\'>${card.val}${card.suit}</span>'; });"></div>`;
+  return `<div class="board-mini-card back-card"><img src="${POKER_CARD_BACK}" alt="back" draggable="false" onerror="tryImageCaseFallback(this, (el) => el.remove());"></div>`;
+}
+function getFallbackSVG() {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="160"><rect width="100%" height="100%" fill="#311b92"/><text x="50%" y="50%" font-size="34" text-anchor="middle" dominant-baseline="middle">⚡</text></svg>`;
+  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+}
+function getBlindBadgeHTML(role) {
+  if (role === 'D') return '<span class="blind-badge blind-d">D</span>';
+  if (role === 'SB') return '<span class="blind-badge blind-sb">SB</span>';
+  if (role === 'BB') return '<span class="blind-badge blind-bb">BB</span>';
+  return '';
+}
+function renderSeatBoxHTML(p, slotCls, options = {}) {
+  const { isMe = false, isTurn = false, isWinner = false, canSeeCards = false, isShowdown = false, flipCards = false } = options;
+  const c0 = p.hand && p.hand[0] ? p.hand[0] : null;
+  const c1 = p.hand && p.hand[1] ? p.hand[1] : null;
+  const turnTag = isMe ? '' : (isTurn ? 'คิด...' : '');
+  const tagText = isWinner ? 'WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag));
+  return `<div class="board-seat ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}"><div class="board-seat-cards">${renderBoardMiniCard(c0, canSeeCards, flipCards)}${renderBoardMiniCard(c1, canSeeCards, flipCards)}</div><div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}</div><div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div></div>`;
+}
+
+function renderUI() {
+  if (!gameState || !gameState.players) return;
+  const myIdx = gameState.players.findIndex(p => p.id === myPlayerId);
+  if (myIdx === -1) return;
+  const me = gameState.players[myIdx];
+
+  const comm = gameState.community || [];
+  const prevCommCount = lastRenderedCommunityCount;
+  const prevStage = lastRenderedStage;
+  const stageChanged = gameState.stageIndex !== prevStage;
+  const isNewHandStart = stageChanged && gameState.stageIndex === 0;
+  const justEnteredShowdown = stageChanged && gameState.stageIndex === 4;
+  lastRenderedStage = gameState.stageIndex;
+  lastRenderedCommunityCount = comm.length;
+
+  const isWaiting = gameState.stageIndex === 5;
+  const isShowdown = gameState.stageIndex === 4;
+  const winnerId = isShowdown ? gameState.winnerId : null;
+
+  document.getElementById('round-stage').innerText = STAGES[gameState.stageIndex] || 'WAITING';
+  document.getElementById('blinds-badge').innerText = `SB ${SMALL_BLIND} / BB ${BIG_BLIND}`;
+  document.getElementById('pot-amount').innerText = formatMoney(gameState.pot || 0);
+  document.getElementById('game-log').innerText = gameState.log || '';
+  const logCountEl = document.getElementById('log-count-badge');
+  if (logCountEl) logCountEl.innerText = Array.isArray(gameState.logs) ? gameState.logs.length : 0;
+
+  document.getElementById('my-name-label').innerText = me.name;
+  const myBlindEl = document.getElementById('my-blind-tag');
+  if (myBlindEl) myBlindEl.innerHTML = getBlindBadgeHTML(me.blindRole);
+  document.getElementById('my-chips-display').innerText = formatMoney(me.chips);
+  document.getElementById('my-bet-pill').innerText = `ลงรอบนี้: ${formatMoney(me.bet || 0)}`;
+
+  const rankBadge = document.getElementById('my-hand-rank');
+  if (isWaiting || !me.hand || me.hand.length === 0) rankBadge.innerText = 'รอแจกไพ่';
+  else if (me.folded) rankBadge.innerText = 'หมอบแล้ว';
+  else rankBadge.innerText = evaluateBestCards([...me.hand, ...comm]).shortName;
+
+  const oppArea = document.getElementById('opponents-area');
+  const opponents = [];
+  for (let offset = 1; offset < gameState.players.length; offset++) {
+    const idx = (myIdx + offset) % gameState.players.length;
+    opponents.push({ player: gameState.players[idx], idx });
+  }
+  const peeked = me.peekedPlayers || [];
+
+  const seatSig = [
+    me.id, isNewHandStart ? handCounter : '', isShowdown ? 'SD' : '',
+    ...opponents.map(({ player: p, idx }) => {
+      const canSee = (isShowdown && !p.folded) || peeked.includes(idx);
+      const cardsSig = canSee ? (p.hand || []).map(c => `${c.val}${c.suit}`).join('-') : (p.hand && p.hand.length ? 'BACK' : 'NONE');
+      return `${p.id}:${cardsSig}:${p.folded ? 1 : 0}`;
+    })
+  ].join('|');
+
+  if (oppArea.dataset.seatSig !== seatSig) {
+    oppArea.dataset.seatSig = seatSig;
+    let seatsHTML = renderSeatBoxHTML(me, BOARD_SLOT_FOR_ME, {
+      isMe: true, isTurn: gameState.turnIndex === myIdx && !isShowdown && !isWaiting,
+      isWinner: winnerId === me.id, canSeeCards: Boolean(me.hand && me.hand.length > 0 && !me.folded), isShowdown,
+      flipCards: isNewHandStart
+    });
+
+    BOARD_OPPONENT_SLOTS.forEach((slotCls, posIdx) => {
+      const item = opponents[posIdx];
+      if (!item) { seatsHTML += `<div class="board-seat ${slotCls}" style="opacity:0.22;"></div>`; return; }
+      const { player: p, idx } = item;
+      const canSee = (isShowdown && !p.folded) || peeked.includes(idx);
+      seatsHTML += renderSeatBoxHTML(p, slotCls, {
+        isMe: false, isTurn: gameState.turnIndex === idx && !isShowdown && !isWaiting,
+        isWinner: winnerId === p.id, canSeeCards: canSee, isShowdown,
+        flipCards: justEnteredShowdown && canSee
+      });
+    });
+    oppArea.innerHTML = seatsHTML;
+  } else {
+    const meEl = oppArea.querySelector(`.${BOARD_SLOT_FOR_ME}`);
+    if (meEl) {
+      meEl.classList.toggle('active-turn', gameState.turnIndex === myIdx && !isShowdown && !isWaiting);
+      meEl.classList.toggle('winner-seat', winnerId === me.id);
+      meEl.classList.toggle('folded', Boolean(me.folded));
+      const chipsEl = meEl.querySelector('.board-seat-chips');
+      if (chipsEl) chipsEl.innerHTML = `💰 ${formatMoney(me.chips)}`;
+    }
+    BOARD_OPPONENT_SLOTS.forEach((slotCls, posIdx) => {
+      const seatEl = oppArea.querySelector(`.${slotCls}`);
+      const item = opponents[posIdx];
+      if (!seatEl || !item) return;
+      const { player: p, idx } = item;
+      const isTurn = gameState.turnIndex === idx && !isShowdown && !isWaiting;
+      const isWinner = winnerId === p.id;
+      const turnTag = isTurn ? 'คิด...' : '';
+      const tagText = isWinner ? 'WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag));
+      seatEl.classList.toggle('active-turn', isTurn);
+      seatEl.classList.toggle('winner-seat', isWinner);
+      seatEl.classList.toggle('folded', Boolean(p.folded));
+      const nameEl = seatEl.querySelector('.board-seat-name');
+      if (nameEl) nameEl.innerHTML = `${p.name}${getBlindBadgeHTML(p.blindRole)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}`;
+      const chipsEl = seatEl.querySelector('.board-seat-chips');
+      if (chipsEl) chipsEl.innerHTML = `💰 ${formatMoney(p.chips)}`;
+    });
+  }
+
+  const commArea = document.getElementById('community-cards');
+  const commSignature = comm.map(c => c ? `${c.val}${c.suit}` : '').join(',');
+  if (isNewHandStart || comm.length !== prevCommCount || commArea.dataset.sig !== commSignature) {
+    commArea.dataset.sig = commSignature;
+    let html = '';
+    let newlyIdx = 0;
+    for (let i = 0; i < 5; i++) {
+      const isNewlyRevealed = Boolean(comm[i]) && i >= prevCommCount && comm.length > prevCommCount;
+      const delayMs = isNewlyRevealed ? newlyIdx * 90 : 0;
+      if (isNewlyRevealed) newlyIdx++;
+      html += renderCardHTML(comm[i], { flip: isNewlyRevealed, delayMs });
+    }
+    commArea.innerHTML = html;
+  }
+
+  const myHandArea = document.getElementById('my-poker-cards');
+  const handSignature = (me.hand || []).map(c => c ? `${c.val}${c.suit}` : '').join(',');
+  if (handSignature !== lastRenderedHandSignature) {
+    const shouldFlipHand = isNewHandStart || (!isNewHandStart && lastRenderedHandSignature !== '');
+    lastRenderedHandSignature = handSignature;
+    myHandArea.innerHTML = (me.hand || []).map((c, idx) => renderCardHTML(c, { flip: shouldFlipHand, delayMs: shouldFlipHand ? idx * 90 : 0 })).join('');
+  }
+
+  const myPowerArea = document.getElementById('my-power-cards');
+  const powerList = me.powerCards || [];
+  const powerIdsSignature = powerList.map(pc => pc.uid).join(',');
+  if (powerIdsSignature !== lastRenderedPowerSignature || myPowerArea.children.length !== powerList.length) {
+    lastRenderedPowerSignature = powerIdsSignature;
+    myPowerArea.innerHTML = powerList.map(pc => `
+      <div class="power-card ${pc.used ? 'used' : ''} ${isNewHandStart ? 'anim-deal' : ''}" data-uid="${pc.uid}" onclick="onClickPowerCard('${pc.uid}')" title="${pc.name}: ${pc.desc}">
+        <span class="p-badge">${pc.used ? 'ใช้แล้ว' : 'กดใช้'}</span>
+        <img src="${pc.image}" alt="${pc.name}" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.src='${getFallbackSVG()}'; });">
+        <div class="p-title">${pc.name}</div>
+      </div>`).join('');
+  } else {
+    powerList.forEach(pc => {
+      const cardEl = myPowerArea.querySelector(`.power-card[data-uid="${pc.uid}"]`);
+      if (!cardEl) return;
+      cardEl.classList.toggle('used', Boolean(pc.used));
+      const badgeEl = cardEl.querySelector('.p-badge');
+      if (badgeEl) badgeEl.innerText = pc.used ? 'ใช้แล้ว' : 'กดใช้';
+    });
+  }
+
+  const isMyTurn = gameState.turnIndex === myIdx && gameState.stageIndex < 4 && !me.folded;
+  const isMeWinner = winnerId === me.id;
+  document.getElementById('player-area').classList.toggle('my-turn', isMyTurn);
+  document.getElementById('player-area').classList.toggle('winner-player', isMeWinner);
+  if (isMeWinner) rankBadge.innerText = `🏆 ชนะ! ${me.finalHandName ? `(${me.finalHandName})` : ''}`;
+
+  const toCall = Math.max(0, (gameState.currentBet || 0) - (me.bet || 0));
+  const raiseBox = document.getElementById('raise-controls');
+  const raiseInput = document.getElementById('raise-amount-input');
+  const quickAddBtn = raiseBox ? raiseBox.querySelector('.quick-bet-btn') : null;
+  const maxExtraRaise = Math.max(0, (me.chips || 0) - toCall);
+
+  document.getElementById('btn-start-online').style.display = (isWaiting && myPlayerId === 'p0') ? 'block' : 'none';
+  document.getElementById('btn-fold').style.display = (isShowdown || isWaiting) ? 'none' : 'block';
+  document.getElementById('btn-call').style.display = (isShowdown || isWaiting) ? 'none' : 'block';
+  if (raiseBox) raiseBox.style.display = (isShowdown || isWaiting) ? 'none' : 'flex';
+  document.getElementById('btn-next-round').style.display = (isShowdown && (!isOnline || myPlayerId === 'p0')) ? 'block' : 'none';
+
+  document.getElementById('btn-fold').disabled = !isMyTurn;
+  document.getElementById('btn-call').disabled = !isMyTurn;
+  if (raiseInput) { raiseInput.disabled = !isMyTurn || maxExtraRaise <= 0; raiseInput.max = String(Math.max(10, maxExtraRaise)); }
+  if (quickAddBtn) quickAddBtn.disabled = !isMyTurn || maxExtraRaise <= 0;
+  document.getElementById('btn-raise').disabled = !isMyTurn || maxExtraRaise <= 0;
+  document.getElementById('btn-call').innerText = toCall > 0 ? `ตาม (${formatMoney(toCall)})` : 'เช็ค (Check)';
+
+  syncTurnTimerWithState();
+}
+
+function scheduleRender() { if (renderRafId !== null) return; renderRafId = requestAnimationFrame(() => { renderRafId = null; renderUI(); }); }
+
+// ============================================================================
+// 🌐 8. ออนไลน์
+// ============================================================================
+function syncAndRender() { if (isOnline && db) db.ref('rooms/' + roomCode).set(gameState); else scheduleRender(); }
+function createOnlineRoom() {
+  getAudioContext();
+  const myName = document.getElementById('player-name').value.trim() || (currentGoogleUser?.displayName || 'Host');
+  roomCode = Math.random().toString(36).substring(2, 6).toUpperCase(); isOnline = true; myPlayerId = 'p0'; handCounter = 0;
+  gameState = { players: [{ id: 'p0', name: myName, uid: currentGoogleUser?.uid || null, chips: STARTING_CHIPS, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '' }], deck: [], community: [], pot: 0, currentBet: 0, dealerIndex: -1, sbIndex: -1, bbIndex: -1, turnIndex: 0, stageIndex: 5, winnerId: null, logs: [], log: `ห้อง ${roomCode} สร้างแล้ว!` };
+  appendGameLog(gameState, `สร้างห้องออนไลน์รหัส ${roomCode} โดย ${myName}`);
+  document.getElementById('mode-badge').innerText = `ห้อง: ${roomCode}`;
+  document.getElementById('lobby-screen').style.display = 'none'; document.getElementById('game-screen').style.display = 'flex';
+  db.ref('rooms/' + roomCode).set(gameState); listenToRoom();
+}
+function joinOnlineRoom() {
+  getAudioContext();
+  const code = document.getElementById('room-code-input').value.trim().toUpperCase();
+  const myName = document.getElementById('player-name').value.trim() || (currentGoogleUser?.displayName || 'Guest');
+  if (!code) return alert('กรุณาใส่รหัสห้อง 4 หลัก');
+  db.ref('rooms/' + code).once('value', snap => {
+    const data = snap.val();
+    if (!data) return alert('ไม่พบห้องนี้! ตรวจสอบรหัสห้องอีกครั้ง');
+    if (data.players.length >= MAX_PLAYERS) return alert(`ห้องเต็มแล้ว (สูงสุด ${MAX_PLAYERS} คน)`);
+    if (data.stageIndex !== 5) return alert('ห้องนี้กำลังเล่นอยู่ รอจบตาก่อนนะ!');
+    roomCode = code; isOnline = true; myPlayerId = 'p' + data.players.length;
+    data.players.push({ id: myPlayerId, name: myName, uid: currentGoogleUser?.uid || null, chips: STARTING_CHIPS, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '' });
+    appendGameLog(data, `${myName} เข้าร่วมห้องแล้ว! (${data.players.length}/${MAX_PLAYERS} คน)`);
+    document.getElementById('mode-badge').innerText = `ห้อง: ${roomCode}`;
+    document.getElementById('lobby-screen').style.display = 'none'; document.getElementById('game-screen').style.display = 'flex';
+    db.ref('rooms/' + roomCode).set(data); listenToRoom();
+  });
+}
+function listenToRoom() { db.ref('rooms/' + roomCode).on('value', snap => { if (snap.exists()) { gameState = snap.val(); scheduleRender(); } }); }
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>GSHPLUS POKER - โปกเกอร์การ์ดพลัง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-felt: #165e4d;
+    --bg-felt-deep: #0a352b;
+    --bg-dark: #051c17;
+    --gold: #f5b942;
+    --gold-light: #ffe58f;
+    --card-w: 72px;
+    --card-h: 101px;
+
+    /* ยอด POT สีขาว ตัวใหญ่ ชัดเจน อยู่กลางกรอบสี่เหลี่ยมใต้คำว่า POT */
+    --pot-top: 12.6%;
+    --pot-w: 18%;
+    --pot-h: 5.5%;
+
+    /* ไพ่กองกลาง 5 ใบอยู่กึ่งกลางกรอบสีขาวพอดี */
+    --comm-top: 35.2%;
+    --comm-w: 38.5%;
+    --comm-h: 17.2%;
+
+    --seat-tl-x: 5.2%;
+    --seat-tl-y: 9.8%;
+    --seat-tl-w: 18.4%;
+    --seat-tl-h: 31.2%;
+
+    --seat-tr-x: 76.4%;
+    --seat-tr-y: 9.8%;
+    --seat-tr-w: 18.4%;
+    --seat-tr-h: 31.2%;
+
+    --seat-bl-x: 10.8%;
+    --seat-bl-y: 49.0%;
+    --seat-bl-w: 18.4%;
+    --seat-bl-h: 31.2%;
+
+    --seat-bc-x: 40.8%;
+    --seat-bc-y: 61.2%;
+    --seat-bc-w: 18.4%;
+    --seat-bc-h: 31.2%;
+
+    --seat-br-x: 70.8%;
+    --seat-br-y: 49.0%;
+    --seat-br-w: 18.4%;
+    --seat-br-h: 31.2%;
+  }
+  * {
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+    font-family: 'Kanit', sans-serif;
+  }
+  img {
+    pointer-events: none;
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+  }
+  body { margin: 0; background: var(--bg-dark); color: #fff; overflow-x: hidden; font-weight: 400; }
+
+  @keyframes dealPop {
+    0% { opacity: 0; transform: translateY(-8px) scale(0.96); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes cardFlip3D {
+    0% { transform: perspective(750px) rotateY(88deg) scale(0.96); opacity: 0.65; }
+    100% { transform: perspective(750px) rotateY(0deg) scale(1); opacity: 1; }
+  }
+  @keyframes powerFlash {
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.14); }
+    100% { filter: brightness(1); }
+  }
+  @keyframes handBadgePop {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.72; }
+  }
+
+  .anim-deal { animation: dealPop 0.24s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .anim-flash { animation: powerFlash 0.32s ease; }
+
+  .flip-slot { width: var(--card-w); height: var(--card-h); position: relative; flex-shrink: 0; perspective: 750px; }
+  .flip-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
+  .flip-inner.is-flipping { animation: cardFlip3D 0.34s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .flip-face { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); backface-visibility: hidden; }
+  .flip-front { background: #fff; color: #111; display: flex; flex-direction: column; justify-content: space-between; padding: 4px; font-weight: 700; }
+  .flip-front.custom-img { padding: 0; background: #fff; border: 1.5px solid rgba(255, 255, 255, 0.8); }
+  .flip-front.custom-img img { width: 100%; height: 100%; object-fit: fill; background: #fff; display: block; }
+  .flip-front.red { color: #d32f2f; }
+
+  .card.empty { width: var(--card-w); height: var(--card-h); border-radius: 6px; background: transparent; border: none; flex-shrink: 0; }
+  .card-top { font-size: 0.95rem; line-height: 1; font-weight: 700; }
+  .card-mid { font-size: 1.65rem; text-align: center; line-height: 1; }
+  .card-bot { font-size: 0.95rem; line-height: 1; font-weight: 700; transform: rotate(180deg); }
+
+  /* Lobby Screen */
+  #lobby-screen {
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100dvh; padding: 28px 24px 56px; text-align: center;
     background: #1b5d52;
   }
   .lobby-bg-canvas {
