@@ -34,61 +34,51 @@
 
   /* Animations */
   @keyframes dealPop {
-    0% { opacity: 0; transform: translateY(-18px) scale(0.84); }
-    75% { opacity: 1; transform: translateY(2px) scale(1.02); }
+    0% { opacity: 0; transform: translateY(-14px) scale(0.9); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
   }
-  @keyframes cardFlip3D {
-    0% { transform: perspective(900px) rotateY(-180deg) scale(0.94); }
-    65% { transform: perspective(900px) rotateY(10deg) scale(1.03); }
-    100% { transform: perspective(900px) rotateY(0deg) scale(1); }
+  @keyframes cardRevealSmooth {
+    0% { opacity: 0.35; transform: scale(0.92); }
+    100% { opacity: 1; transform: scale(1); }
   }
   @keyframes powerFlash {
-    0% { transform: scale(1); filter: brightness(1); }
-    40% { transform: scale(1.03); filter: brightness(1.25); }
-    100% { transform: scale(1); filter: brightness(1); }
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.18); }
+    100% { filter: brightness(1); }
   }
   @keyframes handBadgePop {
-    0% { transform: scale(0.96); }
-    50% { transform: scale(1.03); }
-    100% { transform: scale(1); }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.72; }
   }
 
-  .anim-deal { animation: dealPop 0.32s cubic-bezier(0.22, 1, 0.36, 1) both; }
-  .anim-flash { animation: powerFlash 0.45s ease; }
+  .anim-deal { animation: dealPop 0.28s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .anim-flash { animation: powerFlash 0.38s ease; }
 
-  /* 3D Flip Card Structure */
+  /* Card Structure (ไม่บีบสัดส่วน) */
   .flip-slot {
     width: var(--card-w);
     height: var(--card-h);
-    perspective: 900px;
     position: relative;
-    transition: transform 0.2s ease;
+    flex-shrink: 0;
   }
-  .flip-slot:hover { transform: translateY(-3px); }
   .flip-inner {
     width: 100%;
     height: 100%;
     position: relative;
-    transform-style: preserve-3d;
-    transform: perspective(900px) rotateY(0deg);
   }
   .flip-inner.is-flipping {
-    animation: cardFlip3D 0.56s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: cardRevealSmooth 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
   .flip-face {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 5px 14px rgba(0, 0, 0, 0.5);
   }
   .flip-front {
-    transform: rotateY(0deg);
     background: #fff;
     color: #111;
     display: flex;
@@ -100,17 +90,10 @@
   .flip-front.custom-img {
     padding: 0;
     background: #141414;
-    border: 1.5px solid rgba(255, 255, 255, 0.5);
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
   }
-  .flip-front.custom-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .flip-front.custom-img img { width: 100%; height: 100%; object-fit: contain; background: #fff; display: block; }
   .flip-front.red { color: #d32f2f; }
-
-  .flip-back {
-    transform: rotateY(180deg);
-    background: linear-gradient(135deg, #8e1414, #4f0707);
-    border: 1.5px solid rgba(255, 229, 143, 0.55);
-  }
-  .flip-back img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   .card.empty {
     width: var(--card-w);
@@ -118,6 +101,7 @@
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.04);
     border: 1.5px dashed rgba(255, 255, 255, 0.24);
+    flex-shrink: 0;
   }
   .card-top { font-size: 1.1rem; line-height: 1; font-weight: 700; }
   .card-mid { font-size: 2rem; text-align: center; line-height: 1; }
@@ -184,7 +168,7 @@
     padding: 4px 12px; border-radius: 14px; font-weight: 700; font-size: 0.9rem; min-width: 108px; text-align: center;
   }
   .timer-badge.danger {
-    background: rgba(211, 47, 47, 0.35); border-color: #ff6e6e; color: #ffd6d6; animation: handBadgePop 0.5s infinite;
+    background: rgba(211, 47, 47, 0.35); border-color: #ff6e6e; color: #ffd6d6; animation: handBadgePop 0.8s infinite;
   }
   .top-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
   .small-btn { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.28); color: #fff; border-radius: 8px; padding: 5px 10px; font-size: 0.84rem; cursor: pointer; font-weight: 500; }
@@ -246,31 +230,30 @@
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
   }
 
-  /* Community Cards fitted inside the center rounded box on board.png */
+  /* Community Cards fitted inside the center rounded box on board.png (ไม่บีบสัดส่วน) */
   .board-community-overlay {
     position: absolute;
     left: 50%;
     top: 44.5%;
     transform: translate(-50%, -50%);
-    width: 33.4%;
+    width: 34.4%;
     height: 19.6%;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 3.2%;
+    display: flex;
     align-items: center;
-    justify-items: center;
-    padding: 0.4%;
+    justify-content: center;
+    gap: 0.65%;
+    padding: 0.3%;
   }
   .board-community-overlay .flip-slot,
   .board-community-overlay .card.empty {
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
+    height: 96%;
+    width: auto;
+    aspect-ratio: 5 / 7;
+    max-width: 18.8%;
   }
-  .board-community-overlay .card-top { font-size: clamp(0.6rem, 0.9vw, 0.9rem); }
-  .board-community-overlay .card-mid { font-size: clamp(1rem, 1.7vw, 1.6rem); }
-  .board-community-overlay .card-bot { font-size: clamp(0.6rem, 0.9vw, 0.9rem); }
+  .board-community-overlay .card-top { font-size: clamp(0.55rem, 0.8vw, 0.82rem); }
+  .board-community-overlay .card-mid { font-size: clamp(0.9rem, 1.4vw, 1.35rem); }
+  .board-community-overlay .card-bot { font-size: clamp(0.55rem, 0.8vw, 0.82rem); }
 
   /* 5 Seat Overlays aligned to the exact 5 frames on board.png */
   .board-seat {
@@ -278,8 +261,9 @@
     width: 13.7%;
     height: 33.3%;
     border-radius: 8px;
-    transition: box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
     border: 2px solid transparent;
+    background: transparent;
+    box-shadow: none;
   }
   .board-seat.seat-top-left    { left: 5.5%;   top: 6.5%; }
   .board-seat.seat-top-right   { left: 80.8%;  top: 6.5%; }
@@ -287,15 +271,19 @@
   .board-seat.seat-bot-center  { left: 43.15%; top: 62.2%; }
   .board-seat.seat-bot-right   { left: 75.1%;  top: 50.2%; }
 
+  .board-seat.is-me-seat {
+    border-color: rgba(129, 199, 132, 0.45);
+    background: rgba(12, 64, 52, 0.22);
+  }
   .board-seat.active-turn {
     border-color: var(--gold);
     background: rgba(245, 185, 66, 0.14);
-    box-shadow: 0 0 18px rgba(245, 185, 66, 0.65);
+    box-shadow: 0 0 14px rgba(245, 185, 66, 0.55);
   }
   .board-seat.winner-seat {
     border-color: var(--gold-light);
     background: rgba(245, 185, 66, 0.24);
-    box-shadow: 0 0 24px rgba(255, 229, 143, 0.9);
+    box-shadow: 0 0 18px rgba(255, 229, 143, 0.78);
   }
   .board-seat.folded {
     opacity: 0.48;
@@ -325,16 +313,14 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.45);
+    flex-shrink: 0;
   }
-  .board-mini-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .board-mini-card img { width: 100%; height: 100%; object-fit: contain; background: #fff; display: block; }
+  .board-mini-card.back-card img { object-fit: cover; background: #5a0b0b; }
   .board-mini-card.revealed {
     background: #fff;
-    color: #111;
-    font-weight: 800;
-    font-size: clamp(0.68rem, 1.05vw, 0.98rem);
     border-color: var(--gold);
   }
-  .board-mini-card.revealed.red { color: #d32f2f; }
 
   .board-seat-name {
     position: absolute;
@@ -380,7 +366,7 @@
     top: 4%;
     right: 5%;
     z-index: 3;
-    background: rgba(0, 0, 0, 0.76);
+    background: rgba(0, 0, 0, 0.78);
     border: 1px solid rgba(255, 229, 143, 0.7);
     color: var(--gold-light);
     font-size: clamp(0.55rem, 0.78vw, 0.72rem);
@@ -419,10 +405,9 @@
   .player-area {
     background: rgba(0,0,0,0.9); border-top: 2.5px solid rgba(245,185,66,0.45);
     padding: 12px 18px 14px; display: flex; flex-direction: column; gap: 10px;
-    transition: border-color 0.22s ease, box-shadow 0.22s ease;
   }
-  .player-area.my-turn { border-top-color: var(--gold); box-shadow: 0 -4px 24px rgba(245,185,66,0.22); }
-  .player-area.winner-player { border-top-color: var(--gold-light); box-shadow: 0 -4px 28px rgba(255, 213, 79, 0.45); }
+  .player-area.my-turn { border-top-color: var(--gold); }
+  .player-area.winner-player { border-top-color: var(--gold-light); }
 
   .my-hands-row { display: flex; justify-content: center; align-items: center; gap: 28px; flex-wrap: wrap; }
   .hand-group { display: flex; flex-direction: column; align-items: center; }
@@ -1562,14 +1547,15 @@ function finishHand(winner, handName = 'ชนะบาย (คนอื่น�
 }
 
 // ============================================================================
-// 🎨 7. ระบบแสดงผลหน้าจอ + วางบน board.png + 3D Flip
+// 🎨 7. ระบบแสดงผลหน้าจอ + วางบน board.png + รูปการ์ดตอนเฉลย
 // ============================================================================
-const BOARD_SEAT_SLOTS = [
+// จัด 5 ตำแหน่งให้ตรงกรอบบน board.png โดยให้ seat-bot-center เป็นของผู้เล่นหลัก (me)
+const BOARD_SLOT_FOR_ME = 'seat-bot-center';
+const BOARD_OPPONENT_SLOTS = [
   'seat-top-left',
-  'seat-top-right',
   'seat-bot-left',
-  'seat-bot-center',
-  'seat-bot-right'
+  'seat-bot-right',
+  'seat-top-right'
 ];
 
 function fallbackCardText(imgEl, val, suit) {
@@ -1592,19 +1578,18 @@ function renderCardHTML(card, options = {}) {
         <div class="flip-face flip-front custom-img">
           <img src="${getPokerCardImagePath(card)}" alt="${card.val}${card.suit}" draggable="false" onerror="fallbackCardText(this, '${card.val}', '${card.suit}')">
         </div>
-        <div class="flip-face flip-back">
-          <img src="${POKER_CARD_BACK}" alt="back" draggable="false" onerror="tryImageCaseFallback(this, (el) => el.remove());">
-        </div>
       </div>
     </div>`;
 }
 
 function renderBoardMiniCard(card, canSee) {
   if (canSee && card) {
-    const isRed = card.suit === '♥' || card.suit === '♦';
-    return `<div class="board-mini-card revealed ${isRed ? 'red' : ''}">${card.val}${card.suit}</div>`;
+    return `
+      <div class="board-mini-card revealed">
+        <img src="${getPokerCardImagePath(card)}" alt="${card.val}${card.suit}" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.parentElement.innerHTML='<span style=\\'font-weight:800;color:#111;font-size:0.78rem;\\'>${card.val}${card.suit}</span>'; });">
+      </div>`;
   }
-  return `<div class="board-mini-card"><img src="${POKER_CARD_BACK}" alt="back" draggable="false" onerror="tryImageCaseFallback(this, (el) => el.remove());"></div>`;
+  return `<div class="board-mini-card back-card"><img src="${POKER_CARD_BACK}" alt="back" draggable="false" onerror="tryImageCaseFallback(this, (el) => el.remove());"></div>`;
 }
 
 function getFallbackSVG() {
@@ -1617,6 +1602,21 @@ function getBlindBadgeHTML(role) {
   if (role === 'SB') return '<span class="blind-badge blind-sb">SB</span>';
   if (role === 'BB') return '<span class="blind-badge blind-bb">BB</span>';
   return '';
+}
+
+function renderSeatBoxHTML(p, slotCls, options = {}) {
+  const { isMe = false, isTurn = false, isWinner = false, canSeeCards = false, isShowdown = false } = options;
+  const c0 = p.hand && p.hand[0] ? p.hand[0] : null;
+  const c1 = p.hand && p.hand[1] ? p.hand[1] : null;
+  const tagText = isWinner ? '🏆 WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : (isTurn ? 'คิด...' : '')));
+
+  return `
+    <div class="board-seat ${slotCls} ${isMe ? 'is-me-seat' : ''} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}">
+      ${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}
+      <div class="board-seat-cards">${renderBoardMiniCard(c0, canSeeCards)}${renderBoardMiniCard(c1, canSeeCards)}</div>
+      <div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}</div>
+      <div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div>
+    </div>`;
 }
 
 function renderUI() {
@@ -1654,37 +1654,39 @@ function renderUI() {
   else if (me.folded) rankBadge.innerText = 'หมอบแล้ว';
   else rankBadge.innerText = evaluateBestCards([...me.hand, ...comm]).shortName;
 
+  const oppArea = document.getElementById('opponents-area');
+  let seatsHTML = renderSeatBoxHTML(me, BOARD_SLOT_FOR_ME, {
+    isMe: true,
+    isTurn: gameState.turnIndex === myIdx && !isShowdown && !isWaiting,
+    isWinner: winnerId === me.id,
+    canSeeCards: Boolean(me.hand && me.hand.length > 0 && !me.folded),
+    isShowdown
+  });
+
   const opponents = [];
   for (let offset = 1; offset < gameState.players.length; offset++) {
     const idx = (myIdx + offset) % gameState.players.length;
     opponents.push({ player: gameState.players[idx], idx });
   }
 
-  const oppArea = document.getElementById('opponents-area');
-  oppArea.innerHTML = '';
-  BOARD_SEAT_SLOTS.forEach((slotCls, posIdx) => {
+  const peeked = me.peekedPlayers || [];
+  BOARD_OPPONENT_SLOTS.forEach((slotCls, posIdx) => {
     const item = opponents[posIdx];
     if (!item) {
-      oppArea.innerHTML += `<div class="board-seat ${slotCls}" style="opacity:0.25;"></div>`;
+      seatsHTML += `<div class="board-seat ${slotCls}" style="opacity:0.22;"></div>`;
       return;
     }
     const { player: p, idx } = item;
-    const isTurn = gameState.turnIndex === idx && gameState.stageIndex < 4;
-    const isWinner = winnerId === p.id;
-    const peeked = me.peekedPlayers || [];
-    const canSeeCards = (isShowdown && !p.folded) || peeked.includes(idx);
-    const c0 = p.hand && p.hand[0] ? p.hand[0] : null;
-    const c1 = p.hand && p.hand[1] ? p.hand[1] : null;
-    const tagText = isWinner ? '🏆 WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && gameState.stageIndex < 4) ? `ลง ${formatMoney(p.bet)}` : (isTurn ? 'คิด...' : '')));
-
-    oppArea.innerHTML += `
-      <div class="board-seat ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}">
-        ${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}
-        <div class="board-seat-cards">${renderBoardMiniCard(c0, canSeeCards)}${renderBoardMiniCard(c1, canSeeCards)}</div>
-        <div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}</div>
-        <div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div>
-      </div>`;
+    const canSeeOppCards = (isShowdown && !p.folded) || peeked.includes(idx);
+    seatsHTML += renderSeatBoxHTML(p, slotCls, {
+      isMe: false,
+      isTurn: gameState.turnIndex === idx && !isShowdown && !isWaiting,
+      isWinner: winnerId === p.id,
+      canSeeCards: canSeeOppCards,
+      isShowdown
+    });
   });
+  oppArea.innerHTML = seatsHTML;
 
   const commArea = document.getElementById('community-cards');
   const commSignature = comm.map(c => c ? `${c.val}${c.suit}` : '').join(',');
@@ -1694,7 +1696,7 @@ function renderUI() {
     let newlyIdx = 0;
     for (let i = 0; i < 5; i++) {
       const isNewlyRevealed = Boolean(comm[i]) && i >= prevCommCount && comm.length > prevCommCount;
-      const delayMs = isNewlyRevealed ? newlyIdx * 110 : 0;
+      const delayMs = isNewlyRevealed ? newlyIdx * 80 : 0;
       if (isNewlyRevealed) newlyIdx++;
       commArea.innerHTML += renderCardHTML(comm[i], { flip: isNewlyRevealed, delayMs });
     }
@@ -1705,7 +1707,7 @@ function renderUI() {
   if (handSignature !== lastRenderedHandSignature) {
     const shouldFlipHand = isNewHandStart || (!isNewHandStart && lastRenderedHandSignature !== '');
     lastRenderedHandSignature = handSignature;
-    myHandArea.innerHTML = (me.hand || []).map((c, idx) => renderCardHTML(c, { flip: shouldFlipHand, delayMs: shouldFlipHand ? idx * 120 : 0 })).join('');
+    myHandArea.innerHTML = (me.hand || []).map((c, idx) => renderCardHTML(c, { flip: shouldFlipHand, delayMs: shouldFlipHand ? idx * 80 : 0 })).join('');
   }
 
   const myPowerArea = document.getElementById('my-power-cards');
