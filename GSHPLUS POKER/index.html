@@ -214,20 +214,20 @@
   .board-pot-overlay {
     position: absolute;
     left: 50%;
-    top: 20.6%;
+    top: 17.7%;
     transform: translate(-50%, -50%);
-    width: 9.2%;
-    height: 4.8%;
+    width: 11.4%;
+    height: 5.4%;
     background: transparent;
     border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(0.8rem, 1.45vw, 1.25rem);
+    font-size: clamp(0.8rem, 1.35vw, 1.18rem);
     font-weight: 800;
     color: var(--gold-light);
     letter-spacing: 0.3px;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
   }
 
   /* Community Cards aligned to the 5 slots inside center box on board.png */
@@ -236,11 +236,11 @@
     left: 50%;
     top: 44.5%;
     transform: translate(-50%, -50%);
-    width: 31.8%;
-    height: 17.8%;
+    width: 30.4%;
+    height: 18.2%;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 1.6%;
+    gap: 1.5%;
     align-items: center;
     justify-items: center;
   }
@@ -255,11 +255,11 @@
   .board-community-overlay .card-mid { font-size: clamp(0.9rem, 1.35vw, 1.3rem); }
   .board-community-overlay .card-bot { font-size: clamp(0.55rem, 0.78vw, 0.8rem); }
 
-  /* 5 Player Frames: พื้นหลังโปร่งใส ไม่บังลาย board.png */
+  /* 5 Player Frames: จัดให้อยู่ในกรอบบน board.png พอดีตัว */
   .board-seat {
     position: absolute;
-    width: 13.4%;
-    height: 31.5%;
+    width: 12.6%;
+    height: 29.8%;
     border-radius: 10px;
     border: 1.5px solid transparent;
     background: transparent;
@@ -268,11 +268,11 @@
     flex-direction: column;
     justify-content: space-between;
   }
-  .board-seat.seat-top-left    { left: 5.7%;   top: 7.2%; }
-  .board-seat.seat-top-right   { left: 80.9%;  top: 7.2%; }
-  .board-seat.seat-bot-left    { left: 11.4%;  top: 51.2%; }
-  .board-seat.seat-bot-center  { left: 43.3%;  top: 63.0%; }
-  .board-seat.seat-bot-right   { left: 75.3%;  top: 51.2%; }
+  .board-seat.seat-top-left    { left: 6.1%;   top: 7.7%; }
+  .board-seat.seat-top-right   { left: 81.3%;  top: 7.7%; }
+  .board-seat.seat-bot-left    { left: 11.7%;  top: 51.6%; }
+  .board-seat.seat-bot-center  { left: 43.7%;  top: 63.3%; }
+  .board-seat.seat-bot-right   { left: 75.7%;  top: 51.6%; }
 
   .board-seat.active-turn {
     border-color: var(--gold);
@@ -320,15 +320,15 @@
   }
 
   .board-seat-name {
-    height: 18%;
-    min-height: 16px;
+    height: 17%;
+    min-height: 15px;
     background: rgba(0, 0, 0, 0.48);
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    font-size: clamp(0.58rem, 0.86vw, 0.82rem);
+    font-size: clamp(0.56rem, 0.82vw, 0.78rem);
     font-weight: 700;
     color: #fff;
     white-space: nowrap;
@@ -337,8 +337,8 @@
     padding: 0 4px;
   }
   .board-seat-chips {
-    height: 17%;
-    min-height: 15px;
+    height: 16%;
+    min-height: 14px;
     margin-top: 2px;
     background: rgba(0, 0, 0, 0.48);
     border-radius: 4px;
@@ -346,7 +346,7 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
-    font-size: clamp(0.56rem, 0.82vw, 0.78rem);
+    font-size: clamp(0.54rem, 0.78vw, 0.74rem);
     font-weight: 700;
     color: var(--gold-light);
     white-space: nowrap;
