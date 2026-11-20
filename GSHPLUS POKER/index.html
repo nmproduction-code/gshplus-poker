@@ -1081,28 +1081,28 @@ const POWER_CARDS_POOL = [
   },
   {
     id: 'swap',
-    name: 'สลับชะตา',
+    name: 'สลับไพ่',
     desc: 'สลับไพ่ 1 ใบแบบสุ่มบนมือคุณ กับไพ่ของเป้าหมาย 1 คน',
     image: './cards/swap.png',
     needTarget: true
   },
   {
     id: 'redraw_river',
-    name: 'พลิกกระดาน',
+    name: 'บือออ',
     desc: 'ล้างไพ่กองกลางใบล่าสุด แล้วจั่วใบใหม่จากกองมาแทน!',
     image: './cards/redraw.png',
     needTarget: false
   },
   {
     id: 'redraw_hand',
-    name: 'จั่วใหม่ยกชุด',
+    name: 'มือไม่สวย',
     desc: 'ทิ้งไพ่บนมือตัวเองทั้ง 2 ใบ แล้วจั่วใหม่จากกองทันที',
     image: './cards/mulligan.png',
     needTarget: false
   },
   {
     id: 'tax',
-    name: 'รีดไถชิป',
+    name: 'ปล้น',
     desc: 'ขโมยชิปจากคู่แข่ง 1 คน 150 ชิป เข้ากองกลางทันที',
     image: './cards/tax.png',
     needTarget: true
@@ -1116,7 +1116,7 @@ function applyPowerEffect(cardId, state, userIdx, targetIdx) {
   if (cardId === 'peek') {
     if (!user.peekedPlayers) user.peekedPlayers = [];
     user.peekedPlayers.push(targetIdx);
-    return `${user.name} ใช้ [เนตรวงแหวน] แอบส่องไพ่ของ ${target.name}!`;
+    return `${user.name} ใช้ [ขอดูหน่อย] แอบส่องไพ่ของ ${target.name}!`;
   }
   if (cardId === 'swap') {
     const myIdx = Math.floor(Math.random() * 2);
@@ -1124,19 +1124,19 @@ function applyPowerEffect(cardId, state, userIdx, targetIdx) {
     const temp = user.hand[myIdx];
     user.hand[myIdx] = target.hand[opIdx];
     target.hand[opIdx] = temp;
-    return `${user.name} ใช้ [สลับชะตา] สลับไพ่กับ ${target.name}!`;
+    return `${user.name} ใช้ [สลับไพ่] สลับไพ่กับ ${target.name}!`;
   }
   if (cardId === 'redraw_river') {
     if (state.community && state.community.length > 0 && state.deck && state.deck.length > 0) {
       state.community[state.community.length - 1] = state.deck.pop();
-      return `${user.name} ใช้ [พลิกกระดาน] เปลี่ยนไพ่กองกลางใบล่าสุด!`;
+      return `${user.name} ใช้ [บือออ] เปลี่ยนไพ่กองกลางใบล่าสุด!`;
     }
-    return `${user.name} ใช้ [พลิกกระดาน] แต่ยังไม่มีไพ่กองกลางให้เปลี่ยน!`;
+    return `${user.name} ใช้ [บือออ] แต่ยังไม่มีไพ่กองกลางให้เปลี่ยน!`;
   }
   if (cardId === 'redraw_hand') {
     if (state.deck && state.deck.length >= 2) {
       user.hand = [state.deck.pop(), state.deck.pop()];
-      return `${user.name} ใช้ [จั่วใหม่ยกชุด] เปลี่ยนไพ่ในมือใหม่ทั้งหมด!`;
+      return `${user.name} ใช้ [มือไม่สวย] เปลี่ยนไพ่ในมือใหม่ทั้งหมด!`;
     }
     return `ไพ่ในกองไม่พอจั่วใหม่!`;
   }
@@ -1144,7 +1144,7 @@ function applyPowerEffect(cardId, state, userIdx, targetIdx) {
     const steal = Math.min(150, target.chips);
     target.chips -= steal;
     state.pot += steal;
-    return `${user.name} ใช้ [รีดไถชิป] ดึงเงิน ${target.name} ${formatMoney(steal)} ชิป ลงกองกลาง!`;
+    return `${user.name} ใช้ [ปล้น] ดึงเงิน ${target.name} ${formatMoney(steal)} ชิป ลงกองกลาง!`;
   }
   return '';
 }
