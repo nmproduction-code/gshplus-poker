@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>GSHPLUS POKER - โปกเกอร์การ์ดพลัง</title>
+<title>POWER POKER - โปกเกอร์การ์ดพลัง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -66,7 +66,7 @@
   .logo { font-size: 3rem; font-weight: 800; color: var(--gold); text-shadow: 0 4px 16px rgba(0,0,0,0.65); margin-bottom: 6px; letter-spacing: 0.5px; }
   .subtitle { color: #b9f6ca; margin-bottom: 24px; font-size: 1.08rem; font-weight: 400; }
   .panel { background: rgba(0,0,0,0.68); border: 2px solid rgba(245,185,66,0.35); border-radius: 20px; padding: 24px; width: 100%; max-width: 460px; box-shadow: 0 14px 36px rgba(0,0,0,0.6); }
-  input { width: 100%; padding: 13px; border-radius: 10px; border: 1px solid #43a047; background: #092c1a; color: #fff; font-size: 1.02rem; font-weight: 500; margin-bottom: 12px; text-align: center; }
+  input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #43a047; background: #092c1a; color: #fff; font-size: 1rem; font-weight: 500; margin-bottom: 12px; text-align: center; }
   .btn { width: 100%; padding: 13px; border: none; border-radius: 12px; font-size: 1.02rem; font-weight: 700; cursor: pointer; transition: 0.18s; margin-bottom: 10px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
   .btn-gold { background: linear-gradient(135deg, #ffd54f, #d48806); color: #1a1100; }
   .btn-gold:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-2px); }
@@ -76,8 +76,6 @@
   .btn-blue:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-2px); }
   .btn-red { background: #c62828; color: #fff; }
   .btn-red:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-2px); }
-  .btn-google { background: #ffffff; color: #1f2937; border: 1px solid #d1d5db; }
-  .btn-google:hover:not(:disabled) { background: #f3f4f6; transform: translateY(-2px); }
   .btn-ghost { background: rgba(255,255,255,0.1); color: #e5e7eb; border: 1px solid rgba(255,255,255,0.22); }
   .btn-ghost:hover:not(:disabled) { background: rgba(255,255,255,0.18); }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
@@ -338,9 +336,9 @@
   .quick-bet-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .raise-box .btn-gold { flex: 1; padding: 10px 12px; font-size: 0.98rem; }
 
-  /* Modal & Drawers */
+  /* Modal & Admin */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
-  .modal-box { background: #102e1e; border: 2px solid var(--gold); border-radius: 16px; padding: 22px; max-width: 480px; width: 100%; text-align: center; max-height: 85vh; display: flex; flex-direction: column; }
+  .modal-box { background: #102e1e; border: 2px solid var(--gold); border-radius: 16px; padding: 22px; max-width: 560px; width: 100%; text-align: center; max-height: 88vh; display: flex; flex-direction: column; }
   .target-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; overflow-y: auto; text-align: left; }
 
   .log-history-list {
@@ -366,6 +364,30 @@
   .lb-name { font-weight: 600; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .lb-sub { font-size: 0.76rem; color: #a5d6a7; }
   .lb-score { font-weight: 700; color: var(--gold-light); font-size: 0.92rem; white-space: nowrap; }
+
+  .admin-tabs { display: flex; gap: 6px; margin: 10px 0; flex-wrap: wrap; }
+  .admin-tab-btn {
+    flex: 1; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(245,185,66,0.4);
+    background: rgba(255,255,255,0.08); color: #fff; font-weight: 600; font-size: 0.88rem; cursor: pointer;
+  }
+  .admin-tab-btn.active { background: var(--gold); color: #140d00; }
+  .admin-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+  .admin-stat-box { background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 8px; }
+  .admin-stat-num { font-size: 1.15rem; font-weight: 700; color: var(--gold-light); }
+  .admin-stat-lbl { font-size: 0.76rem; color: #a5d6a7; }
+  .admin-item-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 8px 10px; border-radius: 10px; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1); font-size: 0.86rem;
+  }
+  .mini-danger-btn {
+    background: #c62828; color: #fff; border: none; border-radius: 7px;
+    padding: 5px 10px; font-size: 0.78rem; font-weight: 600; cursor: pointer;
+  }
+  .mini-gold-btn {
+    background: var(--gold); color: #140d00; border: none; border-radius: 7px;
+    padding: 5px 10px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+  }
 
   @media (max-width: 640px) {
     :root { --card-w: 76px; --card-h: 108px; }
@@ -396,7 +418,7 @@
 
 <!-- ==================== 1. หน้าล็อบบี้ ==================== -->
 <div id="lobby-screen">
-  <div class="logo">♠️ GSHPLUS POKER ♥️</div>
+  <div class="logo">♠️ POWER POKER ♥️</div>
   <div class="subtitle">โปกเกอร์สายปั่น + การ์ดพลังพิเศษ (รอบวง 6 คน)</div>
   
   <div class="panel">
@@ -415,7 +437,10 @@
     <input type="text" id="player-name" placeholder="ใส่ชื่อเล่นของคุณ..." maxlength="16" value="Player 1">
     
     <button class="btn btn-gold" onclick="startSoloBotMode()">🤖 เล่นโหมดทดสอบ (สู้กับบอท 5 ตัว)</button>
-    <button class="btn btn-ghost" onclick="openLeaderboardModal()">🏆 ดูตารางอันดับ Leaderboard</button>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-ghost" style="margin-bottom:0;" onclick="openLeaderboardModal()">🏆 Leaderboard</button>
+      <button class="btn btn-ghost" id="btn-open-admin" style="display:none; margin-bottom:0; border-color:var(--gold); color:var(--gold-light);" onclick="openAdminModal()">🛠️ หลังบ้าน</button>
+    </div>
     
     <hr style="border-color: rgba(255,255,255,0.15); margin: 16px 0;">
     <div style="font-size: 0.92rem; color: #a5d6a7; margin-bottom: 10px; font-weight: 500;">🟢 เชื่อมต่อ Firebase ออนไลน์พร้อมใช้งานแล้ว!</div>
@@ -438,6 +463,7 @@
     <div class="top-actions">
       <button class="small-btn" onclick="openLogModal()">📜 ประวัติ Log (<span id="log-count-badge">0</span>)</button>
       <button class="small-btn" onclick="openLeaderboardModal()">🏆 Leaderboard</button>
+      <button class="small-btn" id="btn-top-admin" style="display:none; border-color:var(--gold); color:var(--gold-light);" onclick="openAdminModal()">🛠️ หลังบ้าน</button>
       <button class="small-btn" id="btn-sound" onclick="toggleSound()">🔊 เสียง: เปิด</button>
       <button class="small-btn" onclick="location.reload()">ออก</button>
     </div>
@@ -451,7 +477,7 @@
     <div class="table-oval" id="table-oval">
       <div class="pot-box">💰 ยอดเงินกองกลาง (POT): <span id="pot-amount">0</span> ชิป</div>
       <div class="community-cards" id="community-cards"></div>
-      <div class="log-banner" id="game-log">ยินดีต้อนรับสู่ GSHPLUS POKER!</div>
+      <div class="log-banner" id="game-log">ยินดีต้อนรับสู่ Power Poker!</div>
     </div>
   </div>
 
@@ -520,6 +546,39 @@
       <div style="text-align:center; color:#ccc; padding:12px;">กำลังโหลดอันดับ...</div>
     </div>
     <button class="btn btn-gold" style="margin-bottom:0;" onclick="closeLeaderboardModal()">ปิดหน้าต่าง</button>
+  </div>
+</div>
+
+<!-- Modal ระบบหลังบ้าน (Admin Dashboard) -->
+<div class="modal-overlay" id="admin-modal">
+  <div class="modal-box">
+    <h3 style="color:var(--gold); margin:0 0 4px; font-size:1.25rem; font-weight:700;">🛠️ ระบบหลังบ้าน (Admin Dashboard)</h3>
+    <div style="font-size:0.82rem; color:#a5d6a7;">จัดการห้องออนไลน์ ตารางคะแนน และบันทึกแอดมิน</div>
+
+    <div class="admin-stats-grid">
+      <div class="admin-stat-box">
+        <div class="admin-stat-num" id="admin-rooms-count">0</div>
+        <div class="admin-stat-lbl">ห้องออนไลน์</div>
+      </div>
+      <div class="admin-stat-box">
+        <div class="admin-stat-num" id="admin-players-count">0</div>
+        <div class="admin-stat-lbl">ผู้เล่นในระบบ</div>
+      </div>
+      <div class="admin-stat-box">
+        <div class="admin-stat-num" id="admin-logs-count">0</div>
+        <div class="admin-stat-lbl">บันทึกระบบ</div>
+      </div>
+    </div>
+
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" id="tab-admin-rooms" onclick="switchAdminTab('rooms')">ห้องออนไลน์</button>
+      <button class="admin-tab-btn" id="tab-admin-lb" onclick="switchAdminTab('leaderboard')">Leaderboard</button>
+      <button class="admin-tab-btn" id="tab-admin-logs" onclick="switchAdminTab('logs')">Admin Log</button>
+    </div>
+
+    <div class="target-list" id="admin-content-list" style="max-height:280px;"></div>
+
+    <button class="btn btn-gold" style="margin-bottom:0;" onclick="closeAdminModal()">ปิดหลังบ้าน</button>
   </div>
 </div>
 
@@ -639,20 +698,38 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
 
+// ใส่อีเมล Google ของผู้ดูแลระบบที่ต้องการให้เห็นปุ่ม "หลังบ้าน"
+const ADMIN_EMAILS = [
+  "your-admin-email@gmail.com"
+];
+
 let currentGoogleUser = null;
+let isAdminUser = false;
+let activeAdminTab = 'rooms';
+
+function checkIsAdmin(user) {
+  if (!user || !user.email) return false;
+  return ADMIN_EMAILS.map(e => e.toLowerCase()).includes(user.email.toLowerCase());
+}
 
 function updateGoogleAuthUI(user) {
   currentGoogleUser = user || null;
+  isAdminUser = checkIsAdmin(user);
+
   const nameEl = document.getElementById('google-display-name');
   const subEl = document.getElementById('google-status-sub');
   const avatarEl = document.getElementById('google-avatar');
   const authBtn = document.getElementById('btn-google-auth');
   const playerNameInput = document.getElementById('player-name');
+  const lobbyAdminBtn = document.getElementById('btn-open-admin');
+  const topAdminBtn = document.getElementById('btn-top-admin');
 
   if (user) {
     const cleanName = (user.displayName || 'Google Player').slice(0, 16);
     nameEl.innerText = cleanName;
-    subEl.innerText = 'ล็อกอิน Google แล้ว • พร้อมบันทึก Leaderboard';
+    subEl.innerText = isAdminUser
+      ? 'ล็อกอิน Google แล้ว • สิทธิ์แอดมิน (Admin)'
+      : 'ล็อกอิน Google แล้ว • พร้อมบันทึก Leaderboard';
     if (user.photoURL) avatarEl.src = user.photoURL;
     authBtn.innerText = 'ออกจากระบบ';
     if (playerNameInput && (playerNameInput.value === 'Player 1' || !playerNameInput.value.trim())) {
@@ -664,6 +741,9 @@ function updateGoogleAuthUI(user) {
     subEl.innerText = 'ล็อกอินเพื่อเก็บสถิติขึ้น Leaderboard';
     authBtn.innerText = 'ล็อกอิน Google';
   }
+
+  if (lobbyAdminBtn) lobbyAdminBtn.style.display = isAdminUser ? 'inline-flex' : 'none';
+  if (topAdminBtn) topAdminBtn.style.display = isAdminUser ? 'inline-block' : 'none';
 }
 
 auth.onAuthStateChanged((user) => {
@@ -681,6 +761,151 @@ async function toggleGoogleLogin() {
   } catch (err) {
     alert('ล็อกอิน Google ไม่สำเร็จ: ' + (err?.message || 'โปรดลองอีกครั้ง'));
   }
+}
+
+// ============================================================================
+// 🛠️ 1.2 ระบบหลังบ้าน (Admin Dashboard)
+// ============================================================================
+function writeAdminAuditLog(actionText) {
+  if (!db) return;
+  const actor = currentGoogleUser?.email || 'Admin';
+  db.ref('adminLogs').push({
+    time: formatTimeNow(),
+    actor,
+    text: actionText,
+    ts: Date.now()
+  });
+}
+
+function openAdminModal() {
+  if (!isAdminUser) {
+    alert('สำหรับบัญชีแอดมินเท่านั้นครับ');
+    return;
+  }
+  document.getElementById('admin-modal').style.display = 'flex';
+  refreshAdminData();
+}
+
+function closeAdminModal() {
+  document.getElementById('admin-modal').style.display = 'none';
+}
+
+function switchAdminTab(tab) {
+  activeAdminTab = tab;
+  document.getElementById('tab-admin-rooms').classList.toggle('active', tab === 'rooms');
+  document.getElementById('tab-admin-lb').classList.toggle('active', tab === 'leaderboard');
+  document.getElementById('tab-admin-logs').classList.toggle('active', tab === 'logs');
+  refreshAdminData();
+}
+
+function refreshAdminData() {
+  if (!isAdminUser || !db) return;
+  const listEl = document.getElementById('admin-content-list');
+  listEl.innerHTML = '<div style="text-align:center; color:#ccc; padding:10px;">กำลังโหลดข้อมูลหลังบ้าน...</div>';
+
+  Promise.all([
+    db.ref('rooms').once('value'),
+    db.ref('leaderboard').once('value'),
+    db.ref('adminLogs').limitToLast(40).once('value')
+  ]).then(([roomsSnap, lbSnap, logsSnap]) => {
+    const rooms = [];
+    roomsSnap.forEach(c => rooms.push({ code: c.key, ...c.val() }));
+
+    const players = [];
+    lbSnap.forEach(c => players.push({ uid: c.key, ...c.val() }));
+    players.sort((a, b) => (b.chips || 0) - (a.chips || 0));
+
+    const logs = [];
+    logsSnap.forEach(c => logs.push({ id: c.key, ...c.val() }));
+    logs.reverse();
+
+    document.getElementById('admin-rooms-count').innerText = rooms.length;
+    document.getElementById('admin-players-count').innerText = players.length;
+    document.getElementById('admin-logs-count').innerText = logs.length;
+
+    if (activeAdminTab === 'rooms') {
+      if (rooms.length === 0) {
+        listEl.innerHTML = '<div style="text-align:center; color:#aaa; padding:12px;">ไม่มีห้องออนไลน์ที่เปิดอยู่</div>';
+        return;
+      }
+      listEl.innerHTML = rooms.map(r => {
+        const pCount = Array.isArray(r.players) ? r.players.length : 0;
+        const stg = STAGES[r.stageIndex] || 'WAITING';
+        return `
+          <div class="admin-item-row">
+            <div>
+              <div style="font-weight:700; color:var(--gold-light);">ห้อง ${r.code} (${stg})</div>
+              <div style="font-size:0.78rem; color:#a5d6a7;">ผู้เล่น ${pCount}/6 คน • Pot ${formatMoney(r.pot || 0)}</div>
+            </div>
+            <button class="mini-danger-btn" onclick="adminDeleteRoom('${r.code}')">ลบห้อง</button>
+          </div>
+        `;
+      }).join('');
+    } else if (activeAdminTab === 'leaderboard') {
+      if (players.length === 0) {
+        listEl.innerHTML = '<div style="text-align:center; color:#aaa; padding:12px;">ยังไม่มีข้อมูล Leaderboard</div>';
+        return;
+      }
+      listEl.innerHTML = players.map(p => `
+        <div class="admin-item-row">
+          <div>
+            <div style="font-weight:700;">${p.name || 'Player'}</div>
+            <div style="font-size:0.78rem; color:#a5d6a7;">💰 ${formatMoney(p.chips || 0)} • ชนะ ${Number(p.wins || 0)}</div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="mini-gold-btn" onclick="adminAdjustChips('${p.uid}', '${(p.name || '').replace(/'/g, '')}', ${Number(p.chips || 0)})">+500</button>
+            <button class="mini-danger-btn" onclick="adminResetUser('${p.uid}', '${(p.name || '').replace(/'/g, '')}')">รีเซ็ต</button>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      if (logs.length === 0) {
+        listEl.innerHTML = '<div style="text-align:center; color:#aaa; padding:12px;">ยังไม่มีประวัติแอดมิน</div>';
+        return;
+      }
+      listEl.innerHTML = `
+        <button class="mini-danger-btn" style="align-self:flex-end; margin-bottom:4px;" onclick="adminClearLogs()">ล้าง Admin Log</button>
+        ${logs.map(l => `
+          <div class="log-item">
+            <span class="log-time">[${l.time || '--:--:--'}]</span>
+            <span>${l.text || ''}</span>
+          </div>
+        `).join('')}
+      `;
+    }
+  });
+}
+
+function adminDeleteRoom(code) {
+  if (!isAdminUser || !code) return;
+  db.ref('rooms/' + code).remove().then(() => {
+    writeAdminAuditLog(`ลบห้องออนไลน์รหัส ${code}`);
+    refreshAdminData();
+  });
+}
+
+function adminAdjustChips(uid, name, currentChips) {
+  if (!isAdminUser || !uid) return;
+  const nextChips = (Number(currentChips) || 0) + 500;
+  db.ref('leaderboard/' + uid).update({ chips: nextChips, updatedAt: Date.now() }).then(() => {
+    writeAdminAuditLog(`เพิ่มชิป +500 ให้ ${name} (เป็น ${formatMoney(nextChips)})`);
+    refreshAdminData();
+  });
+}
+
+function adminResetUser(uid, name) {
+  if (!isAdminUser || !uid) return;
+  db.ref('leaderboard/' + uid).update({ chips: 1000, wins: 0, updatedAt: Date.now() }).then(() => {
+    writeAdminAuditLog(`รีเซ็ตสถิติ Leaderboard ของ ${name}`);
+    refreshAdminData();
+  });
+}
+
+function adminClearLogs() {
+  if (!isAdminUser) return;
+  db.ref('adminLogs').remove().then(() => {
+    refreshAdminData();
+  });
 }
 
 // ============================================================================
@@ -1571,7 +1796,6 @@ function renderUI() {
     `;
   });
 
-  // ไพ่กองกลาง: วาดใหม่และเล่นแอนิเมชันเฉพาะเมื่อจำนวนไพ่กองกลางเปลี่ยนหรือเริ่มตาใหม่
   const commArea = document.getElementById('community-cards');
   const commSignature = comm.map(c => c ? `${c.val}${c.suit}` : '').join(',');
   if (isNewHandStart || comm.length !== prevCommCount || commArea.dataset.sig !== commSignature) {
@@ -1583,7 +1807,6 @@ function renderUI() {
     }
   }
 
-  // ไพ่ในมือ: วาดใหม่เฉพาะเมื่อไพ่บนมือเปลี่ยนจริง
   const myHandArea = document.getElementById('my-poker-cards');
   const handSignature = (me.hand || []).map(c => c ? `${c.val}${c.suit}` : '').join(',');
   if (handSignature !== lastRenderedHandSignature) {
@@ -1592,7 +1815,6 @@ function renderUI() {
     myHandArea.innerHTML = (me.hand || []).map(c => renderCardHTML(c, isNewHandStart || handChangedDuringRound)).join('');
   }
 
-  // การ์ดพลัง: วาดโครงสร้างใหม่เฉพาะเมื่อชุดการ์ดเปลี่ยน ส่วนตอนใช้การ์ดให้อัปเดตคลาส used โดยไม่ทำให้ใบอื่นกระพริบ
   const myPowerArea = document.getElementById('my-power-cards');
   const powerList = me.powerCards || [];
   const powerIdsSignature = powerList.map(pc => pc.uid).join(',');
