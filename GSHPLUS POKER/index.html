@@ -299,6 +299,17 @@
     padding: 1px 8px; border-radius: 999px; line-height: 1.3; flex-shrink: 0;
     box-shadow: 0 0 10px rgba(255, 229, 143, 0.9), 0 0 16px rgba(245, 185, 66, 0.65);
   }
+  .shield-badge {
+    background: linear-gradient(135deg, #4fc3f7, #0288d1);
+    color: #fff;
+    font-size: clamp(0.56rem, 0.78vw, 0.76rem);
+    font-weight: 800;
+    padding: 1px 7px;
+    border-radius: 999px;
+    line-height: 1.25;
+    flex-shrink: 0;
+    box-shadow: 0 0 8px rgba(79, 195, 247, 0.8);
+  }
 
   .blind-badge { display: inline-block; padding: 0 6px; border-radius: 4px; font-size: 0.74em; font-weight: 800; line-height: 1.3; flex-shrink: 0; }
   .blind-d { background: #ffd54f; color: #1a1100; box-shadow: 0 0 8px rgba(255, 213, 79, 0.8); }
@@ -357,8 +368,8 @@
   .cards-row { display: flex; gap: 10px; align-items: center; justify-content: center; }
 
   .power-card { width: var(--card-w); height: var(--card-h); border-radius: 8px; background: #14082b; border: 2px solid #b388ff; color: #fff; padding: 0; cursor: pointer; position: relative; overflow: hidden; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.6); }
-  .power-card:hover:not(.used) { transform: translateY(-4px) scale(1.03); border-color: var(--gold-light); box-shadow: 0 0 14px rgba(255, 229, 143, 0.8); }
-  .power-card.used { opacity: 0.35; pointer-events: none; filter: grayscale(1); }
+  .power-card:hover:not(.used):not(.locked) { transform: translateY(-4px) scale(1.03); border-color: var(--gold-light); box-shadow: 0 0 14px rgba(255, 229, 143, 0.8); }
+  .power-card.used, .power-card.locked { opacity: 0.35; pointer-events: none; filter: grayscale(1); }
   .power-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .power-card .p-title { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 4px 3px; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.45) 65%, transparent 100%); font-size: 0.74rem; font-weight: 700; text-align: center; color: #fff; line-height: 1.1; }
   .power-card .p-badge {
@@ -1026,24 +1037,115 @@ function tryImageCaseFallback(imgEl, onFinalFail) {
 }
 
 // ============================================================================
-// ⚡ 3. การ์ดพลังพิเศษ
+// ⚡ 3. การ์ดพลังพิเศษ (11 ใบ)
 // ============================================================================
 const POWER_CARDS_POOL = [
   { id: 'peek', name: 'แง้ม', desc: 'แอบดูไพ่บนมือของคู่แข่ง 1 คนตลอดทั้งตานี้', image: './cards/peek.png', needTarget: true },
   { id: 'swap', name: 'สลับไพ่', desc: 'สลับไพ่ 1 ใบแบบสุ่มบนมือคุณ กับไพ่ของเป้าหมาย 1 คน', image: './cards/swap.png', needTarget: true },
   { id: 'redraw_river', name: 'บือออ', desc: 'ล้างไพ่กองกลางใบล่าสุด แล้วจั่วใบใหม่จากกองมาแทน!', image: './cards/redraw.png', needTarget: false },
   { id: 'redraw_hand', name: 'มือไม่สวย', desc: 'ทิ้งไพ่บนมือตัวเองทั้ง 2 ใบ แล้วจั่วใหม่จากกองทันที', image: './cards/mulligan.png', needTarget: false },
-  { id: 'tax', name: 'ปล้น', desc: 'ขโมยชิปจากคู่แข่ง 1 คน 150 ชิป เข้ากองกลางทันที', image: './cards/tax.png', needTarget: true }
+  { id: 'tax', name: 'ปล้น', desc: 'ขโมยชิปจากคู่แข่ง 1 คน 150 ชิป เข้ากองกลางทันที', image: './cards/tax.png', needTarget: true },
+  { id: 'burn_board', name: 'เบิร์นกองกลาง', desc: 'เผาไพ่กองกลางใบแรกสุดทิ้ง แล้วจั่วใบใหม่จากกองมาแทน!', image: './cards/burn_board.png', needTarget: false },
+  { id: 'force_fold', name: 'บังคับหมอบ', desc: 'บังคับคู่แข่ง 1 คนในรอบนี้ให้หมอบทันที!', image: './cards/force_fold.png', needTarget: true },
+  { id: 'reset_bet', name: 'รีเซ็ตยอดเกทับ', desc: 'ล้างยอดเกทับรอบนี้ของทุกคนกลับเป็น 0 เช็คกันใหม่ได้!', image: './cards/reset_bet.png', needTarget: false },
+  { id: 'siphon', name: 'ดูดชิป', desc: 'ดูดชิปจากคู่แข่งทุกคน คนละ 100 ชิป เข้ากองกลาง!', image: './cards/siphon.png', needTarget: false },
+  { id: 'shield', name: 'ป้องกัน', desc: 'ป้องกันการ์ดเอฟเฟคได้ 1 ตา แต่จะมีคนใช้สกิลได้แค่ 1 คนบนโต๊ะ!', image: './cards/shield.png', needTarget: false, allowSelfTarget: false },
+  { id: 'discard_one', name: 'ใบเดียวพอ', desc: 'ใช้กับคนไหนก็ได้ให้ทิ้งไพ่ 1 ใบ แต่ต้องให้คนถือใบทิ้งออกทันที!', image: './cards/discard_one.png', needTarget: true, allowSelfTarget: true }
 ];
+
+function isTargetProtectedByShield(state, userIdx, targetIdx) {
+  if (targetIdx === null || targetIdx === undefined || targetIdx === userIdx) return false;
+  const target = state.players[targetIdx];
+  return Boolean(target && target.shieldActive);
+}
+
+function discardRandomHandCard(state, player) {
+  if (!player || !Array.isArray(player.hand) || player.hand.length === 0) return null;
+  const idx = Math.floor(Math.random() * player.hand.length);
+  const [removed] = player.hand.splice(idx, 1);
+  if (!Array.isArray(state.discardPile)) state.discardPile = [];
+  if (removed) state.discardPile.push(removed);
+  return removed;
+}
 
 function applyPowerEffect(cardId, state, userIdx, targetIdx) {
   const user = state.players[userIdx];
-  const target = targetIdx !== null ? state.players[targetIdx] : null;
+  const target = (targetIdx !== null && targetIdx !== undefined) ? state.players[targetIdx] : null;
+
+  if (cardId === 'shield') {
+    if (state.shieldUserId && state.shieldUserId !== user.id) {
+      return `${user.name} พยายามใช้ [ป้องกัน] แต่ตานี้มีคนใช้สกิลป้องกันไปแล้ว!`;
+    }
+    user.shieldActive = true;
+    state.shieldUserId = user.id;
+    return `${user.name} เปิดใช้ [ป้องกัน] ป้องกันการ์ดเอฟเฟค 1 ตา! (สิทธิ์ป้องกันของโต๊ะนี้ถูกใช้แล้ว)`;
+  }
+
+  if (cardId === 'discard_one') {
+    if (!target) return `${user.name} ใช้ [ใบเดียวพอ] แต่ไม่พบเป้าหมาย!`;
+    if (isTargetProtectedByShield(state, userIdx, targetIdx)) {
+      return `🛡️ ${target.name} มีโล่ [ป้องกัน] บล็อกสกิล [ใบเดียวพอ] ของ ${user.name} สำเร็จ!`;
+    }
+    const discarded = discardRandomHandCard(state, target);
+    if (!discarded) {
+      return `${user.name} ใช้ [ใบเดียวพอ] ใส่ ${target.name} แต่ไม่มีไพ่บนมือให้ทิ้ง!`;
+    }
+    return `${user.name} ใช้ [ใบเดียวพอ] บังคับให้ ${target.name} ทิ้งไพ่ ${discarded.val}${discarded.suit} 1 ใบทันที!`;
+  }
+
+  if (isTargetProtectedByShield(state, userIdx, targetIdx)) {
+    return `🛡️ ${target.name} มีโล่ [ป้องกัน] ป้องกันเอฟเฟคของ ${user.name} ได้ตลอดตานี้!`;
+  }
+
   if (cardId === 'peek') { if (!user.peekedPlayers) user.peekedPlayers = []; user.peekedPlayers.push(targetIdx); return `${user.name} ใช้ [แง้ม] แอบส่องไพ่ของ ${target.name}!`; }
-  if (cardId === 'swap') { const myIdx = Math.floor(Math.random() * 2); const opIdx = Math.floor(Math.random() * 2); const temp = user.hand[myIdx]; user.hand[myIdx] = target.hand[opIdx]; target.hand[opIdx] = temp; return `${user.name} ใช้ [สลับไพ่] สลับไพ่กับ ${target.name}!`; }
+  if (cardId === 'swap') {
+    if (!user.hand || !target.hand || user.hand.length === 0 || target.hand.length === 0) return `${user.name} ใช้ [สลับไพ่] แต่ไพ่บนมือไม่พอสลับ!`;
+    const myIdx = Math.floor(Math.random() * user.hand.length);
+    const opIdx = Math.floor(Math.random() * target.hand.length);
+    const temp = user.hand[myIdx]; user.hand[myIdx] = target.hand[opIdx]; target.hand[opIdx] = temp;
+    return `${user.name} ใช้ [สลับไพ่] สลับไพ่กับ ${target.name}!`;
+  }
   if (cardId === 'redraw_river') { if (state.community && state.community.length > 0 && state.deck && state.deck.length > 0) { state.community[state.community.length - 1] = state.deck.pop(); return `${user.name} ใช้ [บือออ] เปลี่ยนไพ่กองกลางใบล่าสุด!`; } return `${user.name} ใช้ [บือออ] แต่ยังไม่มีไพ่กองกลางให้เปลี่ยน!`; }
   if (cardId === 'redraw_hand') { if (state.deck && state.deck.length >= 2) { user.hand = [state.deck.pop(), state.deck.pop()]; return `${user.name} ใช้ [มือไม่สวย] เปลี่ยนไพ่ในมือใหม่ทั้งหมด!`; } return `ไพ่ในกองไม่พอจั่วใหม่!`; }
   if (cardId === 'tax') { const steal = Math.min(150, target.chips); target.chips -= steal; state.pot += steal; return `${user.name} ใช้ [ปล้น] ดึงเงิน ${target.name} ${formatMoney(steal)} ชิป ลงกองกลาง!`; }
+  if (cardId === 'burn_board') {
+    if (state.community && state.community.length > 0 && state.deck && state.deck.length > 0) {
+      const burned = state.community[0];
+      state.community[0] = state.deck.pop();
+      return `${user.name} ใช้ [เบิร์นกองกลาง] เผาไพ่ใบแรก (${burned.val}${burned.suit}) แล้วเปิดใบใหม่!`;
+    }
+    return `${user.name} ใช้ [เบิร์นกองกลาง] แต่ยังไม่มีไพ่กองกลางให้เผา!`;
+  }
+  if (cardId === 'force_fold') {
+    if (target && !target.folded) {
+      target.folded = true;
+      return `${user.name} ใช้ [บังคับหมอบ] สั่งให้ ${target.name} หมอบทันที!`;
+    }
+    return `${user.name} ใช้ [บังคับหมอบ] แต่เป้าหมายหมอบไปแล้ว!`;
+  }
+  if (cardId === 'reset_bet') {
+    state.players.forEach(p => { p.bet = 0; });
+    state.currentBet = 0;
+    return `${user.name} ใช้ [รีเซ็ตยอดเกทับ] ล้างยอดเกทับรอบนี้ของทุกคนเป็น 0!`;
+  }
+  if (cardId === 'siphon') {
+    let totalDrained = 0;
+    let blockedCount = 0;
+    state.players.forEach((p, idx) => {
+      if (idx !== userIdx && !p.folded && p.chips > 0) {
+        if (p.shieldActive) {
+          blockedCount++;
+          return;
+        }
+        const drain = Math.min(100, p.chips);
+        p.chips -= drain;
+        totalDrained += drain;
+      }
+    });
+    state.pot = (state.pot || 0) + totalDrained;
+    const shieldNote = blockedCount > 0 ? ` (มีผู้ป้องกัน ${blockedCount} คน)` : '';
+    return `${user.name} ใช้ [ดูดชิป] ดูดชิปคู่แข่งรวม ${formatMoney(totalDrained)} ชิป เข้ากองกลาง!${shieldNote}`;
+  }
   return '';
 }
 
@@ -1116,9 +1218,9 @@ function startSoloBotMode() {
   getAudioContext(); isOnline = false; handCounter = 0;
   const myName = document.getElementById('player-name').value.trim() || (currentGoogleUser?.displayName || 'คุณ');
   const botNames = ['บอทสมชาย', 'บอทเจ๊ไฝ', 'บอทเสี่ยช้าง', 'บอทน้องแพรว'];
-  let players = [{ id: 'p0', name: myName, chips: STARTING_CHIPS, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '' }];
-  botNames.forEach((bName, idx) => players.push({ id: 'p' + (idx + 1), name: bName, chips: STARTING_CHIPS, isBot: true, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '' }));
-  gameState = { players, deck: [], community: [], pot: 0, currentBet: 0, dealerIndex: -1, sbIndex: -1, bbIndex: -1, turnIndex: 0, stageIndex: 0, winnerId: null, logs: [], log: 'เริ่มเกม 5 คน!' };
+  let players = [{ id: 'p0', name: myName, chips: STARTING_CHIPS, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '', shieldActive: false }];
+  botNames.forEach((bName, idx) => players.push({ id: 'p' + (idx + 1), name: bName, chips: STARTING_CHIPS, isBot: true, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '', shieldActive: false }));
+  gameState = { players, deck: [], community: [], discardPile: [], shieldUserId: null, pot: 0, currentBet: 0, dealerIndex: -1, sbIndex: -1, bbIndex: -1, turnIndex: 0, stageIndex: 0, winnerId: null, logs: [], log: 'เริ่มเกม 5 คน!' };
   appendGameLog(gameState, `เริ่มเกมโหมดทดสอบ 5 คน (ชิปตั้งต้น ${formatMoney(STARTING_CHIPS)} • SB ${SMALL_BLIND} / BB ${BIG_BLIND})`);
   document.getElementById('lobby-screen').style.display = 'none';
   document.getElementById('game-screen').style.display = 'flex';
@@ -1135,12 +1237,13 @@ function startNewHand() {
   const bbIdx = n === 2 ? (dealerIdx + 1) % n : (dealerIdx + 2) % n;
   const firstTurnIdx = n === 2 ? sbIdx : (bbIdx + 1) % n;
 
-  gameState.deck = createDeck(); gameState.community = []; gameState.pot = 0; gameState.currentBet = 0;
+  gameState.deck = createDeck(); gameState.community = []; gameState.discardPile = []; gameState.shieldUserId = null;
+  gameState.pot = 0; gameState.currentBet = 0;
   gameState.dealerIndex = dealerIdx; gameState.sbIndex = sbIdx; gameState.bbIndex = bbIdx; gameState.stageIndex = 0; gameState.winnerId = null;
 
   gameState.players.forEach((p, idx) => {
     if (p.chips <= 0) p.chips = STARTING_CHIPS;
-    p.bet = 0; p.folded = false; p.raisesInStage = 0; p.finalHandName = ''; p.peekedPlayers = [];
+    p.bet = 0; p.folded = false; p.raisesInStage = 0; p.finalHandName = ''; p.peekedPlayers = []; p.shieldActive = false;
     p.blindRole = idx === dealerIdx ? 'D' : (idx === sbIdx ? 'SB' : (idx === bbIdx ? 'BB' : ''));
     p.hand = [gameState.deck.pop(), gameState.deck.pop()];
     p.powerCards = drawPowerCards(2);
@@ -1213,11 +1316,24 @@ function checkBotTurn() {
   if (typeof currentP.raisesInStage !== 'number') currentP.raisesInStage = 0;
   setTimeout(() => {
     if (!gameState || gameState.stageIndex >= 4 || gameState.players[gameState.turnIndex]?.id !== currentP.id) return;
-    const unusedPower = currentP.powerCards.find(c => !c.used);
-    if (unusedPower && Math.random() < 0.2) {
-      SFX.power(); triggerAnim('table-oval', 'anim-flash'); unusedPower.used = true;
-      const validTargets = gameState.players.map((p, i) => i).filter(i => i !== gameState.turnIndex && !gameState.players[i].folded);
-      appendGameLog(gameState, '⚡ ' + applyPowerEffect(unusedPower.id, gameState, gameState.turnIndex, validTargets[Math.floor(Math.random() * validTargets.length)]));
+    const usablePowers = currentP.powerCards.filter(c => !c.used && !(c.id === 'shield' && gameState.shieldUserId));
+    const unusedPower = usablePowers.length ? usablePowers[Math.floor(Math.random() * usablePowers.length)] : null;
+    if (unusedPower && Math.random() < 0.24) {
+      SFX.power(); triggerAnim('table-oval', 'anim-flash');
+      if (unusedPower.id === 'discard_one') {
+        currentP.powerCards = currentP.powerCards.filter(c => c.uid !== unusedPower.uid);
+      } else {
+        unusedPower.used = true;
+      }
+      const targetPool = unusedPower.allowSelfTarget
+        ? gameState.players.map((p, i) => i).filter(i => !gameState.players[i].folded && (gameState.players[i].hand || []).length > 0)
+        : gameState.players.map((p, i) => i).filter(i => i !== gameState.turnIndex && !gameState.players[i].folded);
+      const targetIdx = targetPool.length ? targetPool[Math.floor(Math.random() * targetPool.length)] : null;
+      appendGameLog(gameState, '⚡ ' + applyPowerEffect(unusedPower.id, gameState, gameState.turnIndex, targetIdx));
+      if (gameState.players.filter(p => !p.folded).length === 1) {
+        finishHand(gameState.players.find(p => !p.folded));
+        return;
+      }
       syncAndRender();
     }
     setTimeout(() => {
@@ -1243,15 +1359,22 @@ function onClickPowerCard(uid) {
   const me = gameState.players[myIdx];
   const card = me.powerCards.find(c => c.uid === uid);
   if (!card || card.used) return;
+  if (card.id === 'shield' && gameState.shieldUserId && gameState.shieldUserId !== me.id) {
+    return alert('ตานี้มีผู้เล่นใช้การ์ด [ป้องกัน] ไปแล้ว (ใช้ได้แค่ 1 คนต่อ 1 ตา)');
+  }
   if (card.needTarget) {
     pendingPowerCardUid = uid;
     document.getElementById('modal-title').innerText = `⚡ ${card.name}`;
     document.getElementById('modal-desc').innerText = card.desc;
     const list = document.getElementById('modal-targets'); list.innerHTML = '';
     gameState.players.forEach((p, idx) => {
-      if (idx !== myIdx && !p.folded) {
+      const canPickSelf = Boolean(card.allowSelfTarget) && idx === myIdx;
+      const canPickOther = idx !== myIdx && !p.folded;
+      if ((canPickSelf || canPickOther) && !p.folded) {
         const btn = document.createElement('button'); btn.className = 'btn btn-gold';
-        btn.innerText = `${p.name} (เงิน: ${formatMoney(p.chips)} ชิป)`;
+        const shieldTag = (idx !== myIdx && p.shieldActive) ? ' [🛡️ มีโล่ป้องกัน]' : '';
+        const selfTag = idx === myIdx ? ' (ตัวเอง)' : '';
+        btn.innerText = `${p.name}${selfTag}${shieldTag} (ไพ่ ${(p.hand || []).length} ใบ • เงิน: ${formatMoney(p.chips)} ชิป)`;
         btn.onclick = () => confirmPowerTarget(idx); list.appendChild(btn);
       }
     });
@@ -1263,9 +1386,22 @@ function onClickPowerCard(uid) {
 }
 function confirmPowerTarget(targetIdx) {
   const myIdx = gameState.players.findIndex(p => p.id === myPlayerId);
-  const card = gameState.players[myIdx].powerCards.find(c => c.uid === pendingPowerCardUid);
-  if (card) { SFX.power(); triggerAnim('table-oval', 'anim-flash'); card.used = true; appendGameLog(gameState, '⚡ ' + applyPowerEffect(card.id, gameState, myIdx, targetIdx)); }
-  closeModal(); syncAndRender();
+  const me = gameState.players[myIdx];
+  const cardIdx = me.powerCards.findIndex(c => c.uid === pendingPowerCardUid);
+  const card = cardIdx >= 0 ? me.powerCards[cardIdx] : null;
+  if (card) {
+    SFX.power(); triggerAnim('table-oval', 'anim-flash');
+    if (card.id === 'discard_one') {
+      me.powerCards.splice(cardIdx, 1);
+    } else {
+      card.used = true;
+    }
+    appendGameLog(gameState, '⚡ ' + applyPowerEffect(card.id, gameState, myIdx, targetIdx));
+  }
+  closeModal();
+  const activePlayers = gameState.players.filter(p => !p.folded);
+  if (activePlayers.length === 1) { finishHand(activePlayers[0]); return; }
+  syncAndRender();
 }
 function closeModal() { hidePopup('target-modal'); pendingPowerCardUid = null; }
 
@@ -1343,13 +1479,16 @@ function getBlindBadgeHTML(role) {
   if (role === 'BB') return '<span class="blind-badge blind-bb">BB</span>';
   return '';
 }
+function getShieldBadgeHTML(p) {
+  return p.shieldActive ? '<span class="shield-badge">🛡️ กัน</span>' : '';
+}
 function renderSeatBoxHTML(p, slotCls, options = {}) {
   const { isMe = false, isTurn = false, isWinner = false, canSeeCards = false, isShowdown = false, flipCards = false } = options;
   const c0 = p.hand && p.hand[0] ? p.hand[0] : null;
   const c1 = p.hand && p.hand[1] ? p.hand[1] : null;
   const turnTag = isMe ? '' : (isTurn ? 'คิด...' : '');
   const tagText = isWinner ? 'WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag));
-  return `<div class="board-seat ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}"><div class="board-seat-cards">${renderBoardMiniCard(c0, canSeeCards, flipCards)}${renderBoardMiniCard(c1, canSeeCards, flipCards)}</div><div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}</div><div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div></div>`;
+  return `<div class="board-seat ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}"><div class="board-seat-cards">${renderBoardMiniCard(c0, canSeeCards, flipCards)}${renderBoardMiniCard(c1, canSeeCards, flipCards)}</div><div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}${getShieldBadgeHTML(p)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}</div><div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div></div>`;
 }
 
 function renderUI() {
@@ -1380,7 +1519,7 @@ function renderUI() {
 
   document.getElementById('my-name-label').innerText = me.name;
   const myBlindEl = document.getElementById('my-blind-tag');
-  if (myBlindEl) myBlindEl.innerHTML = getBlindBadgeHTML(me.blindRole);
+  if (myBlindEl) myBlindEl.innerHTML = getBlindBadgeHTML(me.blindRole) + getShieldBadgeHTML(me);
   document.getElementById('my-chips-display').innerText = formatMoney(me.chips);
   document.getElementById('my-bet-pill').innerText = `ลงรอบนี้: ${formatMoney(me.bet || 0)}`;
 
@@ -1402,7 +1541,7 @@ function renderUI() {
     ...opponents.map(({ player: p, idx }) => {
       const canSee = (isShowdown && !p.folded) || peeked.includes(idx);
       const cardsSig = canSee ? (p.hand || []).map(c => `${c.val}${c.suit}`).join('-') : (p.hand && p.hand.length ? 'BACK' : 'NONE');
-      return `${p.id}:${cardsSig}:${p.folded ? 1 : 0}`;
+      return `${p.id}:${cardsSig}:${p.folded ? 1 : 0}:${p.shieldActive ? 1 : 0}`;
     })
   ].join('|');
 
@@ -1448,7 +1587,7 @@ function renderUI() {
       seatEl.classList.toggle('winner-seat', isWinner);
       seatEl.classList.toggle('folded', Boolean(p.folded));
       const nameEl = seatEl.querySelector('.board-seat-name');
-      if (nameEl) nameEl.innerHTML = `${p.name}${getBlindBadgeHTML(p.blindRole)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}`;
+      if (nameEl) nameEl.innerHTML = `${p.name}${getBlindBadgeHTML(p.blindRole)}${getShieldBadgeHTML(p)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}`;
       const chipsEl = seatEl.querySelector('.board-seat-chips');
       if (chipsEl) chipsEl.innerHTML = `💰 ${formatMoney(p.chips)}`;
     });
@@ -1480,21 +1619,28 @@ function renderUI() {
   const myPowerArea = document.getElementById('my-power-cards');
   const powerList = me.powerCards || [];
   const powerIdsSignature = powerList.map(pc => pc.uid).join(',');
+  const shieldTakenByOther = Boolean(gameState.shieldUserId && gameState.shieldUserId !== me.id);
   if (powerIdsSignature !== lastRenderedPowerSignature || myPowerArea.children.length !== powerList.length) {
     lastRenderedPowerSignature = powerIdsSignature;
-    myPowerArea.innerHTML = powerList.map(pc => `
-      <div class="power-card ${pc.used ? 'used' : ''} ${isNewHandStart ? 'anim-deal' : ''}" data-uid="${pc.uid}" onclick="onClickPowerCard('${pc.uid}')" title="${pc.name}: ${pc.desc}">
-        <span class="p-badge">${pc.used ? 'ใช้แล้ว' : 'กดใช้'}</span>
+    myPowerArea.innerHTML = powerList.map(pc => {
+      const isShieldLocked = pc.id === 'shield' && shieldTakenByOther && !pc.used;
+      const badgeText = pc.used ? 'ใช้แล้ว' : (isShieldLocked ? 'เต็ม 1 คน' : 'กดใช้');
+      return `
+      <div class="power-card ${pc.used ? 'used' : ''} ${isShieldLocked ? 'locked' : ''} ${isNewHandStart ? 'anim-deal' : ''}" data-uid="${pc.uid}" onclick="onClickPowerCard('${pc.uid}')" title="${pc.name}: ${pc.desc}">
+        <span class="p-badge">${badgeText}</span>
         <img src="${pc.image}" alt="${pc.name}" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.src='${getFallbackSVG()}'; });">
         <div class="p-title">${pc.name}</div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   } else {
     powerList.forEach(pc => {
       const cardEl = myPowerArea.querySelector(`.power-card[data-uid="${pc.uid}"]`);
       if (!cardEl) return;
+      const isShieldLocked = pc.id === 'shield' && shieldTakenByOther && !pc.used;
       cardEl.classList.toggle('used', Boolean(pc.used));
+      cardEl.classList.toggle('locked', isShieldLocked);
       const badgeEl = cardEl.querySelector('.p-badge');
-      if (badgeEl) badgeEl.innerText = pc.used ? 'ใช้แล้ว' : 'กดใช้';
+      if (badgeEl) badgeEl.innerText = pc.used ? 'ใช้แล้ว' : (isShieldLocked ? 'เต็ม 1 คน' : 'กดใช้');
     });
   }
 
@@ -1536,7 +1682,7 @@ function createOnlineRoom() {
   getAudioContext();
   const myName = document.getElementById('player-name').value.trim() || (currentGoogleUser?.displayName || 'Host');
   roomCode = Math.random().toString(36).substring(2, 6).toUpperCase(); isOnline = true; myPlayerId = 'p0'; handCounter = 0;
-  gameState = { players: [{ id: 'p0', name: myName, uid: currentGoogleUser?.uid || null, chips: STARTING_CHIPS, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '' }], deck: [], community: [], pot: 0, currentBet: 0, dealerIndex: -1, sbIndex: -1, bbIndex: -1, turnIndex: 0, stageIndex: 5, winnerId: null, logs: [], log: `ห้อง ${roomCode} สร้างแล้ว!` };
+  gameState = { players: [{ id: 'p0', name: myName, uid: currentGoogleUser?.uid || null, chips: STARTING_CHIPS, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '', shieldActive: false }], deck: [], community: [], discardPile: [], shieldUserId: null, pot: 0, currentBet: 0, dealerIndex: -1, sbIndex: -1, bbIndex: -1, turnIndex: 0, stageIndex: 5, winnerId: null, logs: [], log: `ห้อง ${roomCode} สร้างแล้ว!` };
   appendGameLog(gameState, `สร้างห้องออนไลน์รหัส ${roomCode} โดย ${myName}`);
   document.getElementById('mode-badge').innerText = `ห้อง: ${roomCode}`;
   document.getElementById('lobby-screen').style.display = 'none'; document.getElementById('game-screen').style.display = 'flex';
@@ -1553,7 +1699,7 @@ function joinOnlineRoom() {
     if (data.players.length >= MAX_PLAYERS) return alert(`ห้องเต็มแล้ว (สูงสุด ${MAX_PLAYERS} คน)`);
     if (data.stageIndex !== 5) return alert('ห้องนี้กำลังเล่นอยู่ รอจบตาก่อนนะ!');
     roomCode = code; isOnline = true; myPlayerId = 'p' + data.players.length;
-    data.players.push({ id: myPlayerId, name: myName, uid: currentGoogleUser?.uid || null, chips: STARTING_CHIPS, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '' });
+    data.players.push({ id: myPlayerId, name: myName, uid: currentGoogleUser?.uid || null, chips: STARTING_CHIPS, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '', shieldActive: false });
     appendGameLog(data, `${myName} เข้าร่วมห้องแล้ว! (${data.players.length}/${MAX_PLAYERS} คน)`);
     document.getElementById('mode-badge').innerText = `ห้อง: ${roomCode}`;
     document.getElementById('lobby-screen').style.display = 'none'; document.getElementById('game-screen').style.display = 'flex';
