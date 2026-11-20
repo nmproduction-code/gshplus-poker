@@ -87,6 +87,15 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0.72; }
   }
+  @keyframes popupBounceIn {
+    0% { opacity: 0; transform: scale(0.76) translateY(20px); }
+    65% { opacity: 1; transform: scale(1.03) translateY(-3px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes backdropFadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
 
   .anim-deal { animation: dealPop 0.24s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .anim-flash { animation: powerFlash 0.32s ease; }
@@ -105,7 +114,7 @@
   .card-mid { font-size: 1.65rem; text-align: center; line-height: 1; }
   .card-bot { font-size: 0.95rem; line-height: 1; font-weight: 700; transform: rotate(180deg); }
 
-  /* Lobby Screen: จัดก้อนโลโก้ + แผงเมนูให้อยู่กึ่งกลางหน้าจอ */
+  /* Lobby Screen */
   #lobby-screen {
     display: flex;
     flex-direction: column;
@@ -132,7 +141,7 @@
   .btn-red { background: #c62828; color: #fff; }
   .btn-red:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-2px); }
   .btn-ghost { background: rgba(255,255,255,0.1); color: #e5e7eb; border: 1px solid rgba(255,255,255,0.22); }
-  .btn-ghost:hover:not(:disabled) { background: rgba(255,255,255,0.18); }
+  .btn-ghost:hover:not(:disabled) { background: rgba(255,255,255,0.18); transform: translateY(-1px); }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
 
   .user-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255,255,255,0.07); border: 1px solid rgba(245,185,66,0.35); border-radius: 12px; padding: 10px 12px; margin-bottom: 14px; text-align: left; }
@@ -141,7 +150,7 @@
   .user-name { font-size: 0.96rem; font-weight: 700; color: var(--gold-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .user-sub { font-size: 0.8rem; color: #a5d6a7; }
 
-  /* Game Screen: อยู่ในจอเดียวไม่ต้องเลื่อนลง */
+  /* Game Screen */
   #game-screen {
     display: none;
     flex-direction: column;
@@ -159,8 +168,8 @@
   .timer-badge { background: rgba(255, 193, 7, 0.18); border: 1.5px solid var(--gold); color: var(--gold-light); padding: 3px 12px; border-radius: 12px; font-weight: 700; font-size: 0.84rem; min-width: 98px; text-align: center; }
   .timer-badge.danger { background: rgba(211, 47, 47, 0.35); border-color: #ff6e6e; color: #ffd6d6; animation: handBadgePop 0.8s infinite; }
   .top-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-  .small-btn { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.28); color: #fff; border-radius: 7px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; font-weight: 500; }
-  .small-btn:hover { background: rgba(255,255,255,0.22); }
+  .small-btn { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.28); color: #fff; border-radius: 7px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; font-weight: 500; transition: 0.15s; }
+  .small-btn:hover { background: rgba(255,255,255,0.22); transform: translateY(-1px); }
 
   /* Board Canvas */
   .board-stage-wrap {
@@ -188,7 +197,6 @@
   .poker-board-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; pointer-events: none; z-index: 1; }
   .board-overlay { position: relative; width: 100%; height: 100%; z-index: 2; }
 
-  /* ยอด POT สีขาว ตัวใหญ่ ชัดเจน อยู่กลางกรอบสี่เหลี่ยมใต้คำว่า POT */
   .board-pot-overlay {
     position: absolute; left: 50%; top: var(--pot-top);
     transform: translateX(-50%);
@@ -197,7 +205,6 @@
     letter-spacing: 0.5px;
   }
 
-  /* ไพ่กองกลาง 5 ใบ: ขยับเข้ากรอบสีขาวและใหญ่พอดี */
   .board-community-overlay {
     position: absolute; left: calc(50% + 1.4%); top: var(--comm-top);
     transform: translateX(-50%);
@@ -317,7 +324,7 @@
     text-overflow: ellipsis;
   }
 
-  /* Player Area: กระชับพอดีจอ ไม่ต้องเลื่อนลง และขยายระยะด้านข้าง */
+  /* Player Area */
   .player-area {
     flex-shrink: 0;
     background: rgba(0,0,0,0.92);
@@ -369,8 +376,63 @@
   .quick-bet-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .raise-box .btn-gold { flex: 1; padding: 7px 14px; font-size: 0.9rem; }
 
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
-  .modal-box { background: #102e1e; border: 2px solid var(--gold); border-radius: 16px; padding: 22px; max-width: 580px; width: 100%; text-align: center; max-height: 88vh; display: flex; flex-direction: column; }
+  /* Popup Modal Styles */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.is-open {
+    display: flex;
+    animation: backdropFadeIn 0.18s ease-out both;
+  }
+  .modal-box {
+    position: relative;
+    background: linear-gradient(165deg, #133824 0%, #0b2417 100%);
+    border: 2px solid var(--gold);
+    border-radius: 18px;
+    padding: 22px;
+    max-width: 580px;
+    width: 100%;
+    text-align: center;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 28px rgba(245, 185, 66, 0.25);
+  }
+  .modal-overlay.is-open .modal-box {
+    animation: popupBounceIn 0.28s cubic-bezier(0.22, 1.25, 0.36, 1) both;
+  }
+  .popup-close-x {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.15s;
+  }
+  .popup-close-x:hover {
+    background: rgba(198, 40, 40, 0.85);
+    border-color: #ff8a80;
+    transform: scale(1.06);
+  }
+
   .target-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; overflow-y: auto; text-align: left; }
   .guide-card-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); }
   .guide-card-thumb { width: 56px; height: 78px; border-radius: 8px; object-fit: cover; border: 1.5px solid #b388ff; flex-shrink: 0; background: #14082b; }
@@ -441,8 +503,8 @@
     
     <button class="btn btn-gold" onclick="startSoloBotMode()">🤖 เล่นโหมดทดสอบ (สู้กับบอท 4 ตัว • รวม 5 คน)</button>
     <div style="display:flex; gap:8px;">
-      <button class="btn btn-ghost" style="margin-bottom:0;" onclick="openGuideModal('skills')">📖 คู่มือสกิล & แรงค์ไพ่</button>
-      <button class="btn btn-ghost" style="margin-bottom:0;" onclick="openLeaderboardModal()">🏆 Leaderboard</button>
+      <button class="btn btn-ghost" style="margin-bottom:0;" onclick="openGuideModal('skills')">⚡ สกิลการ์ด</button>
+      <button class="btn btn-ghost" style="margin-bottom:0;" onclick="openLeaderboardModal()">🏆 อันดับ</button>
       <button class="btn btn-ghost" id="btn-open-admin" style="display:none; margin-bottom:0; border-color:var(--gold); color:var(--gold-light);" onclick="openAdminModal()">🛠️ หลังบ้าน</button>
     </div>
     
@@ -468,8 +530,8 @@
     <div class="top-actions">
       <button class="small-btn" onclick="openGuideModal('skills')">⚡ สกิลการ์ด</button>
       <button class="small-btn" onclick="openGuideModal('ranks')">🃏 แรงค์ไพ่</button>
+      <button class="small-btn" onclick="openLeaderboardModal()">🏆 อันดับ</button>
       <button class="small-btn" onclick="openLogModal()">📜 ประวัติ Log (<span id="log-count-badge">0</span>)</button>
-      <button class="small-btn" onclick="openLeaderboardModal()">🏆 Leaderboard</button>
       <button class="small-btn" id="btn-top-admin" style="display:none; border-color:var(--gold); color:var(--gold-light);" onclick="openAdminModal()">🛠️ หลังบ้าน</button>
       <button class="small-btn" id="btn-sound" onclick="toggleSound()">🔊 เสียง: เปิด</button>
       <button class="small-btn" onclick="location.reload()">ออก</button>
@@ -523,10 +585,11 @@
   </div>
 </div>
 
-<!-- Modals -->
-<div class="modal-overlay" id="guide-modal">
+<!-- Popups -->
+<div class="modal-overlay" id="guide-modal" onclick="handleBackdropClick(event, closeGuideModal)">
   <div class="modal-box">
-    <h3 style="color:var(--gold); margin:0 0 6px; font-size:1.25rem; font-weight:700;">📖 คู่มือสกิลการ์ด & แรงค์ Poker</h3>
+    <button class="popup-close-x" type="button" onclick="closeGuideModal()" aria-label="ปิด">✕</button>
+    <h3 id="guide-popup-title" style="color:var(--gold); margin:0 0 6px; font-size:1.25rem; font-weight:700;">⚡ สกิลการ์ดพลังพิเศษ</h3>
     <div class="admin-tabs">
       <button class="admin-tab-btn active" id="tab-guide-skills" onclick="switchGuideTab('skills')">⚡ สกิลการ์ดพลัง</button>
       <button class="admin-tab-btn" id="tab-guide-ranks" onclick="switchGuideTab('ranks')">🃏 ลำดับความใหญ่ของ Poker</button>
@@ -536,8 +599,9 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="target-modal">
+<div class="modal-overlay" id="target-modal" onclick="handleBackdropClick(event, closeModal)">
   <div class="modal-box">
+    <button class="popup-close-x" type="button" onclick="closeModal()" aria-label="ปิด">✕</button>
     <h3 id="modal-title" style="color:var(--gold); margin-top:0; font-size:1.25rem; font-weight:700;">เลือกเป้าหมาย</h3>
     <p id="modal-desc" style="font-size:0.95rem; color:#ddd; font-weight:400;"></p>
     <div class="target-list" id="modal-targets"></div>
@@ -545,8 +609,9 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="log-modal">
+<div class="modal-overlay" id="log-modal" onclick="handleBackdropClick(event, closeLogModal)">
   <div class="modal-box">
+    <button class="popup-close-x" type="button" onclick="closeLogModal()" aria-label="ปิด">✕</button>
     <h3 style="color:var(--gold); margin:0 0 6px; font-size:1.25rem; font-weight:700;">📜 ประวัติ Log ระหว่างเล่น</h3>
     <div style="font-size:0.84rem; color:#a5d6a7;">บันทึกทุกการเดินเกมในตานี้แบบเรียลไทม์</div>
     <div class="log-history-list" id="log-history-list"></div>
@@ -554,8 +619,9 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="leaderboard-modal">
+<div class="modal-overlay" id="leaderboard-modal" onclick="handleBackdropClick(event, closeLeaderboardModal)">
   <div class="modal-box">
+    <button class="popup-close-x" type="button" onclick="closeLeaderboardModal()" aria-label="ปิด">✕</button>
     <h3 style="color:var(--gold); margin:0 0 6px; font-size:1.25rem; font-weight:700;">🏆 ตารางอันดับ Leaderboard</h3>
     <div style="font-size:0.84rem; color:#a5d6a7;">อันดับผู้เล่นจากบัญชี Google ที่ลงทะเบียนไว้</div>
     <div class="target-list" id="leaderboard-list">
@@ -565,8 +631,9 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="admin-modal">
+<div class="modal-overlay" id="admin-modal" onclick="handleBackdropClick(event, closeAdminModal)">
   <div class="modal-box">
+    <button class="popup-close-x" type="button" onclick="closeAdminModal()" aria-label="ปิด">✕</button>
     <h3 style="color:var(--gold); margin:0 0 4px; font-size:1.25rem; font-weight:700;">🛠️ ระบบหลังบ้าน (Admin Dashboard)</h3>
     <div style="font-size:0.82rem; color:#a5d6a7;">จัดการห้องออนไลน์ ตารางคะแนน และบันทึกแอดมิน</div>
     <div class="admin-stats-grid">
@@ -604,6 +671,25 @@ document.addEventListener('keydown', (e) => {
     e.preventDefault();
   }
 });
+
+// Popup Helper
+function showPopup(modalId) {
+  const el = document.getElementById(modalId);
+  if (!el) return;
+  el.classList.remove('is-open');
+  void el.offsetWidth;
+  el.classList.add('is-open');
+}
+function hidePopup(modalId) {
+  const el = document.getElementById(modalId);
+  if (!el) return;
+  el.classList.remove('is-open');
+}
+function handleBackdropClick(event, closeFn) {
+  if (event.target === event.currentTarget && typeof closeFn === 'function') {
+    closeFn();
+  }
+}
 
 // ============================================================================
 // 🔊 0. ระบบเสียงเอฟเฟกต์
@@ -741,7 +827,7 @@ async function toggleGoogleLogin() {
 }
 
 // ============================================================================
-// 📖 1.1 คู่มือสกิล & แรงค์ไพ่
+// 📖 1.1 คู่มือสกิล & แรงค์ไพ่ (Popup)
 // ============================================================================
 const POKER_HAND_RANKS = [
   { rankNo: 1, name: 'Straight Flush', th: 'สเตรทฟลัช', sample: '9♠ 8♠ 7♠ 6♠ 5♠', desc: 'ไพ่ 5 ใบเรียงลำดับกันและดอกเดียวกันทั้งหมด' },
@@ -755,12 +841,23 @@ const POKER_HAND_RANKS = [
   { rankNo: 9, name: 'High Card', th: 'ไพ่สูง', sample: 'A♠ Q♦ 10♥ 7♣ 2♠', desc: 'ไม่มีชุดใดเข้าเกณฑ์ วัดกันที่ใบแต้มสูงสุด (A ใหญ่สุด)' }
 ];
 
-function openGuideModal(initialTab = 'skills') { activeGuideTab = initialTab; document.getElementById('guide-modal').style.display = 'flex'; switchGuideTab(initialTab); }
-function closeGuideModal() { document.getElementById('guide-modal').style.display = 'none'; }
+function openGuideModal(initialTab = 'skills') {
+  playTone(620, 0.06, 'sine', 0, 0.08);
+  activeGuideTab = initialTab;
+  showPopup('guide-modal');
+  switchGuideTab(initialTab);
+}
+function closeGuideModal() {
+  hidePopup('guide-modal');
+}
 function switchGuideTab(tab) {
   activeGuideTab = tab;
   document.getElementById('tab-guide-skills').classList.toggle('active', tab === 'skills');
   document.getElementById('tab-guide-ranks').classList.toggle('active', tab === 'ranks');
+  const titleEl = document.getElementById('guide-popup-title');
+  if (titleEl) {
+    titleEl.innerText = tab === 'skills' ? '⚡ สกิลการ์ดพลังพิเศษ' : '🃏 ลำดับความใหญ่ของไพ่ Poker';
+  }
   const listEl = document.getElementById('guide-content-list');
   if (tab === 'skills') {
     listEl.innerHTML = POWER_CARDS_POOL.map(card => `
@@ -790,8 +887,8 @@ function switchGuideTab(tab) {
 // 🛠️ 1.2 ระบบหลังบ้าน
 // ============================================================================
 function writeAdminAuditLog(actionText) { if (db) db.ref('adminLogs').push({ time: formatTimeNow(), actor: currentGoogleUser?.email || 'Admin', text: actionText, ts: Date.now() }); }
-function openAdminModal() { if (!isAdminUser) return alert('สำหรับบัญชีแอดมินเท่านั้นครับ'); document.getElementById('admin-modal').style.display = 'flex'; refreshAdminData(); }
-function closeAdminModal() { document.getElementById('admin-modal').style.display = 'none'; }
+function openAdminModal() { if (!isAdminUser) return alert('สำหรับบัญชีแอดมินเท่านั้นครับ'); showPopup('admin-modal'); refreshAdminData(); }
+function closeAdminModal() { hidePopup('admin-modal'); }
 function switchAdminTab(tab) { activeAdminTab = tab; document.getElementById('tab-admin-rooms').classList.toggle('active', tab === 'rooms'); document.getElementById('tab-admin-lb').classList.toggle('active', tab === 'leaderboard'); document.getElementById('tab-admin-logs').classList.toggle('active', tab === 'logs'); refreshAdminData(); }
 function refreshAdminData() {
   if (!isAdminUser || !db) return;
@@ -838,7 +935,7 @@ function adminResetUser(uid, name) { if (isAdminUser && uid) { db.ref('leaderboa
 function adminClearLogs() { if (isAdminUser) db.ref('adminLogs').remove().then(() => refreshAdminData()); }
 
 // ============================================================================
-// 🏆 1.5 LEADERBOARD
+// 🏆 1.5 LEADERBOARD (Popup)
 // ============================================================================
 function ensureLeaderboardEntry(user, displayName) {
   if (!user || !db) return;
@@ -858,9 +955,9 @@ function recordLeaderboardWin(winnerPlayer, potWon) {
   });
 }
 function openLeaderboardModal() {
-  const modal = document.getElementById('leaderboard-modal');
+  playTone(660, 0.06, 'triangle', 0, 0.09);
   const listEl = document.getElementById('leaderboard-list');
-  modal.style.display = 'flex';
+  showPopup('leaderboard-modal');
   listEl.innerHTML = '<div style="text-align:center; color:#ccc; padding:12px;">กำลังโหลดอันดับ...</div>';
   db.ref('leaderboard').orderByChild('chips').limitToLast(20).once('value', (snap) => {
     const items = []; snap.forEach((child) => items.push(child.val()));
@@ -878,7 +975,9 @@ function openLeaderboardModal() {
       </div>`).join('');
   });
 }
-function closeLeaderboardModal() { document.getElementById('leaderboard-modal').style.display = 'none'; }
+function closeLeaderboardModal() {
+  hidePopup('leaderboard-modal');
+}
 
 // ============================================================================
 // 📜 1.8 LOG
@@ -891,15 +990,16 @@ function appendGameLog(state, message) {
   state.log = message;
 }
 function openLogModal() {
-  const modal = document.getElementById('log-modal');
   const listEl = document.getElementById('log-history-list');
-  modal.style.display = 'flex';
+  showPopup('log-modal');
   const logs = (gameState && Array.isArray(gameState.logs)) ? gameState.logs : [];
   listEl.innerHTML = logs.length
     ? [...logs].reverse().map(item => `<div class="log-item"><span class="log-time">[${item.time || '--:--:--'}]</span><span>${item.text || ''}</span></div>`).join('')
     : '<div style="text-align:center; color:#aaa; padding:12px;">ยังไม่มีประวัติ Log ในตานี้</div>';
 }
-function closeLogModal() { document.getElementById('log-modal').style.display = 'none'; }
+function closeLogModal() {
+  hidePopup('log-modal');
+}
 
 // ============================================================================
 // 🃏 2. รูปไพ่
@@ -1155,7 +1255,7 @@ function onClickPowerCard(uid) {
         btn.onclick = () => confirmPowerTarget(idx); list.appendChild(btn);
       }
     });
-    document.getElementById('target-modal').style.display = 'flex';
+    showPopup('target-modal');
   } else {
     SFX.power(); triggerAnim('table-oval', 'anim-flash'); card.used = true;
     appendGameLog(gameState, '⚡ ' + applyPowerEffect(card.id, gameState, myIdx, null)); syncAndRender();
@@ -1167,7 +1267,7 @@ function confirmPowerTarget(targetIdx) {
   if (card) { SFX.power(); triggerAnim('table-oval', 'anim-flash'); card.used = true; appendGameLog(gameState, '⚡ ' + applyPowerEffect(card.id, gameState, myIdx, targetIdx)); }
   closeModal(); syncAndRender();
 }
-function closeModal() { document.getElementById('target-modal').style.display = 'none'; pendingPowerCardUid = null; }
+function closeModal() { hidePopup('target-modal'); pendingPowerCardUid = null; }
 
 // ============================================================================
 // 🏆 6. คำนวณแต้ม
