@@ -17,29 +17,41 @@
     --card-w: 92px;
     --card-h: 132px;
 
-    /* ค่าตำแหน่งเริ่มต้น */
-    --pot-left: 50%;
-    --pot-top: 15.8%;
+    /* ค่าตำแหน่งที่จัดบาลานซ์แล้ว */
+    --pot-left: 44.4%;
+    --pot-top: 12.7%;
     --pot-w: 11.4%;
     --pot-h: 5.2%;
 
-    --comm-left: 50.8%;
-    --comm-top: 44.5%;
-    --comm-w: 28.6%;
-    --comm-h: 18.0%;
+    --comm-left: 30.7%;
+    --comm-top: 33.6%;
+    --comm-w: 38.7%;
+    --comm-h: 19.6%;
 
-    --seat-w: 12.5%;
-    --seat-h: 29.8%;
-    --seat-tl-x: 6.1%;
-    --seat-tl-y: 7.7%;
-    --seat-tr-x: 81.4%;
-    --seat-tr-y: 7.7%;
-    --seat-bl-x: 11.7%;
-    --seat-bl-y: 51.6%;
+    --seat-tl-x: 7.9%;
+    --seat-tl-y: 11.6%;
+    --seat-tl-w: 12.2%;
+    --seat-tl-h: 28.6%;
+
+    --seat-tr-x: 79.9%;
+    --seat-tr-y: 11.6%;
+    --seat-tr-w: 12.2%;
+    --seat-tr-h: 28.6%;
+
+    --seat-bl-x: 13.4%;
+    --seat-bl-y: 51.2%;
+    --seat-bl-w: 12.5%;
+    --seat-bl-h: 29.8%;
+
     --seat-bc-x: 43.8%;
     --seat-bc-y: 63.5%;
-    --seat-br-x: 75.8%;
-    --seat-br-y: 51.6%;
+    --seat-bc-w: 12.5%;
+    --seat-bc-h: 29.8%;
+
+    --seat-br-x: 74.1%;
+    --seat-br-y: 51.2%;
+    --seat-br-w: 12.5%;
+    --seat-br-h: 29.8%;
   }
   * {
     box-sizing: border-box;
@@ -57,16 +69,16 @@
   body { margin: 0; background: var(--bg-dark); color: #fff; overflow-x: hidden; font-weight: 400; }
 
   @keyframes dealPop {
-    0% { opacity: 0; transform: translateY(-12px) scale(0.94); }
+    0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
   }
-  @keyframes cardRevealSmooth {
-    0% { opacity: 0.35; transform: scale(0.94); }
-    100% { opacity: 1; transform: scale(1); }
+  @keyframes cardFlip3D {
+    0% { transform: perspective(700px) rotateY(90deg) scale(0.95); opacity: 0.55; }
+    100% { transform: perspective(700px) rotateY(0deg) scale(1); opacity: 1; }
   }
   @keyframes powerFlash {
     0% { filter: brightness(1); }
-    50% { filter: brightness(1.16); }
+    50% { filter: brightness(1.14); }
     100% { filter: brightness(1); }
   }
   @keyframes handBadgePop {
@@ -74,12 +86,12 @@
     50% { opacity: 0.72; }
   }
 
-  .anim-deal { animation: dealPop 0.25s cubic-bezier(0.22, 1, 0.36, 1) both; }
-  .anim-flash { animation: powerFlash 0.35s ease; }
+  .anim-deal { animation: dealPop 0.24s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .anim-flash { animation: powerFlash 0.32s ease; }
 
   .flip-slot { width: var(--card-w); height: var(--card-h); position: relative; flex-shrink: 0; }
-  .flip-inner { width: 100%; height: 100%; position: relative; }
-  .flip-inner.is-flipping { animation: cardRevealSmooth 0.28s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .flip-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
+  .flip-inner.is-flipping { animation: cardFlip3D 0.36s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .flip-face { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 7px; overflow: hidden; box-shadow: 0 5px 14px rgba(0, 0, 0, 0.5); }
   .flip-front { background: #fff; color: #111; display: flex; flex-direction: column; justify-content: space-between; padding: 5px; font-weight: 700; }
   .flip-front.custom-img { padding: 0; background: #fff; border: 1.5px solid rgba(255, 255, 255, 0.75); }
@@ -93,18 +105,34 @@
 
   /* Lobby Screen */
   #lobby-screen {
+    position: relative;
+    overflow: hidden;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     min-height: 100vh; padding: 28px 24px 56px; text-align: center;
-    background:
-      linear-gradient(rgba(5, 28, 23, 0.26), rgba(5, 28, 23, 0.42)),
-      url('./background.png') center / cover no-repeat fixed,
-      radial-gradient(circle at center, #1b6b58 0%, #06211a 100%);
+    background: radial-gradient(circle at center, #1b6b58 0%, #06211a 100%);
   }
-  .lobby-logo-wrap { margin-bottom: 6px; display: flex; justify-content: center; align-items: center; }
+  .lobby-bg-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
+    opacity: 0.92;
+  }
+  .lobby-bg-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(rgba(5, 28, 23, 0.28), rgba(5, 28, 23, 0.48));
+    pointer-events: none;
+  }
+  .lobby-logo-wrap { position: relative; z-index: 2; margin-bottom: 6px; display: flex; justify-content: center; align-items: center; }
   .lobby-logo-img { max-width: 340px; width: 82%; max-height: 150px; height: auto; object-fit: contain; filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.65)); }
   .logo { font-size: 2.8rem; font-weight: 800; color: var(--gold); text-shadow: 0 4px 16px rgba(0,0,0,0.65); margin-bottom: 4px; }
-  .subtitle { color: #e8fff1; text-shadow: 0 2px 10px rgba(0,0,0,0.75); margin-bottom: 18px; font-size: 1.05rem; font-weight: 500; }
-  .panel { background: rgba(4, 24, 19, 0.78); backdrop-filter: blur(6px); border: 2px solid rgba(245,185,66,0.42); border-radius: 20px; padding: 22px; width: 100%; max-width: 460px; box-shadow: 0 14px 36px rgba(0,0,0,0.65); }
+  .subtitle { position: relative; z-index: 2; color: #e8fff1; text-shadow: 0 2px 10px rgba(0,0,0,0.75); margin-bottom: 18px; font-size: 1.05rem; font-weight: 500; }
+  .panel { position: relative; z-index: 2; background: rgba(4, 24, 19, 0.82); backdrop-filter: blur(6px); border: 2px solid rgba(245,185,66,0.42); border-radius: 20px; padding: 22px; width: 100%; max-width: 460px; box-shadow: 0 14px 36px rgba(0,0,0,0.65); }
   input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #43a047; background: #092c1a; color: #fff; font-size: 1rem; font-weight: 500; margin-bottom: 12px; text-align: center; user-select: text; -webkit-user-select: text; }
   .btn { width: 100%; padding: 12px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.18s; margin-bottom: 10px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
   .btn-gold { background: linear-gradient(135deg, #ffd54f, #d48806); color: #1a1100; }
@@ -169,15 +197,15 @@
   .board-community-overlay .card-bot { font-size: clamp(0.55rem, 0.78vw, 0.8rem); }
 
   .board-seat {
-    position: absolute; width: var(--seat-w); height: var(--seat-h);
+    position: absolute;
     border-radius: 10px; border: 1.5px solid transparent; background: transparent;
-    display: flex; flex-direction: column; justify-content: space-between;
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
   }
-  .board-seat.seat-top-left    { left: var(--seat-tl-x); top: var(--seat-tl-y); }
-  .board-seat.seat-top-right   { left: var(--seat-tr-x); top: var(--seat-tr-y); }
-  .board-seat.seat-bot-left    { left: var(--seat-bl-x); top: var(--seat-bl-y); }
-  .board-seat.seat-bot-center  { left: var(--seat-bc-x); top: var(--seat-bc-y); }
-  .board-seat.seat-bot-right   { left: var(--seat-br-x); top: var(--seat-br-y); }
+  .board-seat.seat-top-left    { left: var(--seat-tl-x); top: var(--seat-tl-y); width: var(--seat-tl-w); height: var(--seat-tl-h); }
+  .board-seat.seat-top-right   { left: var(--seat-tr-x); top: var(--seat-tr-y); width: var(--seat-tr-w); height: var(--seat-tr-h); }
+  .board-seat.seat-bot-left    { left: var(--seat-bl-x); top: var(--seat-bl-y); width: var(--seat-bl-w); height: var(--seat-bl-h); }
+  .board-seat.seat-bot-center  { left: var(--seat-bc-x); top: var(--seat-bc-y); width: var(--seat-bc-w); height: var(--seat-bc-h); }
+  .board-seat.seat-bot-right   { left: var(--seat-br-x); top: var(--seat-br-y); width: var(--seat-br-w); height: var(--seat-br-h); }
 
   /* โหมดลากวางเหมือน PowerPoint */
   .ppt-drag-mode .ppt-box {
@@ -214,37 +242,50 @@
   .board-seat.winner-seat { border-color: var(--gold-light); box-shadow: 0 0 18px rgba(255, 229, 143, 0.8); }
   .board-seat.folded { opacity: 0.45; filter: grayscale(0.5); }
 
-  .board-seat-cards { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 2px 4px; }
+  /* แถบการ์ด ชื่อ และแต้ม ให้พอดีตัวการ์ด */
+  .board-seat-cards {
+    flex: 1; min-height: 0; width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 4px;
+    padding: 2px 3px;
+  }
   .board-mini-card {
     height: 100%; max-height: 100%; width: auto; aspect-ratio: 5 / 7;
     border-radius: 5px; overflow: hidden; border: 1.5px solid #fff;
     background: linear-gradient(135deg, #8e1414, #4f0707);
     display: flex; align-items: center; justify-content: center;
     box-shadow: 0 3px 8px rgba(0,0,0,0.45); flex-shrink: 0;
+    transform-style: preserve-3d;
   }
+  .board-mini-card.is-flipping { animation: cardFlip3D 0.36s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .board-mini-card img { width: 100%; height: 100%; object-fit: contain; background: #fff; display: block; }
   .board-mini-card.back-card img { object-fit: cover; background: #5a0b0b; }
   .board-mini-card.revealed { background: #fff; border-color: var(--gold); }
 
+  .board-seat-name,
+  .board-seat-chips {
+    width: 78%;
+    min-width: 72px;
+    max-width: calc(100% - 6px);
+    background: rgba(0, 0, 0, 0.58);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; gap: 3px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 1px 4px;
+  }
   .board-seat-name {
-    height: 17%; min-height: 15px; background: rgba(0, 0, 0, 0.48); border-radius: 4px;
-    display: flex; align-items: center; justify-content: center; gap: 4px;
-    font-size: clamp(0.56rem, 0.82vw, 0.78rem); font-weight: 700; color: #fff;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px;
+    height: 16%; min-height: 14px;
+    font-size: clamp(0.54rem, 0.78vw, 0.75rem); font-weight: 700; color: #fff;
   }
   .board-seat-chips {
-    height: 16%; min-height: 14px; margin-top: 2px; background: rgba(0, 0, 0, 0.48); border-radius: 4px;
-    display: flex; align-items: center; justify-content: center; gap: 4px;
-    font-size: clamp(0.54rem, 0.78vw, 0.74rem); font-weight: 700; color: var(--gold-light);
-    white-space: nowrap; overflow: hidden; padding: 0 4px;
+    height: 15%; min-height: 13px; margin-top: 2px;
+    font-size: clamp(0.52rem, 0.75vw, 0.72rem); font-weight: 700; color: var(--gold-light);
   }
   .board-seat-tag {
-    background: rgba(245, 185, 66, 0.9); color: #140d00;
-    font-size: clamp(0.5rem, 0.68vw, 0.65rem); font-weight: 800;
-    padding: 0 5px; border-radius: 999px; line-height: 1.35;
+    background: rgba(245, 185, 66, 0.92); color: #140d00;
+    font-size: clamp(0.48rem, 0.64vw, 0.62rem); font-weight: 800;
+    padding: 0 4px; border-radius: 999px; line-height: 1.3; flex-shrink: 0;
   }
 
-  .blind-badge { display: inline-block; padding: 0 5px; border-radius: 5px; font-size: 0.72em; font-weight: 800; line-height: 1.4; }
+  .blind-badge { display: inline-block; padding: 0 4px; border-radius: 4px; font-size: 0.7em; font-weight: 800; line-height: 1.35; flex-shrink: 0; }
   .blind-d { background: #ffd54f; color: #1a1100; }
   .blind-sb { background: #29b6f6; color: #041926; }
   .blind-bb { background: #ff7043; color: #fff; }
@@ -324,6 +365,8 @@
 
 <!-- 1. หน้าล็อบบี้ -->
 <div id="lobby-screen">
+  <img src="./background.png" alt="" class="lobby-bg-img" draggable="false" onerror="tryImageCaseFallback(this, (el) => el.remove());">
+  <div class="lobby-bg-scrim"></div>
   <div class="lobby-logo-wrap">
     <img src="./logo.png" alt="GSHPLUS POKER" class="lobby-logo-img" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.style.display='none'; document.getElementById('lobby-logo-fallback').style.display='block'; });">
     <div id="lobby-logo-fallback" class="logo" style="display:none;">♠️ GSHPLUS POKER ♥️</div>
@@ -512,13 +555,13 @@
 // 📐 โหมดลากวางเหมือน PowerPoint (เฉพาะแอดมิน)
 // ============================================================================
 const PPT_BOXES = {
-  pot:  { label: 'POT',       x: 50.0, y: 15.8, w: 11.4, h: 5.2,  varX: '--pot-left',  varY: '--pot-top',  varW: '--pot-w',  varH: '--pot-h' },
-  comm: { label: 'ไพ่กองกลาง', x: 50.8, y: 44.5, w: 28.6, h: 18.0, varX: '--comm-left', varY: '--comm-top', varW: '--comm-w', varH: '--comm-h' },
-  tl:   { label: 'ซ้ายบน',     x: 6.1,  y: 7.7,  w: 12.5, h: 29.8, varX: '--seat-tl-x', varY: '--seat-tl-y',varW: '--seat-w', varH: '--seat-h' },
-  tr:   { label: 'ขวาบน',     x: 81.4, y: 7.7,  w: 12.5, h: 29.8, varX: '--seat-tr-x', varY: '--seat-tr-y',varW: '--seat-w', varH: '--seat-h' },
-  bl:   { label: 'ซ้ายล่าง',    x: 11.7, y: 51.6, w: 12.5, h: 29.8, varX: '--seat-bl-x', varY: '--seat-bl-y',varW: '--seat-w', varH: '--seat-h' },
-  bc:   { label: 'กลางล่าง',   x: 43.8, y: 63.5, w: 12.5, h: 29.8, varX: '--seat-bc-x', varY: '--seat-bc-y',varW: '--seat-w', varH: '--seat-h' },
-  br:   { label: 'ขวาล่าง',    x: 75.8, y: 51.6, w: 12.5, h: 29.8, varX: '--seat-br-x', varY: '--seat-br-y',varW: '--seat-w', varH: '--seat-h' }
+  pot:  { label: 'POT',        x: 44.4, y: 12.7, w: 11.4, h: 5.2,  varX: '--pot-left',  varY: '--pot-top',  varW: '--pot-w',     varH: '--pot-h' },
+  comm: { label: 'ไพ่กองกลาง',  x: 30.7, y: 33.6, w: 38.7, h: 19.6, varX: '--comm-left', varY: '--comm-top', varW: '--comm-w',    varH: '--comm-h' },
+  tl:   { label: 'ซ้ายบน',      x: 7.9,  y: 11.6, w: 12.2, h: 28.6, varX: '--seat-tl-x', varY: '--seat-tl-y',varW: '--seat-tl-w', varH: '--seat-tl-h' },
+  tr:   { label: 'ขวาบน',      x: 79.9, y: 11.6, w: 12.2, h: 28.6, varX: '--seat-tr-x', varY: '--seat-tr-y',varW: '--seat-tr-w', varH: '--seat-tr-h' },
+  bl:   { label: 'ซ้ายล่าง',     x: 13.4, y: 51.2, w: 12.5, h: 29.8, varX: '--seat-bl-x', varY: '--seat-bl-y',varW: '--seat-bl-w', varH: '--seat-bl-h' },
+  bc:   { label: 'กลางล่าง',    x: 43.8, y: 63.5, w: 12.5, h: 29.8, varX: '--seat-bc-x', varY: '--seat-bc-y',varW: '--seat-bc-w', varH: '--seat-bc-h' },
+  br:   { label: 'ขวาล่าง',     x: 74.1, y: 51.2, w: 12.5, h: 29.8, varX: '--seat-br-x', varY: '--seat-br-y',varW: '--seat-br-w', varH: '--seat-br-h' }
 };
 
 let pptActive = false;
@@ -911,7 +954,7 @@ function refreshAdminData() {
 }
 function adminDeleteRoom(code) { if (isAdminUser && code) db.ref('rooms/' + code).remove().then(() => { writeAdminAuditLog(`ลบห้องออนไลน์รหัส ${code}`); refreshAdminData(); }); }
 function adminAdjustChips(uid, name, currentChips) { if (isAdminUser && uid) { const nextChips = (Number(currentChips) || 0) + 500; db.ref('leaderboard/' + uid).update({ chips: nextChips, updatedAt: Date.now() }).then(() => { writeAdminAuditLog(`เพิ่มชิป +500 ให้ ${name}`); refreshAdminData(); }); } }
-function adminResetUser(uid, name) { if (isAdminUser && uid) db.ref('leaderboard/' + uid).update({ chips: STARTING_CHIPS, wins: 0, updatedAt: Date.now() }).then(() => { writeAdminAuditLog(`รีเซ็ตสถิติ ${name}`); refreshAdminData(); }); }
+function adminResetUser(uid, name) { if (isAdminUser && uid) { db.ref('leaderboard/' + uid).update({ chips: STARTING_CHIPS, wins: 0, updatedAt: Date.now() }).then(() => { writeAdminAuditLog(`รีเซ็ตสถิติ ${name}`); refreshAdminData(); }); } }
 function adminClearLogs() { if (isAdminUser) db.ref('adminLogs').remove().then(() => refreshAdminData()); }
 
 // ============================================================================
@@ -990,6 +1033,15 @@ function getPokerCardImagePath(card) { return `${POKER_CARD_FOLDER}/${String(car
 function tryImageCaseFallback(imgEl, onFinalFail) {
   if (!imgEl.dataset.triedLower) { imgEl.dataset.triedLower = '1'; imgEl.src = imgEl.src.replace(/\.PNG(\?.*)?$/i, '.png$1'); return; }
   if (!imgEl.dataset.triedUpper) { imgEl.dataset.triedUpper = '1'; imgEl.src = imgEl.src.replace(/\.png(\?.*)?$/i, '.PNG$1'); return; }
+  if (!imgEl.dataset.triedTitle) {
+    imgEl.dataset.triedTitle = '1';
+    const baseName = imgEl.src.split('/').pop().replace(/\.(png|jpg|jpeg|webp)$/i, '');
+    const titleName = baseName.charAt(0).toUpperCase() + baseName.slice(1).toLowerCase();
+    const extMatch = imgEl.src.match(/\.(png|jpg|jpeg|webp)$/i);
+    const ext = extMatch ? extMatch[1] : 'png';
+    imgEl.src = imgEl.src.replace(/[^/]+$/, `${titleName}.${ext}`);
+    return;
+  }
   if (typeof onFinalFail === 'function') onFinalFail(imgEl);
 }
 
@@ -1279,7 +1331,7 @@ function finishHand(winner, handName = 'ชนะบาย (คนอื่น�
 }
 
 // ============================================================================
-// 🎨 7. แสดงผลหน้าจอ
+// 🎨 7. แสดงผลหน้าจอ (ไม่กระพริบ + FLIP 3D)
 // ============================================================================
 const BOARD_SLOT_FOR_ME = 'seat-bot-center';
 const BOARD_OPPONENT_SLOTS = ['seat-top-left', 'seat-bot-left', 'seat-bot-right', 'seat-top-right'];
@@ -1303,8 +1355,8 @@ function renderCardHTML(card, options = {}) {
   if (!card) return `<div class="card empty"></div>`;
   return `<div class="flip-slot"><div class="flip-inner ${flip ? 'is-flipping' : ''}" ${flip && delayMs > 0 ? `style="animation-delay:${delayMs}ms;"` : ''}><div class="flip-face flip-front custom-img"><img src="${getPokerCardImagePath(card)}" alt="${card.val}${card.suit}" draggable="false" onerror="fallbackCardText(this, '${card.val}', '${card.suit}')"></div></div></div>`;
 }
-function renderBoardMiniCard(card, canSee) {
-  if (canSee && card) return `<div class="board-mini-card revealed"><img src="${getPokerCardImagePath(card)}" alt="${card.val}${card.suit}" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.parentElement.innerHTML='<span style=\\'font-weight:800;color:#111;font-size:0.78rem;\\'>${card.val}${card.suit}</span>'; });"></div>`;
+function renderBoardMiniCard(card, canSee, flip = false) {
+  if (canSee && card) return `<div class="board-mini-card revealed ${flip ? 'is-flipping' : ''}"><img src="${getPokerCardImagePath(card)}" alt="${card.val}${card.suit}" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.parentElement.innerHTML='<span style=\\'font-weight:800;color:#111;font-size:0.78rem;\\'>${card.val}${card.suit}</span>'; });"></div>`;
   return `<div class="board-mini-card back-card"><img src="${POKER_CARD_BACK}" alt="back" draggable="false" onerror="tryImageCaseFallback(this, (el) => el.remove());"></div>`;
 }
 function getFallbackSVG() {
@@ -1318,13 +1370,13 @@ function getBlindBadgeHTML(role) {
   return '';
 }
 function renderSeatBoxHTML(p, slotCls, options = {}) {
-  const { isMe = false, isTurn = false, isWinner = false, canSeeCards = false, isShowdown = false } = options;
+  const { isMe = false, isTurn = false, isWinner = false, canSeeCards = false, isShowdown = false, flipCards = false } = options;
   const c0 = p.hand && p.hand[0] ? p.hand[0] : null;
   const c1 = p.hand && p.hand[1] ? p.hand[1] : null;
   const turnTag = isMe ? '' : (isTurn ? 'คิด...' : '');
   const tagText = isWinner ? 'WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag));
   const boxKey = SLOT_TO_BOX_KEY[slotCls] || '';
-  return `<div class="board-seat ppt-box ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}" data-box="${boxKey}"><div class="board-seat-cards">${renderBoardMiniCard(c0, canSeeCards)}${renderBoardMiniCard(c1, canSeeCards)}</div><div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}</div><div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div></div>`;
+  return `<div class="board-seat ppt-box ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}" data-box="${boxKey}"><div class="board-seat-cards">${renderBoardMiniCard(c0, canSeeCards, flipCards)}${renderBoardMiniCard(c1, canSeeCards, flipCards)}</div><div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}</div><div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div></div>`;
 }
 
 function renderUI() {
@@ -1335,8 +1387,10 @@ function renderUI() {
 
   const comm = gameState.community || [];
   const prevCommCount = lastRenderedCommunityCount;
-  const stageChanged = gameState.stageIndex !== lastRenderedStage;
+  const prevStage = lastRenderedStage;
+  const stageChanged = gameState.stageIndex !== prevStage;
   const isNewHandStart = stageChanged && gameState.stageIndex === 0;
+  const justEnteredShowdown = stageChanged && gameState.stageIndex === 4;
   lastRenderedStage = gameState.stageIndex;
   lastRenderedCommunityCount = comm.length;
 
@@ -1363,38 +1417,80 @@ function renderUI() {
   else rankBadge.innerText = evaluateBestCards([...me.hand, ...comm]).shortName;
 
   const oppArea = document.getElementById('opponents-area');
-  let seatsHTML = renderSeatBoxHTML(me, BOARD_SLOT_FOR_ME, {
-    isMe: true, isTurn: gameState.turnIndex === myIdx && !isShowdown && !isWaiting,
-    isWinner: winnerId === me.id, canSeeCards: Boolean(me.hand && me.hand.length > 0 && !me.folded), isShowdown
-  });
-
   const opponents = [];
   for (let offset = 1; offset < gameState.players.length; offset++) {
     const idx = (myIdx + offset) % gameState.players.length;
     opponents.push({ player: gameState.players[idx], idx });
   }
   const peeked = me.peekedPlayers || [];
-  BOARD_OPPONENT_SLOTS.forEach((slotCls, posIdx) => {
-    const item = opponents[posIdx];
-    const boxKey = SLOT_TO_BOX_KEY[slotCls] || '';
-    if (!item) { seatsHTML += `<div class="board-seat ppt-box ${slotCls}" data-box="${boxKey}" style="opacity:0.22;"></div>`; return; }
-    const { player: p, idx } = item;
-    seatsHTML += renderSeatBoxHTML(p, slotCls, {
-      isMe: false, isTurn: gameState.turnIndex === idx && !isShowdown && !isWaiting,
-      isWinner: winnerId === p.id, canSeeCards: (isShowdown && !p.folded) || peeked.includes(idx), isShowdown
+
+  const seatSig = [
+    me.id, isNewHandStart ? handCounter : '', isShowdown ? 'SD' : '',
+    ...opponents.map(({ player: p, idx }) => {
+      const canSee = (isShowdown && !p.folded) || peeked.includes(idx);
+      const cardsSig = canSee ? (p.hand || []).map(c => `${c.val}${c.suit}`).join('-') : (p.hand && p.hand.length ? 'BACK' : 'NONE');
+      return `${p.id}:${cardsSig}:${p.folded ? 1 : 0}`;
+    })
+  ].join('|');
+
+  if (oppArea.dataset.seatSig !== seatSig) {
+    oppArea.dataset.seatSig = seatSig;
+    let seatsHTML = renderSeatBoxHTML(me, BOARD_SLOT_FOR_ME, {
+      isMe: true, isTurn: gameState.turnIndex === myIdx && !isShowdown && !isWaiting,
+      isWinner: winnerId === me.id, canSeeCards: Boolean(me.hand && me.hand.length > 0 && !me.folded), isShowdown,
+      flipCards: isNewHandStart
     });
-  });
-  oppArea.innerHTML = seatsHTML;
+
+    BOARD_OPPONENT_SLOTS.forEach((slotCls, posIdx) => {
+      const item = opponents[posIdx];
+      const boxKey = SLOT_TO_BOX_KEY[slotCls] || '';
+      if (!item) { seatsHTML += `<div class="board-seat ppt-box ${slotCls}" data-box="${boxKey}" style="opacity:0.22;"></div>`; return; }
+      const { player: p, idx } = item;
+      const canSee = (isShowdown && !p.folded) || peeked.includes(idx);
+      seatsHTML += renderSeatBoxHTML(p, slotCls, {
+        isMe: false, isTurn: gameState.turnIndex === idx && !isShowdown && !isWaiting,
+        isWinner: winnerId === p.id, canSeeCards: canSee, isShowdown,
+        flipCards: justEnteredShowdown && canSee
+      });
+    });
+    oppArea.innerHTML = seatsHTML;
+  } else {
+    const meEl = oppArea.querySelector(`.${BOARD_SLOT_FOR_ME}`);
+    if (meEl) {
+      meEl.classList.toggle('active-turn', gameState.turnIndex === myIdx && !isShowdown && !isWaiting);
+      meEl.classList.toggle('winner-seat', winnerId === me.id);
+      meEl.classList.toggle('folded', Boolean(me.folded));
+      const chipsEl = meEl.querySelector('.board-seat-chips');
+      if (chipsEl) chipsEl.innerHTML = `💰 ${formatMoney(me.chips)}`;
+    }
+    BOARD_OPPONENT_SLOTS.forEach((slotCls, posIdx) => {
+      const seatEl = oppArea.querySelector(`.${slotCls}`);
+      const item = opponents[posIdx];
+      if (!seatEl || !item) return;
+      const { player: p, idx } = item;
+      const isTurn = gameState.turnIndex === idx && !isShowdown && !isWaiting;
+      const isWinner = winnerId === p.id;
+      const turnTag = isTurn ? 'คิด...' : '';
+      const tagText = isWinner ? 'WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag));
+      seatEl.classList.toggle('active-turn', isTurn);
+      seatEl.classList.toggle('winner-seat', isWinner);
+      seatEl.classList.toggle('folded', Boolean(p.folded));
+      const nameEl = seatEl.querySelector('.board-seat-name');
+      if (nameEl) nameEl.innerHTML = `${p.name}${getBlindBadgeHTML(p.blindRole)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}`;
+      const chipsEl = seatEl.querySelector('.board-seat-chips');
+      if (chipsEl) chipsEl.innerHTML = `💰 ${formatMoney(p.chips)}`;
+    });
+  }
 
   const commArea = document.getElementById('community-cards');
   const commSignature = comm.map(c => c ? `${c.val}${c.suit}` : '').join(',');
   if (isNewHandStart || comm.length !== prevCommCount || commArea.dataset.sig !== commSignature) {
     commArea.dataset.sig = commSignature;
-    commArea.innerHTML = '<span class="ppt-label-tag">ไพ่กองกลาง</span>';
+    commArea.innerHTML = '<span class="ppt-label-tag">ไพ่กองกลาง</span><span class="ppt-resize-handle" data-resize-key="comm"></span>';
     let newlyIdx = 0;
     for (let i = 0; i < 5; i++) {
       const isNewlyRevealed = Boolean(comm[i]) && i >= prevCommCount && comm.length > prevCommCount;
-      const delayMs = isNewlyRevealed ? newlyIdx * 80 : 0;
+      const delayMs = isNewlyRevealed ? newlyIdx * 90 : 0;
       if (isNewlyRevealed) newlyIdx++;
       commArea.innerHTML += renderCardHTML(comm[i], { flip: isNewlyRevealed, delayMs });
     }
@@ -1407,7 +1503,7 @@ function renderUI() {
   if (handSignature !== lastRenderedHandSignature) {
     const shouldFlipHand = isNewHandStart || (!isNewHandStart && lastRenderedHandSignature !== '');
     lastRenderedHandSignature = handSignature;
-    myHandArea.innerHTML = (me.hand || []).map((c, idx) => renderCardHTML(c, { flip: shouldFlipHand, delayMs: shouldFlipHand ? idx * 80 : 0 })).join('');
+    myHandArea.innerHTML = (me.hand || []).map((c, idx) => renderCardHTML(c, { flip: shouldFlipHand, delayMs: shouldFlipHand ? idx * 90 : 0 })).join('');
   }
 
   const myPowerArea = document.getElementById('my-power-cards');
