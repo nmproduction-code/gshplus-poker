@@ -17,7 +17,7 @@
     --card-w: 92px;
     --card-h: 132px;
 
-    /* ค่าตำแหน่งที่ปรับได้สดๆ */
+    /* ตำแหน่งที่ปรับตาม layout ล่าสุด */
     --pot-left: 50%;
     --pot-top: 15.8%;
     --pot-w: 11.4%;
@@ -28,17 +28,17 @@
     --comm-w: 28.6%;
     --comm-h: 18.0%;
 
-    --seat-w: 12.6%;
+    --seat-w: 12.5%;
     --seat-h: 29.8%;
     --seat-tl-x: 6.1%;
     --seat-tl-y: 7.7%;
-    --seat-tr-x: 81.3%;
+    --seat-tr-x: 81.4%;
     --seat-tr-y: 7.7%;
     --seat-bl-x: 11.7%;
     --seat-bl-y: 51.6%;
-    --seat-bc-x: 43.7%;
-    --seat-bc-y: 63.3%;
-    --seat-br-x: 75.7%;
+    --seat-bc-x: 43.8%;
+    --seat-bc-y: 63.5%;
+    --seat-br-x: 75.8%;
     --seat-br-y: 51.6%;
   }
   * {
@@ -215,10 +215,13 @@
     white-space: nowrap; overflow: hidden; padding: 0 4px;
   }
   .board-seat-tag {
-    position: absolute; top: 3px; right: 4px; z-index: 3;
-    background: rgba(0, 0, 0, 0.84); border: 1px solid rgba(255, 229, 143, 0.75);
-    color: var(--gold-light); font-size: clamp(0.52rem, 0.72vw, 0.68rem); font-weight: 700;
-    padding: 1px 5px; border-radius: 999px;
+    background: rgba(245, 185, 66, 0.9);
+    color: #140d00;
+    font-size: clamp(0.5rem, 0.68vw, 0.65rem);
+    font-weight: 800;
+    padding: 0 5px;
+    border-radius: 999px;
+    line-height: 1.35;
   }
 
   .blind-badge { display: inline-block; padding: 0 5px; border-radius: 5px; font-size: 0.72em; font-weight: 800; line-height: 1.4; }
@@ -512,11 +515,11 @@
 const CAL_STATE = {
   pot:  { x: 50.0, y: 15.8, w: 11.4, h: 5.2,  varX: '--pot-left',    varY: '--pot-top',    varW: '--pot-w',  varH: '--pot-h' },
   comm: { x: 50.8, y: 44.5, w: 28.6, h: 18.0, varX: '--comm-left',   varY: '--comm-top',   varW: '--comm-w', varH: '--comm-h' },
-  tl:   { x: 6.1,  y: 7.7,  w: 12.6, h: 29.8, varX: '--seat-tl-x',   varY: '--seat-tl-y',  varW: '--seat-w', varH: '--seat-h' },
-  tr:   { x: 81.3, y: 7.7,  w: 12.6, h: 29.8, varX: '--seat-tr-x',   varY: '--seat-tr-y',  varW: '--seat-w', varH: '--seat-h' },
-  bl:   { x: 11.7, y: 51.6, w: 12.6, h: 29.8, varX: '--seat-bl-x',   varY: '--seat-bl-y',  varW: '--seat-w', varH: '--seat-h' },
-  bc:   { x: 43.7, y: 63.3, w: 12.6, h: 29.8, varX: '--seat-bc-x',   varY: '--seat-bc-y',  varW: '--seat-w', varH: '--seat-h' },
-  br:   { x: 75.7, y: 51.6, w: 12.6, h: 29.8, varX: '--seat-br-x',   varY: '--seat-br-y',  varW: '--seat-w', varH: '--seat-h' }
+  tl:   { x: 6.1,  y: 7.7,  w: 12.5, h: 29.8, varX: '--seat-tl-x',   varY: '--seat-tl-y',  varW: '--seat-w', varH: '--seat-h' },
+  tr:   { x: 81.4, y: 7.7,  w: 12.5, h: 29.8, varX: '--seat-tr-x',   varY: '--seat-tr-y',  varW: '--seat-w', varH: '--seat-h' },
+  bl:   { x: 11.7, y: 51.6, w: 12.5, h: 29.8, varX: '--seat-bl-x',   varY: '--seat-bl-y',  varW: '--seat-w', varH: '--seat-h' },
+  bc:   { x: 43.8, y: 63.5, w: 12.5, h: 29.8, varX: '--seat-bc-x',   varY: '--seat-bc-y',  varW: '--seat-w', varH: '--seat-h' },
+  br:   { x: 75.8, y: 51.6, w: 12.5, h: 29.8, varX: '--seat-br-x',   varY: '--seat-br-y',  varW: '--seat-w', varH: '--seat-h' }
 };
 
 function closeCalibratorForce() {
@@ -529,10 +532,7 @@ function closeCalibratorForce() {
 }
 
 function toggleCalibrator() {
-  if (!isAdminUser) {
-    closeCalibratorForce();
-    return;
-  }
+  if (!isAdminUser) { closeCalibratorForce(); return; }
   const box = document.getElementById('calibrator-box');
   const canvas = document.getElementById('table-oval');
   const btn = document.getElementById('btn-calibrate');
@@ -1232,8 +1232,8 @@ function renderSeatBoxHTML(p, slotCls, options = {}) {
   const c0 = p.hand && p.hand[0] ? p.hand[0] : null;
   const c1 = p.hand && p.hand[1] ? p.hand[1] : null;
   const turnTag = isMe ? '' : (isTurn ? 'คิด...' : '');
-  const tagText = isWinner ? '🏆 WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag));
-  return `<div class="board-seat ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}">${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}<div class="board-seat-cards">${renderBoardMiniCard(c0, canSeeCards)}${renderBoardMiniCard(c1, canSeeCards)}</div><div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}</div><div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div></div>`;
+  const tagText = isWinner ? 'WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag));
+  return `<div class="board-seat ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}"><div class="board-seat-cards">${renderBoardMiniCard(c0, canSeeCards)}${renderBoardMiniCard(c1, canSeeCards)}</div><div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}</div><div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div></div>`;
 }
 
 function renderUI() {
