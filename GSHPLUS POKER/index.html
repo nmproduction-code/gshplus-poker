@@ -54,7 +54,7 @@
   .anim-deal { animation: dealPop 0.25s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .anim-flash { animation: powerFlash 0.35s ease; }
 
-  /* Card Structure (คงสัดส่วนไพ่เสมอ) */
+  /* Card Structure */
   .flip-slot {
     width: var(--card-w);
     height: var(--card-h);
@@ -255,44 +255,36 @@
   .board-community-overlay .card-mid { font-size: clamp(0.9rem, 1.35vw, 1.3rem); }
   .board-community-overlay .card-bot { font-size: clamp(0.55rem, 0.78vw, 0.8rem); }
 
-  /* 5 Player Frames: ตั้งฉากตรง ไม่เอียง ไม่บีบ */
+  /* 5 Player Frames: พื้นหลังโปร่งใส ไม่บังลาย board.png */
   .board-seat {
     position: absolute;
     width: 13.4%;
-    height: 28.5%;
+    height: 31.5%;
     border-radius: 10px;
-    border: 1.5px solid rgba(255, 255, 255, 0.24);
-    background: rgba(7, 38, 30, 0.84);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+    border: 1.5px solid transparent;
+    background: transparent;
+    box-shadow: none;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 0.45% 0.5%;
-    transform: none;
   }
-  .board-seat.seat-top-left    { left: 5.8%;   top: 8.5%; }
-  .board-seat.seat-top-right   { left: 80.8%;  top: 8.5%; }
-  .board-seat.seat-bot-left    { left: 11.4%;  top: 52.5%; }
-  .board-seat.seat-bot-center  { left: 43.3%;  top: 63.5%; }
-  .board-seat.seat-bot-right   { left: 75.3%;  top: 52.5%; }
+  .board-seat.seat-top-left    { left: 5.7%;   top: 7.2%; }
+  .board-seat.seat-top-right   { left: 80.9%;  top: 7.2%; }
+  .board-seat.seat-bot-left    { left: 11.4%;  top: 51.2%; }
+  .board-seat.seat-bot-center  { left: 43.3%;  top: 63.0%; }
+  .board-seat.seat-bot-right   { left: 75.3%;  top: 51.2%; }
 
-  .board-seat.is-me-seat {
-    border-color: rgba(245, 185, 66, 0.78);
-    background: rgba(11, 56, 44, 0.9);
-  }
   .board-seat.active-turn {
     border-color: var(--gold);
-    background: rgba(20, 74, 58, 0.94);
-    box-shadow: 0 0 14px rgba(245, 185, 66, 0.5);
+    box-shadow: 0 0 14px rgba(245, 185, 66, 0.55);
   }
   .board-seat.winner-seat {
     border-color: var(--gold-light);
-    background: rgba(65, 52, 12, 0.92);
-    box-shadow: 0 0 18px rgba(255, 229, 143, 0.75);
+    box-shadow: 0 0 18px rgba(255, 229, 143, 0.8);
   }
   .board-seat.folded {
-    opacity: 0.5;
-    filter: grayscale(0.45);
+    opacity: 0.45;
+    filter: grayscale(0.5);
   }
 
   .board-seat-cards {
@@ -302,8 +294,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 2px 0;
+    gap: 5px;
+    padding: 2px 4px;
   }
   .board-mini-card {
     height: 100%;
@@ -328,15 +320,15 @@
   }
 
   .board-seat-name {
-    height: 21%;
-    min-height: 18px;
-    background: rgba(0, 0, 0, 0.42);
-    border-radius: 5px;
+    height: 18%;
+    min-height: 16px;
+    background: rgba(0, 0, 0, 0.48);
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    font-size: clamp(0.6rem, 0.9vw, 0.84rem);
+    font-size: clamp(0.58rem, 0.86vw, 0.82rem);
     font-weight: 700;
     color: #fff;
     white-space: nowrap;
@@ -345,16 +337,16 @@
     padding: 0 4px;
   }
   .board-seat-chips {
-    height: 20%;
-    min-height: 17px;
+    height: 17%;
+    min-height: 15px;
     margin-top: 2px;
-    background: rgba(0, 0, 0, 0.42);
-    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.48);
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    font-size: clamp(0.58rem, 0.86vw, 0.8rem);
+    font-size: clamp(0.56rem, 0.82vw, 0.78rem);
     font-weight: 700;
     color: var(--gold-light);
     white-space: nowrap;
@@ -363,15 +355,15 @@
   }
   .board-seat-tag {
     position: absolute;
-    top: 4px;
+    top: 3px;
     right: 4px;
     z-index: 3;
-    background: rgba(0, 0, 0, 0.82);
+    background: rgba(0, 0, 0, 0.84);
     border: 1px solid rgba(255, 229, 143, 0.75);
     color: var(--gold-light);
-    font-size: clamp(0.54rem, 0.74vw, 0.7rem);
+    font-size: clamp(0.52rem, 0.72vw, 0.68rem);
     font-weight: 700;
-    padding: 1px 6px;
+    padding: 1px 5px;
     border-radius: 999px;
   }
 
@@ -1547,7 +1539,7 @@ function finishHand(winner, handName = 'ชนะบาย (คนอื่น�
 }
 
 // ============================================================================
-// 🎨 7. ระบบแสดงผลหน้าจอ + วางบน board.png + รูปการ์ดตอนเฉลย
+// 🎨 7. ระบบแสดงผลหน้าจอ + วางบน board.png แบบโปร่งใสไม่บังลายเดิม
 // ============================================================================
 const BOARD_SLOT_FOR_ME = 'seat-bot-center';
 const BOARD_OPPONENT_SLOTS = [
@@ -1611,7 +1603,7 @@ function renderSeatBoxHTML(p, slotCls, options = {}) {
   const tagText = isWinner ? '🏆 WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag));
 
   return `
-    <div class="board-seat ${slotCls} ${isMe ? 'is-me-seat' : ''} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}">
+    <div class="board-seat ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}">
       ${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}
       <div class="board-seat-cards">${renderBoardMiniCard(c0, canSeeCards)}${renderBoardMiniCard(c1, canSeeCards)}</div>
       <div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}</div>
