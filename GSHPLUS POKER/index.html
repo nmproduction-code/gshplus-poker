@@ -17,10 +17,10 @@
     --card-w: 72px;
     --card-h: 101px;
 
-    /* จัดยอด POT ให้อยู่กึ่งกลางกรอบสี่เหลี่ยมใต้คำว่า POT */
-    --pot-top: 15.0%;
-    --pot-w: 15.6%;
-    --pot-h: 4.5%;
+    /* ขยับยอด POT ขึ้นอีกให้อยู่กลางกรอบสี่เหลี่ยมใต้คำว่า POT */
+    --pot-top: 12.6%;
+    --pot-w: 18%;
+    --pot-h: 5.5%;
 
     /* ไพ่กองกลาง 5 ใบอยู่กึ่งกลางกรอบใหญ่ */
     --comm-top: 34.4%;
@@ -199,13 +199,13 @@
   .poker-board-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; pointer-events: none; z-index: 1; }
   .board-overlay { position: relative; width: 100%; height: 100%; z-index: 2; }
 
-  /* ยอด POT สีขาว ไม่เรืองแสง อยู่กึ่งกลางกรอบสี่เหลี่ยมโค้งมนใต้คำว่า POT */
+  /* ยอด POT สีขาว ตัวใหญ่ ชัดเจน อยู่กึ่งกลางกรอบสี่เหลี่ยมโค้งมนใต้คำว่า POT */
   .board-pot-overlay {
     position: absolute; left: 50%; top: var(--pot-top);
     transform: translateX(-50%);
     width: var(--pot-w); height: var(--pot-h); display: flex; align-items: center; justify-content: center;
-    font-size: clamp(0.76rem, 1.15vw, 1.02rem); font-weight: 700; color: #ffffff;
-    letter-spacing: 0.3px;
+    font-size: clamp(1.05rem, 1.75vw, 1.55rem); font-weight: 800; color: #ffffff;
+    letter-spacing: 0.5px;
   }
 
   /* ไพ่กองกลาง 5 ใบ: ย่อลงมาและอยู่กึ่งกลางกรอบ */
