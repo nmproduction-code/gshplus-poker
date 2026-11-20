@@ -17,7 +17,7 @@
     --card-w: 92px;
     --card-h: 132px;
 
-    /* ตำแหน่งที่ปรับตาม layout ล่าสุด */
+    /* ค่าตำแหน่งเริ่มต้น */
     --pot-left: 50%;
     --pot-top: 15.8%;
     --pot-w: 11.4%;
@@ -151,14 +151,14 @@
   .board-overlay { position: relative; width: 100%; height: 100%; z-index: 2; }
 
   .board-pot-overlay {
-    position: absolute; left: var(--pot-left); top: var(--pot-top); transform: translate(-50%, -50%);
+    position: absolute; left: var(--pot-left); top: var(--pot-top);
     width: var(--pot-w); height: var(--pot-h); display: flex; align-items: center; justify-content: center;
     font-size: clamp(0.8rem, 1.35vw, 1.18rem); font-weight: 800; color: var(--gold-light);
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
   }
 
   .board-community-overlay {
-    position: absolute; left: var(--comm-left); top: var(--comm-top); transform: translate(-50%, -50%);
+    position: absolute; left: var(--comm-left); top: var(--comm-top);
     width: var(--comm-w); height: var(--comm-h); display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5%;
     align-items: center; justify-items: center;
   }
@@ -179,11 +179,35 @@
   .board-seat.seat-bot-center  { left: var(--seat-bc-x); top: var(--seat-bc-y); }
   .board-seat.seat-bot-right   { left: var(--seat-br-x); top: var(--seat-br-y); }
 
-  .calibrate-on .board-pot-overlay,
-  .calibrate-on .board-community-overlay,
-  .calibrate-on .board-seat {
-    outline: 1.5px dashed #ffeb3b;
-    background: rgba(255, 235, 59, 0.08);
+  /* โหมดลากวางเหมือน PowerPoint */
+  .ppt-drag-mode .ppt-box {
+    outline: 2px dashed #ffeb3b;
+    background: rgba(255, 235, 59, 0.14);
+    cursor: move;
+    z-index: 25;
+  }
+  .ppt-drag-mode .ppt-box.ppt-selected {
+    outline: 2.5px solid #00e5ff;
+    background: rgba(0, 229, 255, 0.16);
+  }
+  .ppt-label-tag {
+    display: none; position: absolute; left: 3px; top: 2px; z-index: 30;
+    background: rgba(0, 0, 0, 0.85); color: #ffeb3b; font-size: 10px; font-weight: 700;
+    padding: 1px 5px; border-radius: 4px; pointer-events: none;
+  }
+  .ppt-drag-mode .ppt-label-tag { display: block; }
+  .ppt-resize-handle {
+    display: none; position: absolute; right: -5px; bottom: -5px; width: 13px; height: 13px;
+    background: var(--gold); border: 2px solid #140d00; border-radius: 3px;
+    cursor: nwse-resize; z-index: 35;
+  }
+  .ppt-drag-mode .ppt-resize-handle { display: block; }
+
+  #ppt-toolbar {
+    display: none; position: fixed; right: 14px; top: 56px; z-index: 120;
+    background: rgba(8, 25, 20, 0.96); border: 2px solid var(--gold);
+    border-radius: 14px; padding: 10px 12px; box-shadow: 0 12px 30px rgba(0,0,0,0.85);
+    font-size: 0.82rem; max-width: 260px;
   }
 
   .board-seat.active-turn { border-color: var(--gold); box-shadow: 0 0 14px rgba(245, 185, 66, 0.55); }
@@ -215,13 +239,9 @@
     white-space: nowrap; overflow: hidden; padding: 0 4px;
   }
   .board-seat-tag {
-    background: rgba(245, 185, 66, 0.9);
-    color: #140d00;
-    font-size: clamp(0.5rem, 0.68vw, 0.65rem);
-    font-weight: 800;
-    padding: 0 5px;
-    border-radius: 999px;
-    line-height: 1.35;
+    background: rgba(245, 185, 66, 0.9); color: #140d00;
+    font-size: clamp(0.5rem, 0.68vw, 0.65rem); font-weight: 800;
+    padding: 0 5px; border-radius: 999px; line-height: 1.35;
   }
 
   .blind-badge { display: inline-block; padding: 0 5px; border-radius: 5px; font-size: 0.72em; font-weight: 800; line-height: 1.4; }
@@ -230,17 +250,6 @@
   .blind-bb { background: #ff7043; color: #fff; }
 
   .log-banner { margin-top: 10px; background: rgba(0, 0, 0, 0.78); border: 1px solid rgba(255, 224, 130, 0.35); padding: 7px 18px; border-radius: 12px; font-size: 0.96rem; font-weight: 500; color: var(--gold-light); max-width: 960px; width: 100%; text-align: center; }
-
-  #calibrator-box {
-    display: none; position: fixed; right: 14px; top: 56px; z-index: 120;
-    width: 300px; background: rgba(10, 28, 22, 0.96); border: 2px solid var(--gold);
-    border-radius: 14px; padding: 12px 14px; box-shadow: 0 12px 30px rgba(0,0,0,0.8);
-    font-size: 0.84rem;
-  }
-  .cal-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 7px 0; }
-  .cal-row label { flex: 0 0 84px; color: #e5e7eb; font-weight: 600; }
-  .cal-row input[type="range"] { flex: 1; margin: 0; padding: 0; accent-color: var(--gold); }
-  .cal-row span { width: 46px; text-align: right; color: var(--gold-light); font-weight: 700; }
 
   .player-area { background: rgba(0,0,0,0.9); border-top: 2.5px solid rgba(245,185,66,0.45); padding: 12px 18px 14px; display: flex; flex-direction: column; gap: 10px; }
   .player-area.my-turn { border-top-color: var(--gold); }
@@ -362,7 +371,7 @@
       <div class="timer-badge" id="turn-timer">⏱️ 15s</div>
     </div>
     <div class="top-actions">
-      <button class="small-btn" id="btn-calibrate" style="display:none; border-color:var(--gold); color:var(--gold-light);" onclick="toggleCalibrator()">📐 ปรับตำแหน่ง</button>
+      <button class="small-btn" id="btn-calibrate" style="display:none; border-color:var(--gold); color:var(--gold-light);" onclick="togglePptMode()">📐 โหมดลากวาง</button>
       <button class="small-btn" onclick="openGuideModal('skills')">⚡ สกิลการ์ด</button>
       <button class="small-btn" onclick="openGuideModal('ranks')">🃏 แรงค์ไพ่</button>
       <button class="small-btn" onclick="openLogModal()">📜 ประวัติ Log (<span id="log-count-badge">0</span>)</button>
@@ -373,37 +382,27 @@
     </div>
   </div>
 
-  <!-- แผงเลื่อนปรับตำแหน่งสดๆ (เฉพาะแอดมิน) -->
-  <div id="calibrator-box">
-    <div style="font-weight:700; color:var(--gold); margin-bottom:6px;">📐 ปรับตำแหน่งบนกระดาน (Admin)</div>
-    <div class="cal-row">
-      <label>เลือกจุด:</label>
-      <select id="cal-target" style="margin:0; padding:5px; font-size:0.82rem;" onchange="syncCalSliders()">
-        <option value="pot">กล่อง POT</option>
-        <option value="comm">ไพ่กองกลาง 5 ใบ</option>
-        <option value="tl">ผู้เล่น ซ้ายบน</option>
-        <option value="tr">ผู้เล่น ขวาบน</option>
-        <option value="bl">ผู้เล่น ซ้ายล่าง</option>
-        <option value="bc">ผู้เล่น กลางล่าง (เรา)</option>
-        <option value="br">ผู้เล่น ขวาล่าง</option>
-      </select>
-    </div>
-    <div class="cal-row"><label>ซ้าย-ขวา</label><input id="cal-x" type="range" min="0" max="100" step="0.2" oninput="applyCalFromSliders()"><span id="cal-x-val">50.0%</span></div>
-    <div class="cal-row"><label>บน-ล่าง</label><input id="cal-y" type="range" min="0" max="100" step="0.2" oninput="applyCalFromSliders()"><span id="cal-y-val">50.0%</span></div>
-    <div class="cal-row"><label>ความกว้าง</label><input id="cal-w" type="range" min="5" max="50" step="0.2" oninput="applyCalFromSliders()"><span id="cal-w-val">12.0%</span></div>
-    <div class="cal-row"><label>ความสูง</label><input id="cal-h" type="range" min="3" max="45" step="0.2" oninput="applyCalFromSliders()"><span id="cal-h-val">28.0%</span></div>
-    <div style="display:flex; gap:6px; margin-top:8px;">
-      <button class="mini-gold-btn" style="flex:1;" onclick="copyCalCSS()">ก๊อปค่าไปวาง</button>
-      <button class="mini-danger-btn" onclick="toggleCalibrator()">ปิด</button>
+  <!-- แผงควบคุมโหมดลากวางแบบ PowerPoint -->
+  <div id="ppt-toolbar">
+    <div style="font-weight:700; color:var(--gold); margin-bottom:4px;">📐 โหมดลากวาง (เหมือน PowerPoint)</div>
+    <div style="color:#d1fae5; line-height:1.35; margin-bottom:8px;">ลากกล่องไปวางได้อิสระ • ลากปุ่มสีทองมุมล่างขวาเพื่อย่อ/ขยาย</div>
+    <div id="ppt-selected-info" style="font-size:0.78rem; color:#ffe58f; margin-bottom:8px;">จุดที่เลือก: ยังไม่ได้เลือก</div>
+    <div style="display:flex; gap:6px;">
+      <button class="mini-gold-btn" style="flex:1;" onclick="copyPptValues()">ก๊อปค่า CSS</button>
+      <button class="mini-danger-btn" onclick="togglePptMode()">ปิด</button>
     </div>
   </div>
 
   <div class="board-stage-wrap">
     <div class="poker-board-canvas" id="table-oval">
       <img src="./board.png" alt="GSH+ POKER Board" class="poker-board-img" draggable="false" onerror="tryImageCaseFallback(this, (el) => el.remove());">
-      <div class="board-overlay">
-        <div class="board-pot-overlay"><span id="pot-amount">0</span> P</div>
-        <div class="board-community-overlay" id="community-cards"></div>
+      <div class="board-overlay" id="board-overlay">
+        <div class="board-pot-overlay ppt-box" data-box="pot">
+          <span class="ppt-label-tag">POT</span>
+          <span id="pot-amount">0</span> P
+          <span class="ppt-resize-handle"></span>
+        </div>
+        <div class="board-community-overlay ppt-box" data-box="comm" id="community-cards"></div>
         <div id="opponents-area"></div>
       </div>
     </div>
@@ -510,74 +509,158 @@
 
 <script>
 // ============================================================================
-// 📐 โหมดปรับตำแหน่งสดๆ (เฉพาะแอดมิน)
+// 📐 โหมดลากวางเหมือน PowerPoint (เฉพาะแอดมิน)
 // ============================================================================
-const CAL_STATE = {
-  pot:  { x: 50.0, y: 15.8, w: 11.4, h: 5.2,  varX: '--pot-left',    varY: '--pot-top',    varW: '--pot-w',  varH: '--pot-h' },
-  comm: { x: 50.8, y: 44.5, w: 28.6, h: 18.0, varX: '--comm-left',   varY: '--comm-top',   varW: '--comm-w', varH: '--comm-h' },
-  tl:   { x: 6.1,  y: 7.7,  w: 12.5, h: 29.8, varX: '--seat-tl-x',   varY: '--seat-tl-y',  varW: '--seat-w', varH: '--seat-h' },
-  tr:   { x: 81.4, y: 7.7,  w: 12.5, h: 29.8, varX: '--seat-tr-x',   varY: '--seat-tr-y',  varW: '--seat-w', varH: '--seat-h' },
-  bl:   { x: 11.7, y: 51.6, w: 12.5, h: 29.8, varX: '--seat-bl-x',   varY: '--seat-bl-y',  varW: '--seat-w', varH: '--seat-h' },
-  bc:   { x: 43.8, y: 63.5, w: 12.5, h: 29.8, varX: '--seat-bc-x',   varY: '--seat-bc-y',  varW: '--seat-w', varH: '--seat-h' },
-  br:   { x: 75.8, y: 51.6, w: 12.5, h: 29.8, varX: '--seat-br-x',   varY: '--seat-br-y',  varW: '--seat-w', varH: '--seat-h' }
+const PPT_BOXES = {
+  pot:  { label: 'POT',       x: 50.0, y: 15.8, w: 11.4, h: 5.2,  varX: '--pot-left',  varY: '--pot-top',  varW: '--pot-w',  varH: '--pot-h' },
+  comm: { label: 'ไพ่กองกลาง', x: 50.8, y: 44.5, w: 28.6, h: 18.0, varX: '--comm-left', varY: '--comm-top', varW: '--comm-w', varH: '--comm-h' },
+  tl:   { label: 'ซ้ายบน',     x: 6.1,  y: 7.7,  w: 12.5, h: 29.8, varX: '--seat-tl-x', varY: '--seat-tl-y',varW: '--seat-w', varH: '--seat-h' },
+  tr:   { label: 'ขวาบน',     x: 81.4, y: 7.7,  w: 12.5, h: 29.8, varX: '--seat-tr-x', varY: '--seat-tr-y',varW: '--seat-w', varH: '--seat-h' },
+  bl:   { label: 'ซ้ายล่าง',    x: 11.7, y: 51.6, w: 12.5, h: 29.8, varX: '--seat-bl-x', varY: '--seat-bl-y',varW: '--seat-w', varH: '--seat-h' },
+  bc:   { label: 'กลางล่าง',   x: 43.8, y: 63.5, w: 12.5, h: 29.8, varX: '--seat-bc-x', varY: '--seat-bc-y',varW: '--seat-w', varH: '--seat-h' },
+  br:   { label: 'ขวาล่าง',    x: 75.8, y: 51.6, w: 12.5, h: 29.8, varX: '--seat-br-x', varY: '--seat-br-y',varW: '--seat-w', varH: '--seat-h' }
 };
 
-function closeCalibratorForce() {
-  const box = document.getElementById('calibrator-box');
-  const canvas = document.getElementById('table-oval');
+let pptActive = false;
+let pptDragInfo = null;
+let pptSelectedKey = null;
+
+function ensurePptHandles() {
+  document.querySelectorAll('.ppt-box').forEach(el => {
+    const key = el.dataset.box;
+    if (!key || !PPT_BOXES[key]) return;
+    if (!el.querySelector('.ppt-label-tag')) {
+      const tag = document.createElement('span');
+      tag.className = 'ppt-label-tag';
+      tag.textContent = PPT_BOXES[key].label;
+      el.appendChild(tag);
+    }
+    if (!el.querySelector('.ppt-resize-handle')) {
+      const handle = document.createElement('span');
+      handle.className = 'ppt-resize-handle';
+      handle.dataset.resizeKey = key;
+      el.appendChild(handle);
+    }
+    el.classList.toggle('ppt-selected', key === pptSelectedKey);
+  });
+}
+
+function closePptForce() {
+  pptActive = false;
+  pptDragInfo = null;
+  const bar = document.getElementById('ppt-toolbar');
+  const overlay = document.getElementById('board-overlay');
   const btn = document.getElementById('btn-calibrate');
-  if (box) box.style.display = 'none';
-  if (canvas) canvas.classList.remove('calibrate-on');
+  if (bar) bar.style.display = 'none';
+  if (overlay) overlay.classList.remove('ppt-drag-mode');
   if (btn) btn.classList.remove('active-cal');
 }
 
-function toggleCalibrator() {
-  if (!isAdminUser) { closeCalibratorForce(); return; }
-  const box = document.getElementById('calibrator-box');
-  const canvas = document.getElementById('table-oval');
+function togglePptMode() {
+  if (!isAdminUser) { closePptForce(); return; }
+  pptActive = !pptActive;
+  const bar = document.getElementById('ppt-toolbar');
+  const overlay = document.getElementById('board-overlay');
   const btn = document.getElementById('btn-calibrate');
-  const isOpen = box.style.display === 'block';
-  box.style.display = isOpen ? 'none' : 'block';
-  canvas.classList.toggle('calibrate-on', !isOpen);
-  btn.classList.toggle('active-cal', !isOpen);
-  if (!isOpen) syncCalSliders();
+  bar.style.display = pptActive ? 'block' : 'none';
+  overlay.classList.toggle('ppt-drag-mode', pptActive);
+  btn.classList.toggle('active-cal', pptActive);
+  if (pptActive) ensurePptHandles();
 }
 
-function syncCalSliders() {
-  const key = document.getElementById('cal-target').value;
-  const item = CAL_STATE[key];
-  document.getElementById('cal-x').value = item.x;
-  document.getElementById('cal-y').value = item.y;
-  document.getElementById('cal-w').value = item.w;
-  document.getElementById('cal-h').value = item.h;
-  document.getElementById('cal-x-val').innerText = item.x.toFixed(1) + '%';
-  document.getElementById('cal-y-val').innerText = item.y.toFixed(1) + '%';
-  document.getElementById('cal-w-val').innerText = item.w.toFixed(1) + '%';
-  document.getElementById('cal-h-val').innerText = item.h.toFixed(1) + '%';
+function updatePptSelectedInfo() {
+  const info = document.getElementById('ppt-selected-info');
+  if (!info) return;
+  if (!pptSelectedKey || !PPT_BOXES[pptSelectedKey]) {
+    info.textContent = 'จุดที่เลือก: ยังไม่ได้เลือก';
+    return;
+  }
+  const b = PPT_BOXES[pptSelectedKey];
+  info.textContent = `${b.label}: X=${b.x.toFixed(1)}% Y=${b.y.toFixed(1)}% W=${b.w.toFixed(1)}% H=${b.h.toFixed(1)}%`;
 }
 
-function applyCalFromSliders() {
-  if (!isAdminUser) return;
-  const key = document.getElementById('cal-target').value;
-  const item = CAL_STATE[key];
-  item.x = Number(document.getElementById('cal-x').value);
-  item.y = Number(document.getElementById('cal-y').value);
-  item.w = Number(document.getElementById('cal-w').value);
-  item.h = Number(document.getElementById('cal-h').value);
-
+function applyBoxToCss(key) {
+  const b = PPT_BOXES[key];
+  if (!b) return;
   const root = document.documentElement.style;
-  root.setProperty(item.varX, item.x + '%');
-  root.setProperty(item.varY, item.y + '%');
-  root.setProperty(item.varW, item.w + '%');
-  root.setProperty(item.varH, item.h + '%');
-  syncCalSliders();
+  root.setProperty(b.varX, b.x.toFixed(1) + '%');
+  root.setProperty(b.varY, b.y.toFixed(1) + '%');
+  root.setProperty(b.varW, b.w.toFixed(1) + '%');
+  root.setProperty(b.varH, b.h.toFixed(1) + '%');
+  updatePptSelectedInfo();
 }
 
-function copyCalCSS() {
+document.addEventListener('pointerdown', (e) => {
+  if (!pptActive || !isAdminUser) return;
+  const overlay = document.getElementById('board-overlay');
+  if (!overlay) return;
+  const rect = overlay.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+
+  const resizeHandle = e.target.closest('.ppt-resize-handle');
+  if (resizeHandle) {
+    const key = resizeHandle.dataset.resizeKey;
+    const b = PPT_BOXES[key];
+    if (!b) return;
+    e.preventDefault();
+    e.stopPropagation();
+    pptSelectedKey = key;
+    ensurePptHandles();
+    pptDragInfo = {
+      type: 'resize', key,
+      startClientX: e.clientX, startClientY: e.clientY,
+      startW: b.w, startH: b.h,
+      rectW: rect.width, rectH: rect.height
+    };
+    return;
+  }
+
+  const boxEl = e.target.closest('.ppt-box');
+  if (!boxEl) return;
+  const key = boxEl.dataset.box;
+  const b = PPT_BOXES[key];
+  if (!b) return;
+  e.preventDefault();
+  e.stopPropagation();
+  pptSelectedKey = key;
+  ensurePptHandles();
+  updatePptSelectedInfo();
+  pptDragInfo = {
+    type: 'move', key,
+    startClientX: e.clientX, startClientY: e.clientY,
+    startX: b.x, startY: b.y,
+    rectW: rect.width, rectH: rect.height
+  };
+});
+
+document.addEventListener('pointermove', (e) => {
+  if (!pptActive || !pptDragInfo) return;
+  const b = PPT_BOXES[pptDragInfo.key];
+  if (!b) return;
+  const dxPct = ((e.clientX - pptDragInfo.startClientX) / pptDragInfo.rectW) * 100;
+  const dyPct = ((e.clientY - pptDragInfo.startClientY) / pptDragInfo.rectH) * 100;
+
+  if (pptDragInfo.type === 'move') {
+    b.x = Math.max(0, Math.min(98, Number((pptDragInfo.startX + dxPct).toFixed(1))));
+    b.y = Math.max(0, Math.min(98, Number((pptDragInfo.startY + dyPct).toFixed(1))));
+  } else if (pptDragInfo.type === 'resize') {
+    b.w = Math.max(4, Math.min(60, Number((pptDragInfo.startW + dxPct).toFixed(1))));
+    b.h = Math.max(3, Math.min(50, Number((pptDragInfo.startH + dyPct).toFixed(1))));
+  }
+  applyBoxToCss(pptDragInfo.key);
+});
+
+document.addEventListener('pointerup', () => {
+  pptDragInfo = null;
+});
+
+function copyPptValues() {
   if (!isAdminUser) return;
-  const summary = Object.entries(CAL_STATE).map(([k, v]) => `${k}: x=${v.x}%, y=${v.y}%, w=${v.w}%, h=${v.h}%`).join('\n');
-  navigator.clipboard?.writeText(summary).catch(() => {});
-  alert('ก๊อปค่าตำแหน่งแล้วครับ:\n' + summary);
+  const text = Object.entries(PPT_BOXES)
+    .map(([k, b]) => `${k} (${b.label}): x=${b.x.toFixed(1)}%, y=${b.y.toFixed(1)}%, w=${b.w.toFixed(1)}%, h=${b.h.toFixed(1)}%`)
+    .join('\n');
+  navigator.clipboard?.writeText(text).catch(() => {});
+  alert('ก๊อปค่าตำแหน่งทั้งหมดแล้วครับ:\n' + text);
 }
 
 // ============================================================================
@@ -722,7 +805,7 @@ function updateGoogleAuthUI(user) {
   if (lobbyAdminBtn) lobbyAdminBtn.style.display = isAdminUser ? 'inline-flex' : 'none';
   if (topAdminBtn) topAdminBtn.style.display = isAdminUser ? 'inline-block' : 'none';
   if (calibrateBtn) calibrateBtn.style.display = isAdminUser ? 'inline-block' : 'none';
-  if (!isAdminUser) closeCalibratorForce();
+  if (!isAdminUser) closePptForce();
 }
 
 auth.onAuthStateChanged((user) => updateGoogleAuthUI(user));
@@ -1200,6 +1283,13 @@ function finishHand(winner, handName = 'ชนะบาย (คนอื่น�
 // ============================================================================
 const BOARD_SLOT_FOR_ME = 'seat-bot-center';
 const BOARD_OPPONENT_SLOTS = ['seat-top-left', 'seat-bot-left', 'seat-bot-right', 'seat-top-right'];
+const SLOT_TO_BOX_KEY = {
+  'seat-top-left': 'tl',
+  'seat-top-right': 'tr',
+  'seat-bot-left': 'bl',
+  'seat-bot-center': 'bc',
+  'seat-bot-right': 'br'
+};
 
 function fallbackCardText(imgEl, val, suit) {
   tryImageCaseFallback(imgEl, (finalImg) => {
@@ -1233,7 +1323,8 @@ function renderSeatBoxHTML(p, slotCls, options = {}) {
   const c1 = p.hand && p.hand[1] ? p.hand[1] : null;
   const turnTag = isMe ? '' : (isTurn ? 'คิด...' : '');
   const tagText = isWinner ? 'WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag));
-  return `<div class="board-seat ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}"><div class="board-seat-cards">${renderBoardMiniCard(c0, canSeeCards)}${renderBoardMiniCard(c1, canSeeCards)}</div><div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}</div><div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div></div>`;
+  const boxKey = SLOT_TO_BOX_KEY[slotCls] || '';
+  return `<div class="board-seat ppt-box ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}" data-box="${boxKey}"><div class="board-seat-cards">${renderBoardMiniCard(c0, canSeeCards)}${renderBoardMiniCard(c1, canSeeCards)}</div><div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}</div><div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div></div>`;
 }
 
 function renderUI() {
@@ -1285,7 +1376,8 @@ function renderUI() {
   const peeked = me.peekedPlayers || [];
   BOARD_OPPONENT_SLOTS.forEach((slotCls, posIdx) => {
     const item = opponents[posIdx];
-    if (!item) { seatsHTML += `<div class="board-seat ${slotCls}" style="opacity:0.22;"></div>`; return; }
+    const boxKey = SLOT_TO_BOX_KEY[slotCls] || '';
+    if (!item) { seatsHTML += `<div class="board-seat ppt-box ${slotCls}" data-box="${boxKey}" style="opacity:0.22;"></div>`; return; }
     const { player: p, idx } = item;
     seatsHTML += renderSeatBoxHTML(p, slotCls, {
       isMe: false, isTurn: gameState.turnIndex === idx && !isShowdown && !isWaiting,
@@ -1297,7 +1389,8 @@ function renderUI() {
   const commArea = document.getElementById('community-cards');
   const commSignature = comm.map(c => c ? `${c.val}${c.suit}` : '').join(',');
   if (isNewHandStart || comm.length !== prevCommCount || commArea.dataset.sig !== commSignature) {
-    commArea.dataset.sig = commSignature; commArea.innerHTML = '';
+    commArea.dataset.sig = commSignature;
+    commArea.innerHTML = '<span class="ppt-label-tag">ไพ่กองกลาง</span>';
     let newlyIdx = 0;
     for (let i = 0; i < 5; i++) {
       const isNewlyRevealed = Boolean(comm[i]) && i >= prevCommCount && comm.length > prevCommCount;
@@ -1306,6 +1399,8 @@ function renderUI() {
       commArea.innerHTML += renderCardHTML(comm[i], { flip: isNewlyRevealed, delayMs });
     }
   }
+
+  if (pptActive) ensurePptHandles();
 
   const myHandArea = document.getElementById('my-poker-cards');
   const handSignature = (me.hand || []).map(c => c ? `${c.val}${c.suit}` : '').join(',');
