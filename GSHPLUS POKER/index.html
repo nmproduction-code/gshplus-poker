@@ -303,23 +303,35 @@
   }
   .cards-row { display: flex; gap: 12px; align-items: center; justify-content: center; }
 
-  /* Power Cards (Larger) */
+  /* Full-Art Power Cards */
   .power-card {
-    width: 112px; height: 144px; border-radius: 12px;
-    background: linear-gradient(145deg, #311b92, #14082b);
+    width: var(--card-w); height: var(--card-h); border-radius: 12px;
+    background: #14082b;
     border: 2px solid #b388ff; color: #fff;
-    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-    padding: 6px; cursor: pointer; position: relative; overflow: hidden;
-    transition: transform 0.2s, border-color 0.2s;
-    box-shadow: 0 6px 16px rgba(124,77,255,0.48);
+    padding: 0; cursor: pointer; position: relative; overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 7px 18px rgba(0,0,0,0.65);
   }
-  .power-card:hover:not(.used) { transform: translateY(-6px) scale(1.02); border-color: var(--gold); }
-  .power-card.used { opacity: 0.32; pointer-events: none; filter: grayscale(1); }
-  .power-card img { width: 100%; height: 92px; object-fit: cover; border-radius: 7px; background: #000; }
-  .power-card .p-title { font-size: 0.88rem; font-weight: 600; text-align: center; color: #f3e5f5; line-height: 1.15; }
+  .power-card:hover:not(.used) {
+    transform: translateY(-6px) scale(1.03);
+    border-color: var(--gold);
+    box-shadow: 0 10px 24px rgba(245, 185, 66, 0.45);
+  }
+  .power-card.used { opacity: 0.35; pointer-events: none; filter: grayscale(1); }
+  .power-card img {
+    width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 10px;
+  }
+  .power-card .p-title {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 14px 6px 5px;
+    background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.45) 65%, transparent 100%);
+    font-size: 0.86rem; font-weight: 700; text-align: center; color: #fff; line-height: 1.15;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+  }
   .power-card .p-badge {
-    position: absolute; top: 4px; right: 4px; background: var(--gold); color: #000;
-    font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 6px;
+    position: absolute; top: 5px; right: 5px; background: var(--gold); color: #140d00;
+    font-size: 0.68rem; font-weight: 800; padding: 2px 7px; border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5); z-index: 2;
   }
 
   /* Controls & Custom Raise */
@@ -351,8 +363,40 @@
 
   /* Modal & Admin */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
-  .modal-box { background: #102e1e; border: 2px solid var(--gold); border-radius: 16px; padding: 22px; max-width: 560px; width: 100%; text-align: center; max-height: 88vh; display: flex; flex-direction: column; }
+  .modal-box { background: #102e1e; border: 2px solid var(--gold); border-radius: 16px; padding: 22px; max-width: 580px; width: 100%; text-align: center; max-height: 88vh; display: flex; flex-direction: column; }
   .target-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; overflow-y: auto; text-align: left; }
+
+  .guide-card-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px; border-radius: 12px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
+  }
+  .guide-card-thumb {
+    width: 56px; height: 78px; border-radius: 8px; object-fit: cover;
+    border: 1.5px solid #b388ff; flex-shrink: 0; background: #14082b;
+  }
+  .guide-tag {
+    display: inline-block; font-size: 0.72rem; font-weight: 700;
+    padding: 1px 7px; border-radius: 999px; margin-left: 6px;
+    background: rgba(245, 185, 66, 0.22); color: var(--gold-light);
+    border: 1px solid rgba(245, 185, 66, 0.45);
+  }
+  .rank-row-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 9px 12px; border-radius: 10px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  }
+  .rank-num {
+    width: 26px; height: 26px; border-radius: 999px;
+    background: rgba(245,185,66,0.2); border: 1px solid var(--gold);
+    color: var(--gold-light); font-size: 0.82rem; font-weight: 800;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .rank-sample {
+    font-size: 0.84rem; font-weight: 700; color: #ffe58f;
+    background: rgba(0,0,0,0.35); padding: 3px 8px; border-radius: 8px;
+    white-space: nowrap;
+  }
 
   .log-history-list {
     display: flex; flex-direction: column; gap: 6px; margin: 12px 0;
@@ -416,14 +460,13 @@
     .seat-chips { font-size: 0.78rem; }
     .seat-bet-tag { font-size: 0.74rem; }
     .mini-card { width: 32px; height: 46px; }
-    .power-card { width: 92px; height: 122px; }
-    .power-card img { height: 74px; }
-    .power-card .p-title { font-size: 0.78rem; }
+    .power-card .p-title { font-size: 0.76rem; }
     .table-oval { padding: 14px 12px; border-radius: 28px; }
     .pot-box { font-size: 1.2rem; padding: 6px 22px; }
     .log-banner { font-size: 0.92rem; }
     .controls-row .btn { font-size: 0.92rem; padding: 11px 8px; }
     .raise-input { width: 78px; font-size: 0.9rem; }
+    .rank-row-item { flex-direction: column; align-items: flex-start; }
   }
 </style>
 </head>
@@ -451,6 +494,7 @@
     
     <button class="btn btn-gold" onclick="startSoloBotMode()">🤖 เล่นโหมดทดสอบ (สู้กับบอท 5 ตัว)</button>
     <div style="display:flex; gap:8px;">
+      <button class="btn btn-ghost" style="margin-bottom:0;" onclick="openGuideModal('skills')">📖 คู่มือสกิล & แรงค์ไพ่</button>
       <button class="btn btn-ghost" style="margin-bottom:0;" onclick="openLeaderboardModal()">🏆 Leaderboard</button>
       <button class="btn btn-ghost" id="btn-open-admin" style="display:none; margin-bottom:0; border-color:var(--gold); color:var(--gold-light);" onclick="openAdminModal()">🛠️ หลังบ้าน</button>
     </div>
@@ -475,6 +519,8 @@
       <div class="timer-badge" id="turn-timer">⏱️ 15s</div>
     </div>
     <div class="top-actions">
+      <button class="small-btn" onclick="openGuideModal('skills')">⚡ สกิลการ์ด</button>
+      <button class="small-btn" onclick="openGuideModal('ranks')">🃏 แรงค์ไพ่</button>
       <button class="small-btn" onclick="openLogModal()">📜 ประวัติ Log (<span id="log-count-badge">0</span>)</button>
       <button class="small-btn" onclick="openLeaderboardModal()">🏆 Leaderboard</button>
       <button class="small-btn" id="btn-top-admin" style="display:none; border-color:var(--gold); color:var(--gold-light);" onclick="openAdminModal()">🛠️ หลังบ้าน</button>
@@ -529,6 +575,19 @@
       <button class="btn btn-green" id="btn-start-online" style="display:none;" onclick="startOnlineGame()">🚀 เริ่มแจกไพ่ (ครบคนแล้วกดเลย)</button>
       <button class="btn btn-green" id="btn-next-round" style="display:none;" onclick="startNewHand()">แจกไพ่ตาถัดไป ▶</button>
     </div>
+  </div>
+</div>
+
+<!-- Modal คู่มือสกิลการ์ด & ลำดับความใหญ่ของ Poker -->
+<div class="modal-overlay" id="guide-modal">
+  <div class="modal-box">
+    <h3 style="color:var(--gold); margin:0 0 6px; font-size:1.25rem; font-weight:700;">📖 คู่มือสกิลการ์ด & แรงค์ Poker</h3>
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" id="tab-guide-skills" onclick="switchGuideTab('skills')">⚡ สกิลการ์ดพลัง</button>
+      <button class="admin-tab-btn" id="tab-guide-ranks" onclick="switchGuideTab('ranks')">🃏 ลำดับความใหญ่ของ Poker</button>
+    </div>
+    <div class="target-list" id="guide-content-list" style="max-height:360px;"></div>
+    <button class="btn btn-gold" style="margin-bottom:0;" onclick="closeGuideModal()">ปิดหน้าต่าง</button>
   </div>
 </div>
 
@@ -725,6 +784,7 @@ const ADMIN_EMAILS = [
 let currentGoogleUser = null;
 let isAdminUser = false;
 let activeAdminTab = 'rooms';
+let activeGuideTab = 'skills';
 
 function checkIsAdmin(user) {
   if (!user || !user.email) return false;
@@ -779,6 +839,68 @@ async function toggleGoogleLogin() {
     await auth.signInWithPopup(provider);
   } catch (err) {
     alert('ล็อกอิน Google ไม่สำเร็จ: ' + (err?.message || 'โปรดลองอีกครั้ง'));
+  }
+}
+
+// ============================================================================
+// 📖 1.1 หน้าต่างคู่มือสกิลการ์ด & ลำดับความใหญ่ของ Poker
+// ============================================================================
+const POKER_HAND_RANKS = [
+  { rankNo: 1, name: 'Straight Flush', th: 'สเตรทฟลัช', sample: '9♠ 8♠ 7♠ 6♠ 5♠', desc: 'ไพ่ 5 ใบเรียงลำดับกันและดอกเดียวกันทั้งหมด' },
+  { rankNo: 2, name: 'Four of a Kind', th: 'โฟร์การ์ด', sample: 'K♠ K♥ K♦ K♣ 4♠', desc: 'ไพ่แต้มเดียวกัน 4 ใบ' },
+  { rankNo: 3, name: 'Full House', th: 'ฟูลเฮาส์', sample: 'Q♠ Q♥ Q♦ 10♣ 10♠', desc: 'ไพ่ตอง 3 ใบ + ไพ่คู่ 2 ใบในชุดเดียว' },
+  { rankNo: 4, name: 'Flush', th: 'ฟลัช (สี)', sample: 'A♦ J♦ 9♦ 6♦ 2♦', desc: 'ไพ่ดอกเดียวกัน 5 ใบ (ไม่จำเป็นต้องเรียง)' },
+  { rankNo: 5, name: 'Straight', th: 'สเตรท (เรียง)', sample: '10♣ 9♦ 8♥ 7♠ 6♣', desc: 'ไพ่ 5 ใบเรียงแต้มต่อเนื่องกัน (A-2-3-4-5 ก็เรียง)' },
+  { rankNo: 6, name: 'Three of a Kind', th: 'ตอง', sample: '8♠ 8♥ 8♦ K♣ 3♠', desc: 'ไพ่แต้มเดียวกัน 3 ใบ' },
+  { rankNo: 7, name: 'Two Pair', th: 'สองคู่', sample: 'J♠ J♦ 7♥ 7♣ A♠', desc: 'ไพ่คู่ 2 ชุดในมือรวมกองกลาง' },
+  { rankNo: 8, name: 'One Pair', th: 'หนึ่งคู่', sample: 'A♠ A♥ K♦ 9♣ 4♦', desc: 'ไพ่แต้มเดียวกัน 2 ใบ' },
+  { rankNo: 9, name: 'High Card', th: 'ไพ่สูง', sample: 'A♠ Q♦ 10♥ 7♣ 2♠', desc: 'ไม่มีชุดใดเข้าเกณฑ์ วัดกันที่ใบแต้มสูงสุด (A ใหญ่สุด)' }
+];
+
+function openGuideModal(initialTab = 'skills') {
+  activeGuideTab = initialTab;
+  document.getElementById('guide-modal').style.display = 'flex';
+  switchGuideTab(initialTab);
+}
+
+function closeGuideModal() {
+  document.getElementById('guide-modal').style.display = 'none';
+}
+
+function switchGuideTab(tab) {
+  activeGuideTab = tab;
+  document.getElementById('tab-guide-skills').classList.toggle('active', tab === 'skills');
+  document.getElementById('tab-guide-ranks').classList.toggle('active', tab === 'ranks');
+
+  const listEl = document.getElementById('guide-content-list');
+  if (tab === 'skills') {
+    listEl.innerHTML = POWER_CARDS_POOL.map(card => `
+      <div class="guide-card-item">
+        <img class="guide-card-thumb" src="${card.image}" alt="${card.name}" onerror="tryImageCaseFallback(this, (el) => { el.src='${getFallbackSVG()}'; });">
+        <div style="min-width:0;">
+          <div style="font-weight:700; color:var(--gold-light); font-size:0.98rem;">
+            ${card.name}
+            <span class="guide-tag">${card.needTarget ? 'เลือกเป้าหมาย' : 'ใช้ได้ทันที'}</span>
+          </div>
+          <div style="font-size:0.84rem; color:#e5e7eb; margin-top:2px; line-height:1.35;">${card.desc}</div>
+        </div>
+      </div>
+    `).join('');
+  } else {
+    listEl.innerHTML = POKER_HAND_RANKS.map(item => `
+      <div class="rank-row-item">
+        <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+          <span class="rank-num">${item.rankNo}</span>
+          <div style="min-width:0;">
+            <div style="font-weight:700; color:#fff; font-size:0.92rem;">
+              ${item.name} <span style="color:#a5d6a7; font-weight:500;">(${item.th})</span>
+            </div>
+            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.3;">${item.desc}</div>
+          </div>
+        </div>
+        <div class="rank-sample">${item.sample}</div>
+      </div>
+    `).join('');
   }
 }
 
@@ -1093,7 +1215,7 @@ function tryImageCaseFallback(imgEl, onFinalFail) {
 const POWER_CARDS_POOL = [
   {
     id: 'peek',
-    name: 'เนตรวงแหวน',
+    name: 'แง้ม',
     desc: 'แอบดูไพ่บนมือของคู่แข่ง 1 คนตลอดทั้งตานี้',
     image: './cards/peek.png',
     needTarget: true
@@ -1135,7 +1257,7 @@ function applyPowerEffect(cardId, state, userIdx, targetIdx) {
   if (cardId === 'peek') {
     if (!user.peekedPlayers) user.peekedPlayers = [];
     user.peekedPlayers.push(targetIdx);
-    return `${user.name} ใช้ [เนตรวงแหวน] แอบส่องไพ่ของ ${target.name}!`;
+    return `${user.name} ใช้ [แง้ม] แอบส่องไพ่ของ ${target.name}!`;
   }
   if (cardId === 'swap') {
     const myIdx = Math.floor(Math.random() * 2);
@@ -1764,9 +1886,9 @@ function renderOpponentMiniCard(card, canSee) {
 }
 
 function getFallbackSVG() {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="90">
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="160">
     <rect width="100%" height="100%" fill="#311b92"/>
-    <text x="50%" y="50%" font-size="28" text-anchor="middle" dominant-baseline="middle">⚡</text>
+    <text x="50%" y="50%" font-size="34" text-anchor="middle" dominant-baseline="middle">⚡</text>
   </svg>`;
   return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
 }
@@ -1893,9 +2015,9 @@ function renderUI() {
   if (powerIdsSignature !== lastRenderedPowerSignature || myPowerArea.children.length !== powerList.length) {
     lastRenderedPowerSignature = powerIdsSignature;
     myPowerArea.innerHTML = powerList.map(pc => `
-      <div class="power-card ${pc.used ? 'used' : ''} ${isNewHandStart ? 'anim-deal' : ''}" data-uid="${pc.uid}" onclick="onClickPowerCard('${pc.uid}')" title="${pc.desc}">
+      <div class="power-card ${pc.used ? 'used' : ''} ${isNewHandStart ? 'anim-deal' : ''}" data-uid="${pc.uid}" onclick="onClickPowerCard('${pc.uid}')" title="${pc.name}: ${pc.desc}">
         <span class="p-badge">${pc.used ? 'ใช้แล้ว' : 'กดใช้'}</span>
-        <img src="${pc.image}" onerror="tryImageCaseFallback(this, (el) => { el.src='${getFallbackSVG()}'; });">
+        <img src="${pc.image}" alt="${pc.name}" onerror="tryImageCaseFallback(this, (el) => { el.src='${getFallbackSVG()}'; });">
         <div class="p-title">${pc.name}</div>
       </div>
     `).join('');
