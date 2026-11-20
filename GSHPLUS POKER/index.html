@@ -17,41 +17,41 @@
     --card-w: 84px;
     --card-h: 118px;
 
-    /* ค่าตำแหน่งที่จัดบาลานซ์แล้ว */
-    --pot-left: 41.5%;
-    --pot-top: 12.8%;
-    --pot-w: 17.0%;
-    --pot-h: 5.6%;
+    /* ค่าตำแหน่งที่จัดให้ตรงกับภาพต้นแบบ */
+    --pot-left: 44.2%;
+    --pot-top: 15.2%;
+    --pot-w: 11.6%;
+    --pot-h: 5.2%;
 
-    --comm-left: 30.7%;
-    --comm-top: 33.6%;
-    --comm-w: 38.7%;
-    --comm-h: 19.6%;
+    --comm-left: 30.2%;
+    --comm-top: 32.0%;
+    --comm-w: 39.6%;
+    --comm-h: 22.8%;
 
-    --seat-tl-x: 7.9%;
-    --seat-tl-y: 11.6%;
-    --seat-tl-w: 12.2%;
-    --seat-tl-h: 28.6%;
+    --seat-tl-x: 6.2%;
+    --seat-tl-y: 8.8%;
+    --seat-tl-w: 16.4%;
+    --seat-tl-h: 33.4%;
 
-    --seat-tr-x: 79.9%;
-    --seat-tr-y: 11.6%;
-    --seat-tr-w: 12.2%;
-    --seat-tr-h: 28.6%;
+    --seat-tr-x: 77.4%;
+    --seat-tr-y: 8.8%;
+    --seat-tr-w: 16.4%;
+    --seat-tr-h: 33.4%;
 
-    --seat-bl-x: 13.4%;
-    --seat-bl-y: 51.2%;
-    --seat-bl-w: 12.5%;
-    --seat-bl-h: 29.8%;
+    --seat-bl-x: 11.8%;
+    --seat-bl-y: 48.0%;
+    --seat-bl-w: 16.4%;
+    --seat-bl-h: 33.4%;
 
-    --seat-bc-x: 43.8%;
-    --seat-bc-y: 63.5%;
-    --seat-bc-w: 12.5%;
-    --seat-bc-h: 29.8%;
+    --seat-bc-x: 41.8%;
+    --seat-bc-y: 60.4%;
+    --seat-bc-w: 16.4%;
+    --seat-bc-h: 33.4%;
 
-    --seat-br-x: 74.1%;
-    --seat-br-y: 51.2%;
-    --seat-br-w: 12.5%;
-    --seat-br-h: 29.8%;
+    --seat-br-x: 71.8%;
+    --seat-br-y: 48.0%;
+    --seat-br-w: 16.4%;
+    --seat-br-h: 33.4%;
   }
   * {
     box-sizing: border-box;
@@ -190,7 +190,7 @@
   .board-pot-overlay {
     position: absolute; left: var(--pot-left); top: var(--pot-top);
     width: var(--pot-w); height: var(--pot-h); display: flex; align-items: center; justify-content: center;
-    font-size: clamp(1.15rem, 2vw, 1.8rem); font-weight: 800; color: var(--gold-light);
+    font-size: clamp(1.05rem, 1.85vw, 1.65rem); font-weight: 800; color: var(--gold-light);
     letter-spacing: 0.5px;
     text-shadow: 0 0 10px rgba(255, 213, 79, 0.85), 0 0 22px rgba(245, 185, 66, 0.6), 0 2px 6px rgba(0, 0, 0, 0.95);
   }
@@ -209,7 +209,8 @@
   .board-seat {
     position: absolute;
     border-radius: 6px; border: 1.5px solid transparent; background: transparent;
-    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    display: flex; flex-direction: column; align-items: stretch; justify-content: space-between;
+    gap: 3px;
   }
   .board-seat.seat-top-left    { left: var(--seat-tl-x); top: var(--seat-tl-y); width: var(--seat-tl-w); height: var(--seat-tl-h); }
   .board-seat.seat-top-right   { left: var(--seat-tr-x); top: var(--seat-tr-y); width: var(--seat-tr-w); height: var(--seat-tr-h); }
@@ -258,17 +259,15 @@
   }
   .board-seat.folded { opacity: 0.45; filter: grayscale(0.5); }
 
-  /* การ์ดบนกระดาน: จัดสัดส่วน 2 ใบชิดกันตามเรฟ */
+  /* การ์ดบนกระดาน: 2 ใบซ้าย-ขวา เต็มความกว้างกรอบเหมือนต้นแบบ */
   .board-seat-cards {
-    flex: 1 1 auto; min-height: 0; width: 100%; height: 60%;
-    display: flex; align-items: stretch; justify-content: center; gap: 2px;
-    padding: 0;
+    flex: 1 1 auto; min-height: 0; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+    align-items: stretch; justify-items: stretch;
   }
   .board-mini-card {
-    flex: 1 1 0;
-    width: auto; min-width: 0;
-    height: 100%; max-height: 100%;
-    border-radius: 3px; overflow: hidden; border: 1.5px solid #fff;
+    width: 100%; height: 100%; min-width: 0; min-height: 0;
+    border-radius: 4px; overflow: hidden; border: 1.5px solid #fff;
     background: linear-gradient(135deg, #8e1414, #4f0707);
     display: flex; align-items: center; justify-content: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.55);
@@ -279,27 +278,25 @@
   .board-mini-card.back-card img { object-fit: fill; background: #5a0b0b; }
   .board-mini-card.revealed { background: #fff; border-color: var(--gold-light); box-shadow: 0 0 10px rgba(255, 213, 79, 0.45), 0 4px 10px rgba(0,0,0,0.55); }
 
-  /* แถบชื่อ และ แถบแต้ม/ชิป บนกระดาน: เต็มความกว้างกรอบตามเรฟ */
+  /* แถบชื่อ และ แถบแต้ม/ชิป บนกระดาน: เต็มความกว้างกรอบเหมือนต้นแบบ */
   .board-seat-name,
   .board-seat-chips {
+    flex: 0 0 auto;
     width: 100%;
-    max-width: 100%;
     border-radius: 3px;
-    display: flex; align-items: center; justify-content: center; gap: 3px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 1px 4px;
+    display: flex; align-items: center; justify-content: center; gap: 4px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 2px 5px;
   }
   .board-seat-name {
-    height: 19%; min-height: 16px; margin-top: 2px;
-    background: rgba(0, 0, 0, 0.76);
-    font-size: clamp(0.64rem, 0.92vw, 0.9rem); font-weight: 700; color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(0, 0, 0, 0.78);
+    font-size: clamp(0.66rem, 0.96vw, 0.92rem); font-weight: 700; color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
   .board-seat-chips {
-    height: 19%; min-height: 16px; margin-top: 2px;
-    background: rgba(0, 0, 0, 0.78);
-    font-size: clamp(0.7rem, 1.02vw, 0.98rem); font-weight: 800; color: var(--gold-light);
-    border: 1px solid rgba(245, 185, 66, 0.5);
-    box-shadow: 0 0 10px rgba(245, 185, 66, 0.32);
+    background: rgba(0, 0, 0, 0.8);
+    font-size: clamp(0.72rem, 1.06vw, 1rem); font-weight: 800; color: var(--gold-light);
+    border: 1px solid rgba(245, 185, 66, 0.55);
+    box-shadow: 0 0 10px rgba(245, 185, 66, 0.35);
     text-shadow: 0 0 8px rgba(255, 213, 79, 0.65);
   }
 
@@ -601,13 +598,13 @@
 // 📐 โหมดลากวางเหมือน PowerPoint (เฉพาะแอดมิน)
 // ============================================================================
 const PPT_BOXES = {
-  pot:  { label: 'POT',        x: 41.5, y: 12.8, w: 17.0, h: 5.6,  varX: '--pot-left',  varY: '--pot-top',  varW: '--pot-w',     varH: '--pot-h' },
-  comm: { label: 'ไพ่กองกลาง',  x: 30.7, y: 33.6, w: 38.7, h: 19.6, varX: '--comm-left', varY: '--comm-top', varW: '--comm-w',    varH: '--comm-h' },
-  tl:   { label: 'ซ้ายบน',      x: 7.9,  y: 11.6, w: 12.2, h: 28.6, varX: '--seat-tl-x', varY: '--seat-tl-y',varW: '--seat-tl-w', varH: '--seat-tl-h' },
-  tr:   { label: 'ขวาบน',      x: 79.9, y: 11.6, w: 12.2, h: 28.6, varX: '--seat-tr-x', varY: '--seat-tr-y',varW: '--seat-tr-w', varH: '--seat-tr-h' },
-  bl:   { label: 'ซ้ายล่าง',     x: 13.4, y: 51.2, w: 12.5, h: 29.8, varX: '--seat-bl-x', varY: '--seat-bl-y',varW: '--seat-bl-w', varH: '--seat-bl-h' },
-  bc:   { label: 'กลางล่าง',    x: 43.8, y: 63.5, w: 12.5, h: 29.8, varX: '--seat-bc-x', varY: '--seat-bc-y',varW: '--seat-bc-w', varH: '--seat-bc-h' },
-  br:   { label: 'ขวาล่าง',     x: 74.1, y: 51.2, w: 12.5, h: 29.8, varX: '--seat-br-x', varY: '--seat-br-y',varW: '--seat-br-w', varH: '--seat-br-h' }
+  pot:  { label: 'POT',        x: 44.2, y: 15.2, w: 11.6, h: 5.2,  varX: '--pot-left',  varY: '--pot-top',  varW: '--pot-w',     varH: '--pot-h' },
+  comm: { label: 'ไพ่กองกลาง',  x: 30.2, y: 32.0, w: 39.6, h: 22.8, varX: '--comm-left', varY: '--comm-top', varW: '--comm-w',    varH: '--comm-h' },
+  tl:   { label: 'ซ้ายบน',      x: 6.2,  y: 8.8,  w: 16.4, h: 33.4, varX: '--seat-tl-x', varY: '--seat-tl-y',varW: '--seat-tl-w', varH: '--seat-tl-h' },
+  tr:   { label: 'ขวาบน',      x: 77.4, y: 8.8,  w: 16.4, h: 33.4, varX: '--seat-tr-x', varY: '--seat-tr-y',varW: '--seat-tr-w', varH: '--seat-tr-h' },
+  bl:   { label: 'ซ้ายล่าง',     x: 11.8, y: 48.0, w: 16.4, h: 33.4, varX: '--seat-bl-x', varY: '--seat-bl-y',varW: '--seat-bl-w', varH: '--seat-bl-h' },
+  bc:   { label: 'กลางล่าง',    x: 41.8, y: 60.4, w: 16.4, h: 33.4, varX: '--seat-bc-x', varY: '--seat-bc-y',varW: '--seat-bc-w', varH: '--seat-bc-h' },
+  br:   { label: 'ขวาล่าง',     x: 71.8, y: 48.0, w: 16.4, h: 33.4, varX: '--seat-br-x', varY: '--seat-br-y',varW: '--seat-br-w', varH: '--seat-br-h' }
 };
 
 let pptActive = false;
