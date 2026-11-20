@@ -163,6 +163,19 @@
   .seat.winner-seat.arc-mid { transform: translateY(2px) scale(1.07) !important; }
   .seat.winner-seat.arc-center { transform: translateY(-4px) scale(1.07) !important; }
 
+  .blind-badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .blind-d { background: #ffd54f; color: #1a1100; }
+  .blind-sb { background: #29b6f6; color: #041926; }
+  .blind-bb { background: #ff7043; color: #fff; }
+
   .seat-name { font-size: 0.98rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .seat-money-row {
     display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px;
@@ -458,6 +471,7 @@
     <div class="top-left-badges">
       <div class="room-badge" id="mode-badge">โหมดทดสอบ (BOT)</div>
       <div class="stage-badge" id="round-stage">WAITING</div>
+      <div class="stage-badge" id="blinds-badge">SB 50 / BB 100</div>
       <div class="timer-badge" id="turn-timer">⏱️ 15s</div>
     </div>
     <div class="top-actions">
@@ -488,7 +502,8 @@
       <div class="hand-group">
         <div class="hand-label">
           <span id="my-name-label">คุณ</span>
-          <span class="my-chip-pill">💰 เงินคุณ: <span id="my-chips-display">1,000</span> ชิป</span>
+          <span id="my-blind-tag"></span>
+          <span class="my-chip-pill">💰 เงินคุณ: <span id="my-chips-display">5,000</span> ชิป</span>
           <span class="my-bet-pill" id="my-bet-pill">ลงรอบนี้: 0</span>
           <span class="hand-rank-pill" id="my-hand-rank">รอแจกไพ่</span>
         </div>
@@ -698,6 +713,10 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
 
+const STARTING_CHIPS = 5000;
+const SMALL_BLIND = 50;
+const BIG_BLIND = 100;
+
 // ใส่อีเมล Google ของผู้ดูแลระบบที่ต้องการให้เห็นปุ่ม "หลังบ้าน"
 const ADMIN_EMAILS = [
   "natkamon11208@gmail.com"
@@ -895,8 +914,8 @@ function adminAdjustChips(uid, name, currentChips) {
 
 function adminResetUser(uid, name) {
   if (!isAdminUser || !uid) return;
-  db.ref('leaderboard/' + uid).update({ chips: 1000, wins: 0, updatedAt: Date.now() }).then(() => {
-    writeAdminAuditLog(`รีเซ็ตสถิติ Leaderboard ของ ${name}`);
+  db.ref('leaderboard/' + uid).update({ chips: STARTING_CHIPS, wins: 0, updatedAt: Date.now() }).then(() => {
+    writeAdminAuditLog(`รีเซ็ตสถิติ Leaderboard ของ ${name} เป็น ${formatMoney(STARTING_CHIPS)}`);
     refreshAdminData();
   });
 }
@@ -921,7 +940,7 @@ function ensureLeaderboardEntry(user, displayName) {
         uid: user.uid,
         name: displayName || user.displayName || 'Player',
         photoURL: user.photoURL || '',
-        chips: 1000,
+        chips: STARTING_CHIPS,
         wins: 0,
         updatedAt: Date.now()
       });
@@ -943,7 +962,7 @@ function recordLeaderboardWin(winnerPlayer, potWon) {
       uid: currentGoogleUser.uid,
       name: winnerPlayer.name || currentGoogleUser.displayName || 'Player',
       photoURL: currentGoogleUser.photoURL || '',
-      chips: 1000,
+      chips: STARTING_CHIPS,
       wins: 0
     };
     return {
@@ -1116,7 +1135,7 @@ function applyPowerEffect(cardId, state, userIdx, targetIdx) {
   if (cardId === 'peek') {
     if (!user.peekedPlayers) user.peekedPlayers = [];
     user.peekedPlayers.push(targetIdx);
-    return `${user.name} ใช้ [ขอดูหน่อย] แอบส่องไพ่ของ ${target.name}!`;
+    return `${user.name} ใช้ [เนตรวงแหวน] แอบส่องไพ่ของ ${target.name}!`;
   }
   if (cardId === 'swap') {
     const myIdx = Math.floor(Math.random() * 2);
@@ -1248,7 +1267,7 @@ function syncTurnTimerWithState() {
 }
 
 // ============================================================================
-// 🎲 4. ระบบหลักของเกม + เดิมพันแบบกรอกยอด + บอทสมดุล
+// 🎲 4. ระบบหลักของเกม + Small/Big Blind + ตั้งต้น 5,000 + บอทสมดุล
 // ============================================================================
 const SUITS = ['♠', '♥', '♦', '♣'];
 const VALUES = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -1258,6 +1277,7 @@ let isOnline = false;
 let roomCode = '';
 let myPlayerId = 'p0';
 let gameState = null;
+let handCounter = 0;
 let lastRenderedStage = -1;
 let lastRenderedCommunityCount = 0;
 let lastRenderedHandSignature = '';
@@ -1299,12 +1319,13 @@ function getCustomRaiseAdd() {
 function startSoloBotMode() {
   getAudioContext();
   isOnline = false;
+  handCounter = 0;
   const myName = document.getElementById('player-name').value.trim() || (currentGoogleUser?.displayName || 'คุณ');
   const botNames = ['บอทสมชาย', 'บอทเจ๊ไฝ', 'บอทเสี่ยช้าง', 'บอทน้องแพรว', 'บอทลุงพล'];
   
-  let players = [{ id: 'p0', name: myName, chips: 1000, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [] }];
+  let players = [{ id: 'p0', name: myName, chips: STARTING_CHIPS, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '' }];
   botNames.forEach((bName, idx) => {
-    players.push({ id: 'p' + (idx + 1), name: bName, chips: 1000, isBot: true, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [] });
+    players.push({ id: 'p' + (idx + 1), name: bName, chips: STARTING_CHIPS, isBot: true, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '' });
   });
 
   gameState = {
@@ -1313,13 +1334,16 @@ function startSoloBotMode() {
     community: [],
     pot: 0,
     currentBet: 0,
+    dealerIndex: -1,
+    sbIndex: -1,
+    bbIndex: -1,
     turnIndex: 0,
     stageIndex: 0,
     winnerId: null,
     logs: [],
     log: 'เริ่มเกม! แจกไพ่โปกเกอร์คนละ 2 ใบ + การ์ดพลัง 2 ใบ'
   };
-  appendGameLog(gameState, 'เริ่มเกมโหมดทดสอบ (สู้กับบอท 5 ตัว)');
+  appendGameLog(gameState, `เริ่มเกมโหมดทดสอบ (ชิปตั้งต้น ${formatMoney(STARTING_CHIPS)} • SB ${SMALL_BLIND} / BB ${BIG_BLIND})`);
 
   document.getElementById('lobby-screen').style.display = 'none';
   document.getElementById('game-screen').style.display = 'flex';
@@ -1336,30 +1360,67 @@ function startOnlineGame() {
 
 function startNewHand() {
   SFX.deal();
+  handCounter++;
+  const n = gameState.players.length;
+  const dealerIdx = handCounter === 1
+    ? 0
+    : ((typeof gameState.dealerIndex === 'number' && gameState.dealerIndex >= 0 ? gameState.dealerIndex : 0) + 1) % n;
+
+  let sbIdx, bbIdx, firstTurnIdx;
+  if (n === 2) {
+    sbIdx = dealerIdx;
+    bbIdx = (dealerIdx + 1) % n;
+    firstTurnIdx = sbIdx;
+  } else {
+    sbIdx = (dealerIdx + 1) % n;
+    bbIdx = (dealerIdx + 2) % n;
+    firstTurnIdx = (bbIdx + 1) % n;
+  }
+
   gameState.deck = createDeck();
   gameState.community = [];
   gameState.pot = 0;
-  gameState.currentBet = 50;
+  gameState.currentBet = 0;
+  gameState.dealerIndex = dealerIdx;
+  gameState.sbIndex = sbIdx;
+  gameState.bbIndex = bbIdx;
   gameState.stageIndex = 0;
-  gameState.turnIndex = 0;
   gameState.winnerId = null;
 
-  gameState.players.forEach((p) => {
-    if (p.chips <= 0) p.chips = 500;
-    const ante = Math.min(50, p.chips);
-    p.chips -= ante;
-    gameState.pot += ante;
-    p.bet = ante;
+  gameState.players.forEach((p, idx) => {
+    if (p.chips <= 0) p.chips = STARTING_CHIPS;
+    p.bet = 0;
     p.folded = false;
     p.raisesInStage = 0;
     p.finalHandName = '';
     p.peekedPlayers = [];
+    p.blindRole = idx === dealerIdx ? 'D' : (idx === sbIdx ? 'SB' : (idx === bbIdx ? 'BB' : ''));
     p.hand = [gameState.deck.pop(), gameState.deck.pop()];
     p.powerCards = drawPowerCards(2);
   });
 
-  appendGameLog(gameState, `ตาใหม่เริ่มขึ้น! ทุกคนลงค่าต๋ง 50 ชิป — ตาของ ${gameState.players[0].name}`);
+  const sbPlayer = gameState.players[sbIdx];
+  const bbPlayer = gameState.players[bbIdx];
+
+  const sbPaid = Math.min(SMALL_BLIND, sbPlayer.chips);
+  sbPlayer.chips -= sbPaid;
+  sbPlayer.bet = sbPaid;
+  gameState.pot += sbPaid;
+
+  const bbPaid = Math.min(BIG_BLIND, bbPlayer.chips);
+  bbPlayer.chips -= bbPaid;
+  bbPlayer.bet = bbPaid;
+  gameState.pot += bbPaid;
+
+  gameState.currentBet = Math.max(sbPlayer.bet, bbPlayer.bet, BIG_BLIND);
+  gameState.turnIndex = firstTurnIdx;
+
+  appendGameLog(
+    gameState,
+    `ตาที่ ${handCounter}: ${sbPlayer.name} ลง SB ${formatMoney(sbPaid)}, ${bbPlayer.name} ลง BB ${formatMoney(bbPaid)} — ตาของ ${gameState.players[firstTurnIdx].name}`
+  );
   syncAndRender();
+  checkBotTurn();
 }
 
 function playerAction(action) {
@@ -1494,7 +1555,7 @@ function checkBotTurn() {
       const canAffordRaise = currentP.chips > toCall + 100 && currentP.raisesInStage < 1;
       const r = Math.random();
 
-      if (toCall > 250 && !hasGoodHand && r < 0.65) {
+      if (toCall > 350 && !hasGoodHand && r < 0.65) {
         executeAction(gameState.turnIndex, 'fold');
       } else if (canAffordRaise && ((hasGoodHand && r < 0.22) || (!hasGoodHand && r < 0.06))) {
         currentP.raisesInStage += 1;
@@ -1719,6 +1780,13 @@ function getArcClass(index, totalOpponents) {
   return 'arc-center';
 }
 
+function getBlindBadgeHTML(role) {
+  if (role === 'D') return '<span class="blind-badge blind-d">D</span>';
+  if (role === 'SB') return '<span class="blind-badge blind-sb">SB</span>';
+  if (role === 'BB') return '<span class="blind-badge blind-bb">BB</span>';
+  return '';
+}
+
 function renderUI() {
   if (!gameState || !gameState.players) return;
   const myIdx = gameState.players.findIndex(p => p.id === myPlayerId);
@@ -1738,12 +1806,15 @@ function renderUI() {
   const winnerId = isShowdown ? gameState.winnerId : null;
 
   document.getElementById('round-stage').innerText = STAGES[gameState.stageIndex] || 'WAITING';
+  document.getElementById('blinds-badge').innerText = `SB ${SMALL_BLIND} / BB ${BIG_BLIND}`;
   document.getElementById('pot-amount').innerText = formatMoney(gameState.pot || 0);
   document.getElementById('game-log').innerText = gameState.log || '';
   const logCountEl = document.getElementById('log-count-badge');
   if (logCountEl) logCountEl.innerText = Array.isArray(gameState.logs) ? gameState.logs.length : 0;
 
   document.getElementById('my-name-label').innerText = me.name;
+  const myBlindEl = document.getElementById('my-blind-tag');
+  if (myBlindEl) myBlindEl.innerHTML = getBlindBadgeHTML(me.blindRole);
   document.getElementById('my-chips-display').innerText = formatMoney(me.chips);
   document.getElementById('my-bet-pill').innerText = `ลงรอบนี้: ${formatMoney(me.bet || 0)}`;
 
@@ -1784,7 +1855,7 @@ function renderUI() {
 
     oppArea.innerHTML += `
       <div class="seat ${arcClass} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}">
-        <div class="seat-name">${p.name}</div>
+        <div class="seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}</div>
         <div class="seat-money-row">
           <span class="seat-chips">💰 ${formatMoney(p.chips)}</span>
           ${betBadgeHTML}
@@ -1890,14 +1961,15 @@ function createOnlineRoom() {
   roomCode = Math.random().toString(36).substring(2, 6).toUpperCase();
   isOnline = true;
   myPlayerId = 'p0';
+  handCounter = 0;
 
   gameState = {
-    players: [{ id: 'p0', name: myName, uid: currentGoogleUser?.uid || null, chips: 1000, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [] }],
-    deck: [], community: [], pot: 0, currentBet: 0, turnIndex: 0, stageIndex: 5, winnerId: null,
+    players: [{ id: 'p0', name: myName, uid: currentGoogleUser?.uid || null, chips: STARTING_CHIPS, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '' }],
+    deck: [], community: [], pot: 0, currentBet: 0, dealerIndex: -1, sbIndex: -1, bbIndex: -1, turnIndex: 0, stageIndex: 5, winnerId: null,
     logs: [],
     log: `ห้อง ${roomCode} สร้างแล้ว! บอกรหัสนี้ให้เพื่อนเข้าห้อง (1/6 คน)`
   };
-  appendGameLog(gameState, `สร้างห้องออนไลน์รหัส ${roomCode} โดย ${myName}`);
+  appendGameLog(gameState, `สร้างห้องออนไลน์รหัส ${roomCode} โดย ${myName} (ชิปตั้งต้น ${formatMoney(STARTING_CHIPS)})`);
 
   document.getElementById('mode-badge').innerText = `ห้อง: ${roomCode}`;
   document.getElementById('lobby-screen').style.display = 'none';
@@ -1922,7 +1994,7 @@ function joinOnlineRoom() {
     roomCode = code;
     isOnline = true;
     myPlayerId = 'p' + data.players.length;
-    data.players.push({ id: myPlayerId, name: myName, uid: currentGoogleUser?.uid || null, chips: 1000, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [] });
+    data.players.push({ id: myPlayerId, name: myName, uid: currentGoogleUser?.uid || null, chips: STARTING_CHIPS, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '' });
     appendGameLog(data, `${myName} เข้าร่วมห้องแล้ว! (${data.players.length}/6 คน) รอหัวห้องกดเริ่มเกม...`);
 
     document.getElementById('mode-badge').innerText = `ห้อง: ${roomCode}`;
