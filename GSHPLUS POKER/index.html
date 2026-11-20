@@ -17,16 +17,17 @@
     --card-w: 72px;
     --card-h: 101px;
 
-    /* ค่าตำแหน่งที่จัดให้ตรงกับภาพต้นแบบ */
-    --pot-left: 44.2%;
-    --pot-top: 15.2%;
-    --pot-w: 11.6%;
-    --pot-h: 5.2%;
+    /* ปรับกรอบ POT ให้อยู่กลางกรอบพอดี */
+    --pot-left: 43.2%;
+    --pot-top: 17.6%;
+    --pot-w: 13.6%;
+    --pot-h: 5.4%;
 
+    /* ย่อไพ่กองกลาง 5 ใบลงมาอีก และจัดกึ่งกลางกรอบขาว */
     --comm-left: 30.2%;
-    --comm-top: 32.8%;
+    --comm-top: 34.6%;
     --comm-w: 39.6%;
-    --comm-h: 21.2%;
+    --comm-h: 17.5%;
 
     --seat-tl-x: 6.0%;
     --seat-tl-y: 9.8%;
@@ -200,21 +201,20 @@
   .poker-board-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; pointer-events: none; z-index: 1; }
   .board-overlay { position: relative; width: 100%; height: 100%; z-index: 2; }
 
-  /* ตัวเลข POT สีทองเรืองแสงเด่น */
+  /* ตัวเลข POT สีขาว ไม่เรืองแสง */
   .board-pot-overlay {
     position: absolute; left: var(--pot-left); top: var(--pot-top);
     width: var(--pot-w); height: var(--pot-h); display: flex; align-items: center; justify-content: center;
-    font-size: clamp(0.95rem, 1.65vw, 1.5rem); font-weight: 800; color: var(--gold-light);
-    letter-spacing: 0.5px;
-    text-shadow: 0 0 10px rgba(255, 213, 79, 0.85), 0 0 22px rgba(245, 185, 66, 0.6), 0 2px 6px rgba(0, 0, 0, 0.95);
+    font-size: clamp(0.82rem, 1.3vw, 1.15rem); font-weight: 700; color: #ffffff;
+    letter-spacing: 0.3px;
   }
 
-  /* ไพ่กองกลาง 5 ใบ: ความสูงพอดีกรอบ ไม่ล้นขอบบน-ล่าง */
+  /* ไพ่กองกลาง 5 ใบ: ย่อความสูงลงมาอีกให้อยู่กลางกรอบพอดี */
   .board-community-overlay {
     position: absolute; left: var(--comm-left); top: var(--comm-top);
     width: var(--comm-w); height: var(--comm-h);
     display: flex; align-items: center; justify-content: center;
-    gap: clamp(4px, 0.6vw, 9px);
+    gap: clamp(4px, 0.55vw, 8px);
     padding: 2px 4px;
   }
   .board-community-overlay .flip-slot,
@@ -230,9 +230,9 @@
   .board-community-overlay .flip-front.custom-img img {
     width: 100%; height: 100%; object-fit: fill; background: #fff;
   }
-  .board-community-overlay .card-top { font-size: clamp(0.5rem, 0.72vw, 0.76rem); }
-  .board-community-overlay .card-mid { font-size: clamp(0.85rem, 1.25vw, 1.2rem); }
-  .board-community-overlay .card-bot { font-size: clamp(0.5rem, 0.72vw, 0.76rem); }
+  .board-community-overlay .card-top { font-size: clamp(0.46rem, 0.65vw, 0.7rem); }
+  .board-community-overlay .card-mid { font-size: clamp(0.78rem, 1.1vw, 1.05rem); }
+  .board-community-overlay .card-bot { font-size: clamp(0.46rem, 0.65vw, 0.7rem); }
 
   .board-seat {
     position: absolute;
@@ -491,7 +491,7 @@
       <img src="./board.png" alt="GSH+ POKER Board" class="poker-board-img" draggable="false" onerror="tryImageCaseFallback(this, (el) => el.remove());">
       <div class="board-overlay" id="board-overlay">
         <div class="board-pot-overlay">
-          <span id="pot-amount">0</span> P
+          <span id="pot-amount">0</span>P
         </div>
         <div class="board-community-overlay" id="community-cards"></div>
         <div id="opponents-area"></div>
