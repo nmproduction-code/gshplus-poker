@@ -444,6 +444,9 @@
     justify-content: center;
     padding: 20px;
   }
+  .modal-overlay.top-layer {
+    z-index: 140;
+  }
   .modal-overlay.is-open {
     display: flex;
     animation: backdropFadeIn 0.18s ease-out both;
@@ -494,7 +497,7 @@
 
   .target-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; overflow-y: auto; text-align: left; }
 
-  /* Big Showcase Cards Grid (กด 1 ครั้งขยาย+โชว์สกิล / กดอีกทีใช้สกิล) */
+  /* Big Showcase Cards Grid (กด 1 ครั้งขยาย+โชว์สกิล / กดอีกทีพับกลับเพื่อดูการ์ดอื่น) */
   .big-skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
@@ -578,9 +581,58 @@
   }
 
   .guide-tag { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 1px 7px; border-radius: 999px; margin-left: 6px; background: rgba(245, 185, 66, 0.22); color: var(--gold-light); border: 1px solid rgba(245, 185, 66, 0.45); }
-  .rank-row-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 12px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
+  .rank-row-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 9px 12px; border-radius: 10px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    cursor: pointer; transition: 0.16s ease;
+  }
+  .rank-row-item:hover {
+    background: rgba(245,185,66,0.14);
+    border-color: var(--gold);
+    transform: translateY(-1px);
+  }
   .rank-num { width: 26px; height: 26px; border-radius: 999px; background: rgba(245,185,66,0.2); border: 1px solid var(--gold); color: var(--gold-light); font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .rank-sample { font-size: 0.84rem; font-weight: 700; color: #ffe58f; background: rgba(0,0,0,0.35); padding: 3px 8px; border-radius: 8px; white-space: nowrap; }
+
+  /* Rank Sample Cards Popup */
+  .rank-popup-cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 14px 0 10px;
+    flex-wrap: wrap;
+  }
+  .rank-sample-card {
+    width: 82px;
+    height: 115px;
+    border-radius: 8px;
+    background: #fff;
+    color: #111;
+    border: 2px solid var(--gold-light);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px 6px;
+    font-weight: 800;
+    position: relative;
+  }
+  .rank-sample-card.custom-img {
+    padding: 0;
+    border: 2px solid var(--gold-light);
+  }
+  .rank-sample-card.custom-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    display: block;
+    background: #fff;
+  }
+  .rank-sample-card.red { color: #d32f2f; }
+
   .log-history-list { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; overflow-y: auto; text-align: left; font-size: 0.88rem; max-height: 340px; background: rgba(0,0,0,0.35); border-radius: 10px; padding: 10px; }
   .log-item { padding: 6px 8px; border-radius: 8px; background: rgba(255,255,255,0.05); border-left: 3px solid var(--gold); line-height: 1.35; }
   .log-time { color: #9ca3af; font-size: 0.76rem; margin-right: 6px; }
@@ -619,6 +671,7 @@
     .big-skill-card.is-expanded { grid-column: span 2; }
     .big-skill-art { width: 104px; height: 146px; }
     .big-skill-card.is-expanded .big-skill-art { width: 126px; height: 176px; }
+    .rank-sample-card { width: 58px; height: 82px; }
   }
 </style>
 </head>
@@ -735,13 +788,25 @@
   <div class="modal-box wide-modal">
     <button class="popup-close-x" type="button" onclick="closeGuideModal()" aria-label="ปิด">✕</button>
     <h3 id="guide-popup-title" style="color:var(--gold); margin:0 0 6px; font-size:1.25rem; font-weight:700;">⚡ สกิลการ์ดพลังพิเศษ</h3>
-    <div id="guide-sub-hint" style="font-size:0.82rem; color:#cbd5e1; margin-bottom:2px;">กดที่การ์ด 1 ครั้งเพื่อขยายและดูรายละเอียดสกิล • กดซ้ำอีกครั้งเพื่อใช้สกิลทันที</div>
+    <div id="guide-sub-hint" style="font-size:0.82rem; color:#cbd5e1; margin-bottom:2px;">กดที่การ์ด 1 ครั้งเพื่อขยายและดูรายละเอียดสกิล • กดซ้ำเพื่อพับกลับ</div>
     <div class="admin-tabs">
       <button class="admin-tab-btn active" id="tab-guide-skills" onclick="switchGuideTab('skills')">⚡ สกิลการ์ดพลัง</button>
       <button class="admin-tab-btn" id="tab-guide-ranks" onclick="switchGuideTab('ranks')">🃏 ลำดับความใหญ่ของ Poker</button>
     </div>
     <div id="guide-content-list" style="max-height:430px; overflow-y:auto;"></div>
     <button class="btn btn-gold" style="margin-bottom:0;" onclick="closeGuideModal()">ปิดหน้าต่าง</button>
+  </div>
+</div>
+
+<!-- Popup ตัวอย่างไพ่ของลำดับแรงค์ Poker -->
+<div class="modal-overlay top-layer" id="rank-detail-modal" onclick="handleBackdropClick(event, closeRankDetailModal)">
+  <div class="modal-box">
+    <button class="popup-close-x" type="button" onclick="closeRankDetailModal()" aria-label="ปิด">✕</button>
+    <h3 id="rank-detail-title" style="color:var(--gold); margin:0 0 4px; font-size:1.25rem; font-weight:800;">🃏 ตัวอย่างแรงค์ไพ่</h3>
+    <div id="rank-detail-subtitle" style="font-size:0.86rem; color:#ffe58f; font-weight:700;"></div>
+    <div class="rank-popup-cards" id="rank-detail-cards"></div>
+    <p id="rank-detail-desc" style="font-size:0.92rem; color:#f1f5f9; line-height:1.45; margin:6px 0 14px;"></p>
+    <button class="btn btn-gold" style="margin-bottom:0;" onclick="closeRankDetailModal()">ปิดตัวอย่างไพ่</button>
   </div>
 </div>
 
@@ -991,15 +1056,69 @@ async function toggleGoogleLogin() {
 // 📖 1.1 คู่มือสกิล & แรงค์ไพ่ (Popup)
 // ============================================================================
 const POKER_HAND_RANKS = [
-  { rankNo: 1, name: 'Straight Flush', th: 'สเตรทฟลัช', sample: '9♠ 8♠ 7♠ 6♠ 5♠', desc: 'ไพ่ 5 ใบเรียงลำดับกันและดอกเดียวกันทั้งหมด' },
-  { rankNo: 2, name: 'Four of a Kind', th: 'โฟร์การ์ด', sample: 'K♠ K♥ K♦ K♣ 4♠', desc: 'ไพ่แต้มเดียวกัน 4 ใบ' },
-  { rankNo: 3, name: 'Full House', th: 'ฟูลเฮาส์', sample: 'Q♠ Q♥ Q♦ 10♣ 10♠', desc: 'ไพ่ตอง 3 ใบ + ไพ่คู่ 2 ใบในชุดเดียว' },
-  { rankNo: 4, name: 'Flush', th: 'ฟลัช (สี)', sample: 'A♦ J♦ 9♦ 6♦ 2♦', desc: 'ไพ่ดอกเดียวกัน 5 ใบ (ไม่จำเป็นต้องเรียง)' },
-  { rankNo: 5, name: 'Straight', th: 'สเตรท (เรียง)', sample: '10♣ 9♦ 8♥ 7♠ 6♣', desc: 'ไพ่ 5 ใบเรียงแต้มต่อเนื่องกัน (A-2-3-4-5 ก็เรียง)' },
-  { rankNo: 6, name: 'Three of a Kind', th: 'ตอง', sample: '8♠ 8♥ 8♦ K♣ 3♠', desc: 'ไพ่แต้มเดียวกัน 3 ใบ' },
-  { rankNo: 7, name: 'Two Pair', th: 'สองคู่', sample: 'J♠ J♦ 7♥ 7♣ A♠', desc: 'ไพ่คู่ 2 ชุดในมือรวมกองกลาง' },
-  { rankNo: 8, name: 'One Pair', th: 'หนึ่งคู่', sample: 'A♠ A♥ K♦ 9♣ 4♦', desc: 'ไพ่แต้มเดียวกัน 2 ใบ' },
-  { rankNo: 9, name: 'High Card', th: 'ไพ่สูง', sample: 'A♠ Q♦ 10♥ 7♣ 2♠', desc: 'ไม่มีชุดใดเข้าเกณฑ์ วัดกันที่ใบแต้มสูงสุด (A ใหญ่สุด)' }
+  {
+    rankNo: 1, name: 'Straight Flush', th: 'สเตรทฟลัช', sample: '9♠ 8♠ 7♠ 6♠ 5♠',
+    desc: 'ไพ่ 5 ใบเรียงลำดับกันและดอกเดียวกันทั้งหมด',
+    cards: [
+      { val: '9', suit: '♠' }, { val: '8', suit: '♠' }, { val: '7', suit: '♠' }, { val: '6', suit: '♠' }, { val: '5', suit: '♠' }
+    ]
+  },
+  {
+    rankNo: 2, name: 'Four of a Kind', th: 'โฟร์การ์ด', sample: 'K♠ K♥ K♦ K♣ 4♠',
+    desc: 'ไพ่แต้มเดียวกัน 4 ใบ',
+    cards: [
+      { val: 'K', suit: '♠' }, { val: 'K', suit: '♥' }, { val: 'K', suit: '♦' }, { val: 'K', suit: '♣' }, { val: '4', suit: '♠' }
+    ]
+  },
+  {
+    rankNo: 3, name: 'Full House', th: 'ฟูลเฮาส์', sample: 'Q♠ Q♥ Q♦ 10♣ 10♠',
+    desc: 'ไพ่ตอง 3 ใบ + ไพ่คู่ 2 ใบในชุดเดียว',
+    cards: [
+      { val: 'Q', suit: '♠' }, { val: 'Q', suit: '♥' }, { val: 'Q', suit: '♦' }, { val: '10', suit: '♣' }, { val: '10', suit: '♠' }
+    ]
+  },
+  {
+    rankNo: 4, name: 'Flush', th: 'ฟลัช (สี)', sample: 'A♦ J♦ 9♦ 6♦ 2♦',
+    desc: 'ไพ่ดอกเดียวกัน 5 ใบ (ไม่จำเป็นต้องเรียง)',
+    cards: [
+      { val: 'A', suit: '♦' }, { val: 'J', suit: '♦' }, { val: '9', suit: '♦' }, { val: '6', suit: '♦' }, { val: '2', suit: '♦' }
+    ]
+  },
+  {
+    rankNo: 5, name: 'Straight', th: 'สเตรท (เรียง)', sample: '10♣ 9♦ 8♥ 7♠ 6♣',
+    desc: 'ไพ่ 5 ใบเรียงแต้มต่อเนื่องกัน (A-2-3-4-5 ก็เรียง)',
+    cards: [
+      { val: '10', suit: '♣' }, { val: '9', suit: '♦' }, { val: '8', suit: '♥' }, { val: '7', suit: '♠' }, { val: '6', suit: '♣' }
+    ]
+  },
+  {
+    rankNo: 6, name: 'Three of a Kind', th: 'ตอง', sample: '8♠ 8♥ 8♦ K♣ 3♠',
+    desc: 'ไพ่แต้มเดียวกัน 3 ใบ',
+    cards: [
+      { val: '8', suit: '♠' }, { val: '8', suit: '♥' }, { val: '8', suit: '♦' }, { val: 'K', suit: '♣' }, { val: '3', suit: '♠' }
+    ]
+  },
+  {
+    rankNo: 7, name: 'Two Pair', th: 'สองคู่', sample: 'J♠ J♦ 7♥ 7♣ A♠',
+    desc: 'ไพ่คู่ 2 ชุดในมือรวมกองกลาง',
+    cards: [
+      { val: 'J', suit: '♠' }, { val: 'J', suit: '♦' }, { val: '7', suit: '♥' }, { val: '7', suit: '♣' }, { val: 'A', suit: '♠' }
+    ]
+  },
+  {
+    rankNo: 8, name: 'One Pair', th: 'หนึ่งคู่', sample: 'A♠ A♥ K♦ 9♣ 4♦',
+    desc: 'ไพ่แต้มเดียวกัน 2 ใบ',
+    cards: [
+      { val: 'A', suit: '♠' }, { val: 'A', suit: '♥' }, { val: 'K', suit: '♦' }, { val: '9', suit: '♣' }, { val: '4', suit: '♦' }
+    ]
+  },
+  {
+    rankNo: 9, name: 'High Card', th: 'ไพ่สูง', sample: 'A♠ Q♦ 10♥ 7♣ 2♠',
+    desc: 'ไม่มีชุดใดเข้าเกณฑ์ วัดกันที่ใบแต้มสูงสุด (A ใหญ่สุด)',
+    cards: [
+      { val: 'A', suit: '♠' }, { val: 'Q', suit: '♦' }, { val: '10', suit: '♥' }, { val: '7', suit: '♣' }, { val: '2', suit: '♠' }
+    ]
+  }
 ];
 
 function openGuideModal(initialTab = 'skills') {
@@ -1013,29 +1132,33 @@ function closeGuideModal() {
   expandedGuideCardId = null;
   hidePopup('guide-modal');
 }
+function openRankDetailModal(rankNo) {
+  const item = POKER_HAND_RANKS.find(r => r.rankNo === rankNo);
+  if (!item) return;
+  playTone(660, 0.06, 'triangle', 0, 0.09);
+  document.getElementById('rank-detail-title').innerText = `#${item.rankNo} ${item.name} (${item.th})`;
+  document.getElementById('rank-detail-subtitle').innerText = `ตัวอย่างชุดไพ่: ${item.sample}`;
+  document.getElementById('rank-detail-desc').innerText = item.desc;
+
+  const cardsWrap = document.getElementById('rank-detail-cards');
+  cardsWrap.innerHTML = item.cards.map(c => {
+    const isRed = c.suit === '♥' || c.suit === '♦';
+    return `
+      <div class="rank-sample-card custom-img ${isRed ? 'red' : ''}">
+        <img src="${getPokerCardImagePath(c)}" alt="${c.val}${c.suit}" draggable="false" onerror="fallbackCardText(this, '${c.val}', '${c.suit}')">
+      </div>`;
+  }).join('');
+
+  showPopup('rank-detail-modal');
+}
+function closeRankDetailModal() {
+  hidePopup('rank-detail-modal');
+}
+
 function handleBigSkillCardClick(cardId) {
   playTone(660, 0.06, 'triangle', 0, 0.09);
-  if (expandedGuideCardId !== cardId) {
-    expandedGuideCardId = cardId;
-    switchGuideTab('skills');
-    return;
-  }
-  const cardDef = POWER_CARDS_POOL.find(c => c.id === cardId);
-  if (!cardDef) return;
-  closeGuideModal();
-  if (!gameState || !gameState.players) {
-    alert(`การ์ด [${cardDef.name}]: ${cardDef.desc} (เข้าเล่นในโต๊ะเพื่อกดใช้สกิลได้ทันที)`);
-    return;
-  }
-  const myIdx = gameState.players.findIndex(p => p.id === myPlayerId);
-  if (myIdx === -1) return;
-  const me = gameState.players[myIdx];
-  const ownedCard = (me.powerCards || []).find(c => c.id === cardId && !c.used);
-  if (ownedCard) {
-    onClickPowerCard(ownedCard.uid);
-  } else {
-    alert(`คุณยังไม่มีการ์ด [${cardDef.name}] ที่พร้อมใช้งานบนมือในตอนนี้ครับ`);
-  }
+  expandedGuideCardId = (expandedGuideCardId === cardId) ? null : cardId;
+  switchGuideTab('skills');
 }
 function switchGuideTab(tab) {
   activeGuideTab = tab;
@@ -1047,7 +1170,10 @@ function switchGuideTab(tab) {
     titleEl.innerText = tab === 'skills' ? '⚡ สกิลการ์ดพลังพิเศษ' : '🃏 ลำดับความใหญ่ของไพ่ Poker';
   }
   if (hintEl) {
-    hintEl.style.display = tab === 'skills' ? 'block' : 'none';
+    hintEl.style.display = 'block';
+    hintEl.innerText = tab === 'skills'
+      ? 'กดที่การ์ด 1 ครั้งเพื่อขยายและดูรายละเอียดสกิล • กดซ้ำเพื่อพับกลับไปดูการ์ดอื่น'
+      : 'กดที่ลำดับแรงค์เพื่อเปิดหน้าต่างดูตัวอย่างการ์ดจริง';
   }
   const listEl = document.getElementById('guide-content-list');
   if (tab === 'skills') {
@@ -1059,7 +1185,7 @@ function switchGuideTab(tab) {
       <div class="big-skill-card ${isExpanded ? 'is-expanded' : ''}" onclick="handleBigSkillCardClick('${card.id}')">
         <img class="big-skill-art" src="${card.image}" alt="${card.name}" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.src='${getFallbackSVG()}'; });">
         <div class="big-skill-name">${card.name} <span class="guide-tag">${modeLabel}</span></div>
-        <div class="big-skill-hint">${isExpanded ? 'กดซ้ำอีกครั้งเพื่อใช้สกิลนี้!' : 'กด 1 ครั้งเพื่อดูสกิล'}</div>
+        <div class="big-skill-hint">${isExpanded ? 'กดซ้ำเพื่อพับกลับ' : 'กด 1 ครั้งเพื่อดูสกิล'}</div>
         <div class="big-skill-detail">
           <div class="big-skill-desc">${card.desc}</div>
         </div>
@@ -1068,7 +1194,7 @@ function switchGuideTab(tab) {
   } else {
     listEl.className = 'target-list';
     listEl.innerHTML = POKER_HAND_RANKS.map(item => `
-      <div class="rank-row-item">
+      <div class="rank-row-item" onclick="openRankDetailModal(${item.rankNo})">
         <div style="display:flex; align-items:center; gap:10px; min-width:0;">
           <span class="rank-num">${item.rankNo}</span>
           <div style="min-width:0;">
