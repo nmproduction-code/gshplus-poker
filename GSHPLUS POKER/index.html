@@ -22,10 +22,10 @@
     --pot-w: 18%;
     --pot-h: 5.5%;
 
-    /* ขยายไพ่กองกลาง 5 ใบให้ใหญ่ขึ้นและอยู่กึ่งกลางกรอบพอดี */
-    --comm-top: 34.0%;
-    --comm-w: 44.0%;
-    --comm-h: 19.5%;
+    /* ไพ่กองกลาง 5 ใบอยู่กึ่งกลางกรอบสีขาวพอดี */
+    --comm-top: 35.2%;
+    --comm-w: 38.5%;
+    --comm-h: 17.2%;
 
     --seat-tl-x: 5.2%;
     --seat-tl-y: 9.8%;
@@ -208,13 +208,13 @@
     letter-spacing: 0.5px;
   }
 
-  /* ไพ่กองกลาง 5 ใบ: ขยายขนาดใหญ่ขึ้นและอยู่กึ่งกลางกรอบพอดี */
+  /* ไพ่กองกลาง 5 ใบ: ขยับเข้ากรอบสีขาวและใหญ่พอดี */
   .board-community-overlay {
-    position: absolute; left: 50%; top: var(--comm-top);
+    position: absolute; left: calc(50% + 1.4%); top: var(--comm-top);
     transform: translateX(-50%);
     width: var(--comm-w); height: var(--comm-h);
     display: flex; align-items: center; justify-content: center;
-    gap: clamp(5px, 0.7vw, 10px);
+    gap: clamp(4px, 0.55vw, 8px);
     padding: 2px 6px;
   }
   .board-community-overlay .flip-slot,
@@ -222,7 +222,7 @@
     height: 100%;
     width: auto;
     aspect-ratio: 5 / 7;
-    max-width: calc((100% - 40px) / 5);
+    max-width: calc((100% - 32px) / 5);
   }
   .board-community-overlay .flip-face {
     border-radius: 5px;
