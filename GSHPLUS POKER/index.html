@@ -560,9 +560,9 @@ const db = firebase.database();
 // ============================================================================
 // 🃏 2. ตั้งค่าโฟลเดอร์ รูปหน้าไพ่ และรูปหลังการ์ด (รองรับทั้ง .png และ .PNG)
 // ============================================================================
-const POKER_CARD_FOLDER = 'GSHPLUS POKER/poker-cards';
-const POKER_CARD_EXT = 'png';
-const POKER_CARD_BACK = `${POKER_CARD_FOLDER}/back.png`;
+const POKER_CARD_FOLDER = './poker-cards';
+const POKER_CARD_EXT = 'PNG';
+const POKER_CARD_BACK = './poker-cards/back.PNG';
 
 const SUIT_CODE = { '♠': 's', '♥': 'h', '♦': 'd', '♣': 'c' };
 
@@ -573,14 +573,14 @@ function getPokerCardImagePath(card) {
 }
 
 function tryImageCaseFallback(imgEl, onFinalFail) {
-  if (!imgEl.dataset.triedUpper) {
-    imgEl.dataset.triedUpper = '1';
-    imgEl.src = imgEl.src.replace(/\.png(\?.*)?$/i, '.PNG$1');
-    return;
-  }
   if (!imgEl.dataset.triedLower) {
     imgEl.dataset.triedLower = '1';
     imgEl.src = imgEl.src.replace(/\.PNG(\?.*)?$/i, '.png$1');
+    return;
+  }
+  if (!imgEl.dataset.triedUpper) {
+    imgEl.dataset.triedUpper = '1';
+    imgEl.src = imgEl.src.replace(/\.png(\?.*)?$/i, '.PNG$1');
     return;
   }
   if (typeof onFinalFail === 'function') {
@@ -596,35 +596,35 @@ const POWER_CARDS_POOL = [
     id: 'peek',
     name: 'เนตรวงแหวน',
     desc: 'แอบดูไพ่บนมือของคู่แข่ง 1 คนตลอดทั้งตานี้',
-    image: 'GSHPLUS POKER/cards/peek.png',
+    image: './cards/peek.png',
     needTarget: true
   },
   {
     id: 'swap',
     name: 'สลับชะตา',
     desc: 'สลับไพ่ 1 ใบแบบสุ่มบนมือคุณ กับไพ่ของเป้าหมาย 1 คน',
-    image: 'GSHPLUS POKER/cards/swap.png',
+    image: './cards/swap.png',
     needTarget: true
   },
   {
     id: 'redraw_river',
     name: 'พลิกกระดาน',
     desc: 'ล้างไพ่กองกลางใบล่าสุด แล้วจั่วใบใหม่จากกองมาแทน!',
-    image: 'GSHPLUS POKER/cards/redraw.png',
+    image: './cards/redraw.png',
     needTarget: false
   },
   {
     id: 'redraw_hand',
     name: 'จั่วใหม่ยกชุด',
     desc: 'ทิ้งไพ่บนมือตัวเองทั้ง 2 ใบ แล้วจั่วใหม่จากกองทันที',
-    image: 'GSHPLUS POKER/cards/mulligan.png',
+    image: './cards/mulligan.png',
     needTarget: false
   },
   {
     id: 'tax',
     name: 'รีดไถชิป',
     desc: 'ขโมยชิปจากคู่แข่ง 1 คน 150 ชิป เข้ากองกลางทันที',
-    image: 'GSHPLUS POKER/cards/tax.png',
+    image: './cards/tax.png',
     needTarget: true
   }
 ];
