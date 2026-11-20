@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>GSHPLUS POKER - โปกเกอร์การ์ดพลัง</title>
+<title>POWER POKER - โปกเกอร์การ์ดพลัง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -64,10 +64,10 @@
     background: radial-gradient(circle at center, #167043 0%, #051c10 100%);
   }
   .logo { font-size: 3rem; font-weight: 800; color: var(--gold); text-shadow: 0 4px 16px rgba(0,0,0,0.65); margin-bottom: 6px; letter-spacing: 0.5px; }
-  .subtitle { color: #b9f6ca; margin-bottom: 28px; font-size: 1.08rem; font-weight: 400; }
-  .panel { background: rgba(0,0,0,0.65); border: 2px solid rgba(245,185,66,0.35); border-radius: 20px; padding: 28px; width: 100%; max-width: 440px; box-shadow: 0 14px 36px rgba(0,0,0,0.6); }
-  input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #43a047; background: #092c1a; color: #fff; font-size: 1.05rem; font-weight: 500; margin-bottom: 14px; text-align: center; }
-  .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: 0.18s; margin-bottom: 10px; }
+  .subtitle { color: #b9f6ca; margin-bottom: 24px; font-size: 1.08rem; font-weight: 400; }
+  .panel { background: rgba(0,0,0,0.68); border: 2px solid rgba(245,185,66,0.35); border-radius: 20px; padding: 24px; width: 100%; max-width: 460px; box-shadow: 0 14px 36px rgba(0,0,0,0.6); }
+  input { width: 100%; padding: 13px; border-radius: 10px; border: 1px solid #43a047; background: #092c1a; color: #fff; font-size: 1.02rem; font-weight: 500; margin-bottom: 12px; text-align: center; }
+  .btn { width: 100%; padding: 13px; border: none; border-radius: 12px; font-size: 1.02rem; font-weight: 700; cursor: pointer; transition: 0.18s; margin-bottom: 10px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
   .btn-gold { background: linear-gradient(135deg, #ffd54f, #d48806); color: #1a1100; }
   .btn-gold:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-2px); }
   .btn-green { background: #2e7d32; color: #fff; border: 1px solid #66bb6a; }
@@ -76,7 +76,21 @@
   .btn-blue:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-2px); }
   .btn-red { background: #c62828; color: #fff; }
   .btn-red:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-2px); }
+  .btn-google { background: #ffffff; color: #1f2937; border: 1px solid #d1d5db; }
+  .btn-google:hover:not(:disabled) { background: #f3f4f6; transform: translateY(-2px); }
+  .btn-ghost { background: rgba(255,255,255,0.1); color: #e5e7eb; border: 1px solid rgba(255,255,255,0.22); }
+  .btn-ghost:hover:not(:disabled) { background: rgba(255,255,255,0.18); }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .user-card {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(245,185,66,0.35);
+    border-radius: 12px; padding: 10px 12px; margin-bottom: 14px; text-align: left;
+  }
+  .user-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .user-avatar { width: 38px; height: 38px; border-radius: 999px; object-fit: cover; border: 1.5px solid var(--gold); background: #1b5e20; }
+  .user-name { font-size: 0.96rem; font-weight: 700; color: var(--gold-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-sub { font-size: 0.8rem; color: #a5d6a7; }
 
   /* Game Table Screen */
   #game-screen {
@@ -111,7 +125,7 @@
     color: #ffd6d6;
     animation: handBadgePop 0.5s infinite;
   }
-  .top-actions { display: flex; gap: 8px; align-items: center; }
+  .top-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .small-btn { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.28); color: #fff; border-radius: 8px; padding: 5px 12px; font-size: 0.88rem; cursor: pointer; font-weight: 500; }
   .small-btn:hover { background: rgba(255,255,255,0.22); }
 
@@ -324,10 +338,34 @@
   .quick-bet-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .raise-box .btn-gold { flex: 1; padding: 10px 12px; font-size: 0.98rem; }
 
-  /* Modal */
+  /* Modal & Drawers */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
-  .modal-box { background: #102e1e; border: 2px solid var(--gold); border-radius: 16px; padding: 22px; max-width: 400px; width: 100%; text-align: center; }
-  .target-list { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; }
+  .modal-box { background: #102e1e; border: 2px solid var(--gold); border-radius: 16px; padding: 22px; max-width: 480px; width: 100%; text-align: center; max-height: 85vh; display: flex; flex-direction: column; }
+  .target-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; overflow-y: auto; text-align: left; }
+
+  .log-history-list {
+    display: flex; flex-direction: column; gap: 6px; margin: 12px 0;
+    overflow-y: auto; text-align: left; font-size: 0.88rem; max-height: 340px;
+    background: rgba(0,0,0,0.35); border-radius: 10px; padding: 10px;
+  }
+  .log-item {
+    padding: 6px 8px; border-radius: 8px; background: rgba(255,255,255,0.05);
+    border-left: 3px solid var(--gold); line-height: 1.35;
+  }
+  .log-time { color: #9ca3af; font-size: 0.76rem; margin-right: 6px; }
+
+  .lb-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .lb-row.top1 { border-color: #ffd54f; background: rgba(245, 185, 66, 0.16); }
+  .lb-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .lb-rank { width: 24px; font-weight: 700; color: var(--gold-light); text-align: center; }
+  .lb-avatar { width: 30px; height: 30px; border-radius: 999px; object-fit: cover; background: #1b5e20; }
+  .lb-name { font-weight: 600; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lb-sub { font-size: 0.76rem; color: #a5d6a7; }
+  .lb-score { font-weight: 700; color: var(--gold-light); font-size: 0.92rem; white-space: nowrap; }
 
   @media (max-width: 640px) {
     :root { --card-w: 76px; --card-h: 108px; }
@@ -358,16 +396,29 @@
 
 <!-- ==================== 1. หน้าล็อบบี้ ==================== -->
 <div id="lobby-screen">
-  <div class="logo">♠️ GSHPLUS POKER ♥️</div>
+  <div class="logo">♠️ POWER POKER ♥️</div>
   <div class="subtitle">โปกเกอร์สายปั่น + การ์ดพลังพิเศษ (รอบวง 6 คน)</div>
   
   <div class="panel">
-    <input type="text" id="player-name" placeholder="ใส่ชื่อเล่นของคุณ..." maxlength="12" value="Player 1">
+    <!-- สถานะบัญชี Google -->
+    <div class="user-card" id="google-user-card">
+      <div class="user-info">
+        <img id="google-avatar" class="user-avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='100%25' height='100%25' fill='%231b5e20'/%3E%3Ctext x='50%25' y='55%25' font-size='18' text-anchor='middle' dominant-baseline='middle' fill='%23ffe58f'%3E%E2%99%A0%3C/text%3E%3C/svg%3E" alt="avatar">
+        <div>
+          <div class="user-name" id="google-display-name">ยังไม่ได้ล็อกอิน Google</div>
+          <div class="user-sub" id="google-status-sub">ล็อกอินเพื่อเก็บสถิติขึ้น Leaderboard</div>
+        </div>
+      </div>
+      <button class="small-btn" id="btn-google-auth" onclick="toggleGoogleLogin()">ล็อกอิน Google</button>
+    </div>
+
+    <input type="text" id="player-name" placeholder="ใส่ชื่อเล่นของคุณ..." maxlength="16" value="Player 1">
     
     <button class="btn btn-gold" onclick="startSoloBotMode()">🤖 เล่นโหมดทดสอบ (สู้กับบอท 5 ตัว)</button>
+    <button class="btn btn-ghost" onclick="openLeaderboardModal()">🏆 ดูตารางอันดับ Leaderboard</button>
     
-    <hr style="border-color: rgba(255,255,255,0.15); margin: 18px 0;">
-    <div style="font-size: 0.95rem; color: #a5d6a7; margin-bottom: 10px; font-weight: 500;">🟢 เชื่อมต่อ Firebase ออนไลน์พร้อมใช้งานแล้ว!</div>
+    <hr style="border-color: rgba(255,255,255,0.15); margin: 16px 0;">
+    <div style="font-size: 0.92rem; color: #a5d6a7; margin-bottom: 10px; font-weight: 500;">🟢 เชื่อมต่อ Firebase ออนไลน์พร้อมใช้งานแล้ว!</div>
     <button class="btn btn-green" onclick="createOnlineRoom()">🌐 สร้างห้องออนไลน์ใหม่</button>
     <div style="display: flex; gap: 8px;">
       <input type="text" id="room-code-input" placeholder="รหัสห้อง 4 หลัก" maxlength="4" style="margin:0; text-transform:uppercase;">
@@ -385,6 +436,8 @@
       <div class="timer-badge" id="turn-timer">⏱️ 15s</div>
     </div>
     <div class="top-actions">
+      <button class="small-btn" onclick="openLogModal()">📜 ประวัติ Log (<span id="log-count-badge">0</span>)</button>
+      <button class="small-btn" onclick="openLeaderboardModal()">🏆 Leaderboard</button>
       <button class="small-btn" id="btn-sound" onclick="toggleSound()">🔊 เสียง: เปิด</button>
       <button class="small-btn" onclick="location.reload()">ออก</button>
     </div>
@@ -398,7 +451,7 @@
     <div class="table-oval" id="table-oval">
       <div class="pot-box">💰 ยอดเงินกองกลาง (POT): <span id="pot-amount">0</span> ชิป</div>
       <div class="community-cards" id="community-cards"></div>
-      <div class="log-banner" id="game-log">ยินดีต้อนรับสู่ GSHPLUS POKER!</div>
+      <div class="log-banner" id="game-log">ยินดีต้อนรับสู่ Power Poker!</div>
     </div>
   </div>
 
@@ -444,12 +497,35 @@
     <h3 id="modal-title" style="color:var(--gold); margin-top:0; font-size:1.25rem; font-weight:700;">เลือกเป้าหมาย</h3>
     <p id="modal-desc" style="font-size:0.95rem; color:#ddd; font-weight:400;"></p>
     <div class="target-list" id="modal-targets"></div>
-    <button class="btn btn-red" onclick="closeModal()">ยกเลิก</button>
+    <button class="btn btn-red" style="margin-bottom:0;" onclick="closeModal()">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- Modal ประวัติ Log ระหว่างเล่น -->
+<div class="modal-overlay" id="log-modal">
+  <div class="modal-box">
+    <h3 style="color:var(--gold); margin:0 0 6px; font-size:1.25rem; font-weight:700;">📜 ประวัติ Log ระหว่างเล่น</h3>
+    <div style="font-size:0.84rem; color:#a5d6a7;">บันทึกทุกการเดินเกมในตานี้แบบเรียลไทม์</div>
+    <div class="log-history-list" id="log-history-list"></div>
+    <button class="btn btn-gold" style="margin-bottom:0;" onclick="closeLogModal()">ปิดหน้าต่าง</button>
+  </div>
+</div>
+
+<!-- Modal Leaderboard -->
+<div class="modal-overlay" id="leaderboard-modal">
+  <div class="modal-box">
+    <h3 style="color:var(--gold); margin:0 0 6px; font-size:1.25rem; font-weight:700;">🏆 ตารางอันดับ Leaderboard</h3>
+    <div style="font-size:0.84rem; color:#a5d6a7;">อันดับผู้เล่นจากบัญชี Google ที่ลงทะเบียนไว้</div>
+    <div class="target-list" id="leaderboard-list">
+      <div style="text-align:center; color:#ccc; padding:12px;">กำลังโหลดอันดับ...</div>
+    </div>
+    <button class="btn btn-gold" style="margin-bottom:0;" onclick="closeLeaderboardModal()">ปิดหน้าต่าง</button>
   </div>
 </div>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
@@ -540,8 +616,13 @@ function formatMoney(num) {
   return Number(num || 0).toLocaleString('en-US');
 }
 
+function formatTimeNow() {
+  const now = new Date();
+  return now.toTimeString().slice(0, 8);
+}
+
 // ============================================================================
-// 🔧 1. ตั้งค่า FIREBASE (เชื่อมต่อ GSHPLUS POKER เรียบร้อยแล้ว)
+// 🔧 1. ตั้งค่า FIREBASE (Auth + Realtime Database)
 // ============================================================================
 const firebaseConfig = {
   apiKey: "AIzaSyBABc024vb3h-odI59K1l_37f_3tiikug4",
@@ -556,6 +637,180 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const auth = firebase.auth();
+
+let currentGoogleUser = null;
+
+function updateGoogleAuthUI(user) {
+  currentGoogleUser = user || null;
+  const nameEl = document.getElementById('google-display-name');
+  const subEl = document.getElementById('google-status-sub');
+  const avatarEl = document.getElementById('google-avatar');
+  const authBtn = document.getElementById('btn-google-auth');
+  const playerNameInput = document.getElementById('player-name');
+
+  if (user) {
+    const cleanName = (user.displayName || 'Google Player').slice(0, 16);
+    nameEl.innerText = cleanName;
+    subEl.innerText = 'ล็อกอิน Google แล้ว • พร้อมบันทึก Leaderboard';
+    if (user.photoURL) avatarEl.src = user.photoURL;
+    authBtn.innerText = 'ออกจากระบบ';
+    if (playerNameInput && (playerNameInput.value === 'Player 1' || !playerNameInput.value.trim())) {
+      playerNameInput.value = cleanName;
+    }
+    ensureLeaderboardEntry(user, cleanName);
+  } else {
+    nameEl.innerText = 'ยังไม่ได้ล็อกอิน Google';
+    subEl.innerText = 'ล็อกอินเพื่อเก็บสถิติขึ้น Leaderboard';
+    authBtn.innerText = 'ล็อกอิน Google';
+  }
+}
+
+auth.onAuthStateChanged((user) => {
+  updateGoogleAuthUI(user);
+});
+
+async function toggleGoogleLogin() {
+  if (currentGoogleUser) {
+    await auth.signOut();
+    return;
+  }
+  const provider = new firebase.auth.GoogleAuthProvider();
+  try {
+    await auth.signInWithPopup(provider);
+  } catch (err) {
+    alert('ล็อกอิน Google ไม่สำเร็จ: ' + (err?.message || 'โปรดลองอีกครั้ง'));
+  }
+}
+
+// ============================================================================
+// 🏆 1.5 ระบบ Leaderboard บน Firebase (/leaderboard)
+// ============================================================================
+function ensureLeaderboardEntry(user, displayName) {
+  if (!user || !db) return;
+  const ref = db.ref('leaderboard/' + user.uid);
+  ref.once('value', (snap) => {
+    const existing = snap.val();
+    if (!existing) {
+      ref.set({
+        uid: user.uid,
+        name: displayName || user.displayName || 'Player',
+        photoURL: user.photoURL || '',
+        chips: 1000,
+        wins: 0,
+        updatedAt: Date.now()
+      });
+    } else {
+      ref.update({
+        name: displayName || existing.name || user.displayName || 'Player',
+        photoURL: user.photoURL || existing.photoURL || '',
+        updatedAt: Date.now()
+      });
+    }
+  });
+}
+
+function recordLeaderboardWin(winnerPlayer, potWon) {
+  if (!currentGoogleUser || !winnerPlayer || winnerPlayer.id !== myPlayerId || !db) return;
+  const ref = db.ref('leaderboard/' + currentGoogleUser.uid);
+  ref.transaction((curr) => {
+    const base = curr || {
+      uid: currentGoogleUser.uid,
+      name: winnerPlayer.name || currentGoogleUser.displayName || 'Player',
+      photoURL: currentGoogleUser.photoURL || '',
+      chips: 1000,
+      wins: 0
+    };
+    return {
+      ...base,
+      name: winnerPlayer.name || base.name,
+      photoURL: currentGoogleUser.photoURL || base.photoURL || '',
+      chips: Math.max(base.chips || 0, winnerPlayer.chips || 0),
+      wins: (base.wins || 0) + 1,
+      lastWinPot: potWon || 0,
+      updatedAt: Date.now()
+    };
+  });
+}
+
+function openLeaderboardModal() {
+  const modal = document.getElementById('leaderboard-modal');
+  const listEl = document.getElementById('leaderboard-list');
+  modal.style.display = 'flex';
+  listEl.innerHTML = '<div style="text-align:center; color:#ccc; padding:12px;">กำลังโหลดอันดับ...</div>';
+
+  db.ref('leaderboard').orderByChild('chips').limitToLast(20).once('value', (snap) => {
+    const items = [];
+    snap.forEach((child) => {
+      items.push(child.val());
+    });
+    items.sort((a, b) => (b.chips || 0) - (a.chips || 0) || (b.wins || 0) - (a.wins || 0));
+
+    if (items.length === 0) {
+      listEl.innerHTML = '<div style="text-align:center; color:#ccc; padding:12px;">ยังไม่มีข้อมูลผู้เล่นใน Leaderboard</div>';
+      return;
+    }
+
+    const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='100%25' height='100%25' fill='%231b5e20'/%3E%3Ctext x='50%25' y='55%25' font-size='15' text-anchor='middle' dominant-baseline='middle' fill='%23ffe58f'%3E%E2%99%A0%3C/text%3E%3C/svg%3E";
+    listEl.innerHTML = items.map((row, idx) => `
+      <div class="lb-row ${idx === 0 ? 'top1' : ''}">
+        <div class="lb-left">
+          <div class="lb-rank">${idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '#' + (idx + 1)}</div>
+          <img class="lb-avatar" src="${row.photoURL || defaultAvatar}" alt="avatar">
+          <div style="min-width:0;">
+            <div class="lb-name">${row.name || 'Player'}</div>
+            <div class="lb-sub">ชนะสะสม ${Number(row.wins || 0)} ตา</div>
+          </div>
+        </div>
+        <div class="lb-score">💰 ${formatMoney(row.chips || 0)}</div>
+      </div>
+    `).join('');
+  });
+}
+
+function closeLeaderboardModal() {
+  document.getElementById('leaderboard-modal').style.display = 'none';
+}
+
+// ============================================================================
+// 📜 1.8 ระบบเก็บ Log ระหว่างเล่น
+// ============================================================================
+function appendGameLog(state, message) {
+  if (!state) return;
+  if (!Array.isArray(state.logs)) state.logs = [];
+  const entry = {
+    time: formatTimeNow(),
+    text: message
+  };
+  state.logs.push(entry);
+  if (state.logs.length > 100) {
+    state.logs = state.logs.slice(-100);
+  }
+  state.log = message;
+}
+
+function openLogModal() {
+  const modal = document.getElementById('log-modal');
+  const listEl = document.getElementById('log-history-list');
+  modal.style.display = 'flex';
+
+  const logs = (gameState && Array.isArray(gameState.logs)) ? gameState.logs : [];
+  if (logs.length === 0) {
+    listEl.innerHTML = '<div style="text-align:center; color:#aaa; padding:12px;">ยังไม่มีประวัติ Log ในตานี้</div>';
+    return;
+  }
+
+  listEl.innerHTML = [...logs].reverse().map((item) => `
+    <div class="log-item">
+      <span class="log-time">[${item.time || '--:--:--'}]</span>
+      <span>${item.text || ''}</span>
+    </div>
+  `).join('');
+}
+
+function closeLogModal() {
+  document.getElementById('log-modal').style.display = 'none';
+}
 
 // ============================================================================
 // 🃏 2. ตั้งค่าโฟลเดอร์ รูปหน้าไพ่ และรูปหลังการ์ด (รองรับทั้ง .png และ .PNG)
@@ -728,7 +983,7 @@ function handleTurnTimeout() {
 
   const toCall = Math.max(0, (gameState.currentBet || 0) - (player.bet || 0));
   const fallbackAction = toCall === 0 ? 'call' : 'fold';
-  gameState.log = `⏰ ${player.name} หมดเวลา 15 วิ! ระบบ${fallbackAction === 'call' ? 'เช็คอัตโนมัติ' : 'หมอบอัตโนมัติ'}`;
+  appendGameLog(gameState, `⏰ ${player.name} หมดเวลา 15 วิ! ระบบ${fallbackAction === 'call' ? 'เช็คอัตโนมัติ' : 'หมอบอัตโนมัติ'}`);
   executeAction(pIdx, fallbackAction, 0);
 }
 
@@ -819,7 +1074,7 @@ function getCustomRaiseAdd() {
 function startSoloBotMode() {
   getAudioContext();
   isOnline = false;
-  const myName = document.getElementById('player-name').value.trim() || 'คุณ';
+  const myName = document.getElementById('player-name').value.trim() || (currentGoogleUser?.displayName || 'คุณ');
   const botNames = ['บอทสมชาย', 'บอทเจ๊ไฝ', 'บอทเสี่ยช้าง', 'บอทน้องแพรว', 'บอทลุงพล'];
   
   let players = [{ id: 'p0', name: myName, chips: 1000, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [] }];
@@ -836,8 +1091,10 @@ function startSoloBotMode() {
     turnIndex: 0,
     stageIndex: 0,
     winnerId: null,
+    logs: [],
     log: 'เริ่มเกม! แจกไพ่โปกเกอร์คนละ 2 ใบ + การ์ดพลัง 2 ใบ'
   };
+  appendGameLog(gameState, 'เริ่มเกมโหมดทดสอบ (สู้กับบอท 5 ตัว)');
 
   document.getElementById('lobby-screen').style.display = 'none';
   document.getElementById('game-screen').style.display = 'flex';
@@ -876,7 +1133,7 @@ function startNewHand() {
     p.powerCards = drawPowerCards(2);
   });
 
-  gameState.log = `ตาใหม่เริ่มขึ้น! ทุกคนลงค่าต๋ง 50 ชิป — ตาของ ${gameState.players[0].name}`;
+  appendGameLog(gameState, `ตาใหม่เริ่มขึ้น! ทุกคนลงค่าต๋ง 50 ชิป — ตาของ ${gameState.players[0].name}`);
   syncAndRender();
 }
 
@@ -894,7 +1151,7 @@ function executeAction(pIdx, action, customRaiseAdd = 100) {
   if (action === 'fold') {
     SFX.fold();
     player.folded = true;
-    gameState.log = `${player.name} หมอบ (Fold)`;
+    appendGameLog(gameState, `${player.name} หมอบ (Fold)`);
   } else if (action === 'call') {
     SFX.call();
     const toCall = Math.max(0, gameState.currentBet - player.bet);
@@ -902,7 +1159,7 @@ function executeAction(pIdx, action, customRaiseAdd = 100) {
     player.chips -= actualPay;
     player.bet += actualPay;
     gameState.pot += actualPay;
-    gameState.log = actualPay > 0 ? `${player.name} ตาม (Call) ${formatMoney(actualPay)} ชิป` : `${player.name} ผ่าน (Check)`;
+    appendGameLog(gameState, actualPay > 0 ? `${player.name} ตาม (Call) ${formatMoney(actualPay)} ชิป` : `${player.name} ผ่าน (Check)`);
   } else if (action === 'raise') {
     SFX.raise();
     const toCall = Math.max(0, gameState.currentBet - player.bet);
@@ -916,7 +1173,7 @@ function executeAction(pIdx, action, customRaiseAdd = 100) {
       gameState.currentBet = player.bet;
     }
     gameState.pot += totalPay;
-    gameState.log = `${player.name} เกทับ (Raise) เพิ่ม ${formatMoney(actualRaiseAdd)} เป็นยอดลง ${formatMoney(player.bet)} ชิป!`;
+    appendGameLog(gameState, `${player.name} เกทับ (Raise) เพิ่ม ${formatMoney(actualRaiseAdd)} เป็นยอดลง ${formatMoney(player.bet)} ชิป!`);
   }
 
   advanceTurn();
@@ -959,15 +1216,15 @@ function nextStage() {
   if (gameState.stageIndex === 1) {
     SFX.deal();
     gameState.community.push(gameState.deck.pop(), gameState.deck.pop(), gameState.deck.pop());
-    gameState.log = 'เปิดไพ่ FLOP 3 ใบ!';
+    appendGameLog(gameState, 'เปิดไพ่ FLOP 3 ใบ!');
   } else if (gameState.stageIndex === 2) {
     SFX.deal();
     gameState.community.push(gameState.deck.pop());
-    gameState.log = 'เปิดไพ่ TURN ใบที่ 4!';
+    appendGameLog(gameState, 'เปิดไพ่ TURN ใบที่ 4!');
   } else if (gameState.stageIndex === 3) {
     SFX.deal();
     gameState.community.push(gameState.deck.pop());
-    gameState.log = 'เปิดไพ่ RIVER ใบสุดท้าย!';
+    appendGameLog(gameState, 'เปิดไพ่ RIVER ใบสุดท้าย!');
   } else if (gameState.stageIndex === 4) {
     evaluateShowdown();
     return;
@@ -999,7 +1256,7 @@ function checkBotTurn() {
       const validTargets = gameState.players.map((p, i) => i).filter(i => i !== gameState.turnIndex && !gameState.players[i].folded);
       const randomTarget = validTargets[Math.floor(Math.random() * validTargets.length)];
       const msg = applyPowerEffect(unusedPower.id, gameState, gameState.turnIndex, randomTarget);
-      gameState.log = '⚡ ' + msg;
+      appendGameLog(gameState, '⚡ ' + msg);
       syncAndRender();
     }
 
@@ -1062,7 +1319,7 @@ function onClickPowerCard(uid) {
     triggerAnim('table-oval', 'anim-flash');
     card.used = true;
     const msg = applyPowerEffect(card.id, gameState, myIdx, null);
-    gameState.log = '⚡ ' + msg;
+    appendGameLog(gameState, '⚡ ' + msg);
     syncAndRender();
   }
 }
@@ -1076,7 +1333,7 @@ function confirmPowerTarget(targetIdx) {
     triggerAnim('table-oval', 'anim-flash');
     card.used = true;
     const msg = applyPowerEffect(card.id, gameState, myIdx, targetIdx);
-    gameState.log = '⚡ ' + msg;
+    appendGameLog(gameState, '⚡ ' + msg);
   }
   closeModal();
   syncAndRender();
@@ -1166,11 +1423,13 @@ function finishHand(winner, handName = 'ชนะบาย (คนอื่น�
   triggerAnim('table-oval', 'anim-flash');
   gameState.stageIndex = 4;
   gameState.winnerId = winner ? winner.id : null;
+  const potWon = gameState.pot || 0;
   if (winner) {
-    winner.chips += gameState.pot;
-    gameState.log = `🏆 ผู้ชนะคือ ${winner.name} (${handName}) รับเงินกองกลาง ${formatMoney(gameState.pot)} ชิป!`;
+    winner.chips += potWon;
+    appendGameLog(gameState, `🏆 ผู้ชนะคือ ${winner.name} (${handName}) รับเงินกองกลาง ${formatMoney(potWon)} ชิป!`);
+    recordLeaderboardWin(winner, potWon);
   } else {
-    gameState.log = `🏆 จบตา! เงินกองกลาง ${formatMoney(gameState.pot)} ชิป`;
+    appendGameLog(gameState, `🏆 จบตา! เงินกองกลาง ${formatMoney(potWon)} ชิป`);
   }
   gameState.pot = 0;
   syncAndRender();
@@ -1256,6 +1515,9 @@ function renderUI() {
   document.getElementById('round-stage').innerText = STAGES[gameState.stageIndex] || 'WAITING';
   document.getElementById('pot-amount').innerText = formatMoney(gameState.pot || 0);
   document.getElementById('game-log').innerText = gameState.log || '';
+  const logCountEl = document.getElementById('log-count-badge');
+  if (logCountEl) logCountEl.innerText = Array.isArray(gameState.logs) ? gameState.logs.length : 0;
+
   document.getElementById('my-name-label').innerText = me.name;
   document.getElementById('my-chips-display').innerText = formatMoney(me.chips);
   document.getElementById('my-bet-pill').innerText = `ลงรอบนี้: ${formatMoney(me.bet || 0)}`;
@@ -1321,7 +1583,7 @@ function renderUI() {
     }
   }
 
-  // ไพ่ในมือ: วาดใหม่เฉพาะเมื่อไพ่บนมือเปลี่ยนจริง (เช่น เริ่มตาใหม่หรือใช้การ์ดสลับ/จั่วใหม่)
+  // ไพ่ในมือ: วาดใหม่เฉพาะเมื่อไพ่บนมือเปลี่ยนจริง
   const myHandArea = document.getElementById('my-poker-cards');
   const handSignature = (me.hand || []).map(c => c ? `${c.val}${c.suit}` : '').join(',');
   if (handSignature !== lastRenderedHandSignature) {
@@ -1330,7 +1592,7 @@ function renderUI() {
     myHandArea.innerHTML = (me.hand || []).map(c => renderCardHTML(c, isNewHandStart || handChangedDuringRound)).join('');
   }
 
-  // การ์ดพลัง: วาดโครงสร้างใหม่เฉพาะเมื่อชุดการ์ดเปลี่ยน (เช่น เริ่มตาใหม่) ส่วนตอนใช้การ์ดให้อัปเดตคลาส used โดยไม่ทำให้ใบอื่นกระพริบ
+  // การ์ดพลัง: วาดโครงสร้างใหม่เฉพาะเมื่อชุดการ์ดเปลี่ยน ส่วนตอนใช้การ์ดให้อัปเดตคลาส used โดยไม่ทำให้ใบอื่นกระพริบ
   const myPowerArea = document.getElementById('my-power-cards');
   const powerList = me.powerCards || [];
   const powerIdsSignature = powerList.map(pc => pc.uid).join(',');
@@ -1402,16 +1664,18 @@ function syncAndRender() {
 
 function createOnlineRoom() {
   getAudioContext();
-  const myName = document.getElementById('player-name').value.trim() || 'Host';
+  const myName = document.getElementById('player-name').value.trim() || (currentGoogleUser?.displayName || 'Host');
   roomCode = Math.random().toString(36).substring(2, 6).toUpperCase();
   isOnline = true;
   myPlayerId = 'p0';
 
   gameState = {
-    players: [{ id: 'p0', name: myName, chips: 1000, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [] }],
+    players: [{ id: 'p0', name: myName, uid: currentGoogleUser?.uid || null, chips: 1000, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [] }],
     deck: [], community: [], pot: 0, currentBet: 0, turnIndex: 0, stageIndex: 5, winnerId: null,
+    logs: [],
     log: `ห้อง ${roomCode} สร้างแล้ว! บอกรหัสนี้ให้เพื่อนเข้าห้อง (1/6 คน)`
   };
+  appendGameLog(gameState, `สร้างห้องออนไลน์รหัส ${roomCode} โดย ${myName}`);
 
   document.getElementById('mode-badge').innerText = `ห้อง: ${roomCode}`;
   document.getElementById('lobby-screen').style.display = 'none';
@@ -1424,7 +1688,7 @@ function createOnlineRoom() {
 function joinOnlineRoom() {
   getAudioContext();
   const code = document.getElementById('room-code-input').value.trim().toUpperCase();
-  const myName = document.getElementById('player-name').value.trim() || 'Guest';
+  const myName = document.getElementById('player-name').value.trim() || (currentGoogleUser?.displayName || 'Guest');
   if (!code) return alert('กรุณาใส่รหัสห้อง 4 หลัก');
 
   db.ref('rooms/' + code).once('value', snap => {
@@ -1436,8 +1700,8 @@ function joinOnlineRoom() {
     roomCode = code;
     isOnline = true;
     myPlayerId = 'p' + data.players.length;
-    data.players.push({ id: myPlayerId, name: myName, chips: 1000, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [] });
-    data.log = `${myName} เข้าร่วมห้องแล้ว! (${data.players.length}/6 คน) รอหัวห้องกดเริ่มเกม...`;
+    data.players.push({ id: myPlayerId, name: myName, uid: currentGoogleUser?.uid || null, chips: 1000, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [] });
+    appendGameLog(data, `${myName} เข้าร่วมห้องแล้ว! (${data.players.length}/6 คน) รอหัวห้องกดเริ่มเกม...`);
 
     document.getElementById('mode-badge').innerText = `ห้อง: ${roomCode}`;
     document.getElementById('lobby-screen').style.display = 'none';
