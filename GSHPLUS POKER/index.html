@@ -34,16 +34,16 @@
 
   /* Animations */
   @keyframes dealPop {
-    0% { opacity: 0; transform: translateY(-14px) scale(0.9); }
+    0% { opacity: 0; transform: translateY(-12px) scale(0.94); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
   }
   @keyframes cardRevealSmooth {
-    0% { opacity: 0.35; transform: scale(0.92); }
+    0% { opacity: 0.35; transform: scale(0.94); }
     100% { opacity: 1; transform: scale(1); }
   }
   @keyframes powerFlash {
     0% { filter: brightness(1); }
-    50% { filter: brightness(1.18); }
+    50% { filter: brightness(1.16); }
     100% { filter: brightness(1); }
   }
   @keyframes handBadgePop {
@@ -51,10 +51,10 @@
     50% { opacity: 0.72; }
   }
 
-  .anim-deal { animation: dealPop 0.28s cubic-bezier(0.22, 1, 0.36, 1) both; }
-  .anim-flash { animation: powerFlash 0.38s ease; }
+  .anim-deal { animation: dealPop 0.25s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .anim-flash { animation: powerFlash 0.35s ease; }
 
-  /* Card Structure (ไม่บีบสัดส่วน) */
+  /* Card Structure (คงสัดส่วนไพ่เสมอ) */
   .flip-slot {
     width: var(--card-w);
     height: var(--card-h);
@@ -67,7 +67,7 @@
     position: relative;
   }
   .flip-inner.is-flipping {
-    animation: cardRevealSmooth 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: cardRevealSmooth 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
   .flip-face {
     position: absolute;
@@ -90,7 +90,7 @@
   .flip-front.custom-img {
     padding: 0;
     background: #fff;
-    border: 1.5px solid rgba(255, 255, 255, 0.7);
+    border: 1.5px solid rgba(255, 255, 255, 0.75);
   }
   .flip-front.custom-img img { width: 100%; height: 100%; object-fit: contain; background: #fff; display: block; }
   .flip-front.red { color: #d32f2f; }
@@ -255,56 +255,61 @@
   .board-community-overlay .card-mid { font-size: clamp(0.9rem, 1.35vw, 1.3rem); }
   .board-community-overlay .card-bot { font-size: clamp(0.55rem, 0.78vw, 0.8rem); }
 
-  /* 5 Seat Overlays aligned to the exact 5 frames on board.png */
+  /* 5 Player Frames: ตั้งฉากตรง ไม่เอียง ไม่บีบ */
   .board-seat {
     position: absolute;
-    width: 13.7%;
-    height: 33.3%;
-    border-radius: 8px;
-    border: 2px solid transparent;
-    background: transparent;
-    box-shadow: none;
+    width: 13.4%;
+    height: 28.5%;
+    border-radius: 10px;
+    border: 1.5px solid rgba(255, 255, 255, 0.24);
+    background: rgba(7, 38, 30, 0.84);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.45% 0.5%;
+    transform: none;
   }
-  .board-seat.seat-top-left    { left: 5.5%;   top: 6.5%; }
-  .board-seat.seat-top-right   { left: 80.8%;  top: 6.5%; }
-  .board-seat.seat-bot-left    { left: 11.2%;  top: 50.2%; }
-  .board-seat.seat-bot-center  { left: 43.15%; top: 62.2%; }
-  .board-seat.seat-bot-right   { left: 75.1%;  top: 50.2%; }
+  .board-seat.seat-top-left    { left: 5.8%;   top: 8.5%; }
+  .board-seat.seat-top-right   { left: 80.8%;  top: 8.5%; }
+  .board-seat.seat-bot-left    { left: 11.4%;  top: 52.5%; }
+  .board-seat.seat-bot-center  { left: 43.3%;  top: 63.5%; }
+  .board-seat.seat-bot-right   { left: 75.3%;  top: 52.5%; }
 
   .board-seat.is-me-seat {
-    border-color: rgba(245, 185, 66, 0.55);
-    background: rgba(12, 64, 52, 0.28);
+    border-color: rgba(245, 185, 66, 0.78);
+    background: rgba(11, 56, 44, 0.9);
   }
   .board-seat.active-turn {
     border-color: var(--gold);
-    background: rgba(245, 185, 66, 0.14);
-    box-shadow: 0 0 14px rgba(245, 185, 66, 0.55);
+    background: rgba(20, 74, 58, 0.94);
+    box-shadow: 0 0 14px rgba(245, 185, 66, 0.5);
   }
   .board-seat.winner-seat {
     border-color: var(--gold-light);
-    background: rgba(245, 185, 66, 0.24);
-    box-shadow: 0 0 18px rgba(255, 229, 143, 0.78);
+    background: rgba(65, 52, 12, 0.92);
+    box-shadow: 0 0 18px rgba(255, 229, 143, 0.75);
   }
   .board-seat.folded {
-    opacity: 0.48;
+    opacity: 0.5;
     filter: grayscale(0.45);
   }
 
   .board-seat-cards {
-    position: absolute;
-    left: 6%;
-    right: 6%;
-    top: 5%;
-    height: 58%;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8%;
+    gap: 6px;
+    padding: 2px 0;
   }
   .board-mini-card {
-    height: 94%;
+    height: 100%;
+    max-height: 100%;
+    width: auto;
     aspect-ratio: 5 / 7;
-    max-width: 44%;
     border-radius: 5px;
     overflow: hidden;
     border: 1.5px solid #fff;
@@ -312,7 +317,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.45);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.45);
     flex-shrink: 0;
   }
   .board-mini-card img { width: 100%; height: 100%; object-fit: contain; background: #fff; display: block; }
@@ -323,18 +328,15 @@
   }
 
   .board-seat-name {
-    position: absolute;
-    left: 6%;
-    right: 6%;
-    top: 66.5%;
-    height: 14.5%;
-    background: rgba(12, 64, 52, 0.72);
-    border-radius: 4px;
+    height: 21%;
+    min-height: 18px;
+    background: rgba(0, 0, 0, 0.42);
+    border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    font-size: clamp(0.62rem, 0.95vw, 0.88rem);
+    font-size: clamp(0.6rem, 0.9vw, 0.84rem);
     font-weight: 700;
     color: #fff;
     white-space: nowrap;
@@ -343,18 +345,16 @@
     padding: 0 4px;
   }
   .board-seat-chips {
-    position: absolute;
-    left: 6%;
-    right: 6%;
-    top: 83%;
-    height: 14%;
-    background: rgba(12, 64, 52, 0.72);
-    border-radius: 4px;
+    height: 20%;
+    min-height: 17px;
+    margin-top: 2px;
+    background: rgba(0, 0, 0, 0.42);
+    border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    font-size: clamp(0.6rem, 0.9vw, 0.84rem);
+    font-size: clamp(0.58rem, 0.86vw, 0.8rem);
     font-weight: 700;
     color: var(--gold-light);
     white-space: nowrap;
@@ -363,13 +363,13 @@
   }
   .board-seat-tag {
     position: absolute;
-    top: 4%;
-    right: 5%;
+    top: 4px;
+    right: 4px;
     z-index: 3;
-    background: rgba(0, 0, 0, 0.78);
-    border: 1px solid rgba(255, 229, 143, 0.7);
+    background: rgba(0, 0, 0, 0.82);
+    border: 1px solid rgba(255, 229, 143, 0.75);
     color: var(--gold-light);
-    font-size: clamp(0.55rem, 0.78vw, 0.72rem);
+    font-size: clamp(0.54rem, 0.74vw, 0.7rem);
     font-weight: 700;
     padding: 1px 6px;
     border-radius: 999px;
@@ -1549,7 +1549,6 @@ function finishHand(winner, handName = 'ชนะบาย (คนอื่น�
 // ============================================================================
 // 🎨 7. ระบบแสดงผลหน้าจอ + วางบน board.png + รูปการ์ดตอนเฉลย
 // ============================================================================
-// กลางล่าง (seat-bot-center) เป็นของผู้เล่นหลัก (me) ตามลำดับที่นั่งทั้ง 5 ช่องบน board.png
 const BOARD_SLOT_FOR_ME = 'seat-bot-center';
 const BOARD_OPPONENT_SLOTS = [
   'seat-top-left',
@@ -1608,7 +1607,8 @@ function renderSeatBoxHTML(p, slotCls, options = {}) {
   const { isMe = false, isTurn = false, isWinner = false, canSeeCards = false, isShowdown = false } = options;
   const c0 = p.hand && p.hand[0] ? p.hand[0] : null;
   const c1 = p.hand && p.hand[1] ? p.hand[1] : null;
-  const tagText = isWinner ? '🏆 WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : (isTurn ? 'คิด...' : '')));
+  const turnTag = isMe ? '' : (isTurn ? 'คิด...' : '');
+  const tagText = isWinner ? '🏆 WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag));
 
   return `
     <div class="board-seat ${slotCls} ${isMe ? 'is-me-seat' : ''} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}">
