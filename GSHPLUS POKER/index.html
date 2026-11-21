@@ -113,7 +113,7 @@
   .anim-deal { animation: dealPop 0.24s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .anim-flash { animation: powerFlash 0.32s ease; }
 
-  .flip-slot { width: var(--card-w); height: var(--card-h); position: relative; flex-shrink: 0; perspective: 750px; transition: transform 0.22s ease, opacity 0.22s ease; }
+  .flip-slot { width: var(--card-w); height: var(--card-h); position: relative; flex-shrink: 0; perspective: 750px; transition: transform 0.22s ease, opacity 0.22s ease, filter 0.22s ease; }
   .flip-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
   .flip-inner.is-flipping { animation: cardFlip3D 0.34s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .flip-face { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); backface-visibility: hidden; }
@@ -122,18 +122,22 @@
   .flip-front.custom-img img { width: 100%; height: 100%; object-fit: fill; background: #fff; display: block; }
   .flip-front.red { color: #d32f2f; }
 
+  /* ไฮไลท์การ์ดที่ได้แรงค์ และทำให้การ์ดอื่นจางๆ */
+  .flip-slot.winning-rank-card,
   .board-community-overlay .flip-slot.winning-board-card {
-    z-index: 5;
+    z-index: 6;
     animation: winBoardPulse 1.3s ease-in-out infinite;
   }
+  .flip-slot.winning-rank-card .flip-front.custom-img,
   .board-community-overlay .flip-slot.winning-board-card .flip-front.custom-img {
     border: 2.5px solid var(--gold-light);
-    box-shadow: 0 0 14px rgba(255, 229, 143, 0.95);
+    box-shadow: 0 0 16px rgba(255, 229, 143, 0.95);
   }
+  .flip-slot.dimmed-card,
   .board-community-overlay .flip-slot.dimmed-board-card {
-    opacity: 0.42;
-    filter: brightness(0.75) saturate(0.75);
-    transform: scale(0.95);
+    opacity: 0.32;
+    filter: brightness(0.62) saturate(0.55);
+    transform: scale(0.94);
   }
 
   .card.empty { width: var(--card-w); height: var(--card-h); border-radius: 6px; background: transparent; border: none; flex-shrink: 0; }
@@ -170,6 +174,15 @@
   .btn-ghost { background: rgba(255,255,255,0.1); color: #e5e7eb; border: 1px solid rgba(255,255,255,0.22); }
   .btn-ghost:hover:not(:disabled) { background: rgba(255,255,255,0.18); transform: translateY(-1px); }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn.shielded-target {
+    background: linear-gradient(135deg, #4b5563, #374151);
+    color: #cbd5e1;
+    border: 1.5px solid #9ca3af;
+    box-shadow: none;
+    filter: grayscale(0.85);
+    opacity: 0.65 !important;
+    cursor: not-allowed !important;
+  }
 
   .user-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255,255,255,0.07); border: 1px solid rgba(245,185,66,0.35); border-radius: 12px; padding: 10px 12px; margin-bottom: 14px; text-align: left; }
   .user-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
@@ -262,6 +275,7 @@
     border-radius: 8px; border: 1.5px solid transparent; background: transparent;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 2px;
+    transition: opacity 0.22s ease, filter 0.22s ease, box-shadow 0.22s ease;
   }
   .board-seat.seat-top-left    { left: var(--seat-tl-x); top: var(--seat-tl-y); width: var(--seat-tl-w); height: var(--seat-tl-h); }
   .board-seat.seat-top-right   { left: var(--seat-tr-x); top: var(--seat-tr-y); width: var(--seat-tr-w); height: var(--seat-tr-h); }
@@ -275,11 +289,21 @@
     box-shadow: 0 0 24px 5px rgba(255, 213, 79, 0.88), 0 0 42px 10px rgba(245, 185, 66, 0.52);
   }
   .board-seat.winner-seat {
-    border-color: var(--gold-light);
-    background: rgba(255, 229, 143, 0.09);
-    box-shadow: 0 0 28px 6px rgba(255, 229, 143, 0.95), 0 0 48px 12px rgba(245, 185, 66, 0.7);
+    border: 2px solid var(--gold-light);
+    background: radial-gradient(circle at center, rgba(255, 229, 143, 0.24) 0%, rgba(245, 185, 66, 0.1) 75%);
+    box-shadow: 0 0 28px 6px rgba(255, 229, 143, 0.95), 0 0 48px 12px rgba(245, 185, 66, 0.72);
+    z-index: 4;
   }
-  .board-seat.folded { opacity: 0.45; filter: grayscale(0.5); }
+  .board-seat.winner-seat .board-seat-name {
+    background: linear-gradient(135deg, rgba(120, 72, 0, 0.92), rgba(56, 30, 0, 0.94));
+    border-color: var(--gold-light);
+    color: var(--gold-light);
+  }
+  .board-seat.loser-showdown {
+    opacity: 0.42;
+    filter: brightness(0.75) saturate(0.65);
+  }
+  .board-seat.folded { opacity: 0.42; filter: grayscale(0.55); }
 
   .board-seat-cards {
     width: 100%; height: 64%;
@@ -292,11 +316,23 @@
     background: linear-gradient(135deg, #8e1414, #4f0707);
     display: flex; align-items: center; justify-content: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.55);
+    transition: opacity 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, filter 0.22s ease;
   }
   .board-mini-card.is-flipping { animation: cardFlip3D 0.34s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .board-mini-card img { width: 100%; height: 100%; object-fit: fill; background: #fff; display: block; }
   .board-mini-card.back-card img { object-fit: fill; background: #5a0b0b; }
   .board-mini-card.revealed { background: #fff; border-color: var(--gold-light); box-shadow: 0 0 10px rgba(255, 213, 79, 0.45), 0 4px 10px rgba(0,0,0,0.55); }
+  .board-mini-card.win-rank-mini {
+    border: 2px solid var(--gold-light);
+    transform: translateY(-3px) scale(1.06);
+    box-shadow: 0 0 14px rgba(255, 229, 143, 0.95), 0 4px 10px rgba(0,0,0,0.65);
+    z-index: 3;
+  }
+  .board-mini-card.dimmed-mini {
+    opacity: 0.3;
+    filter: brightness(0.6) saturate(0.5);
+    transform: scale(0.92);
+  }
 
   .board-seat-name,
   .board-seat-chips {
@@ -382,9 +418,18 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   }
   .player-area.my-turn { border-top-color: var(--gold-light); box-shadow: 0 -4px 20px rgba(245, 185, 66, 0.35); }
-  .player-area.winner-player { border-top-color: var(--gold-light); box-shadow: 0 -6px 26px rgba(255, 229, 143, 0.55); }
+  .player-area.winner-player {
+    border-top: 2.5px solid var(--gold-light);
+    background: linear-gradient(180deg, rgba(245, 185, 66, 0.16) 0%, rgba(0, 0, 0, 0.95) 65%);
+    box-shadow: 0 -6px 28px rgba(255, 229, 143, 0.65);
+  }
+  .player-area.loser-player {
+    opacity: 0.62;
+    filter: saturate(0.72);
+  }
 
   .my-hands-row { display: flex; justify-content: center; align-items: center; gap: 28px; flex-wrap: nowrap; }
   .hand-group { display: flex; flex-direction: column; align-items: center; }
@@ -423,8 +468,17 @@
     color: #140d00; font-size: 0.68rem; font-weight: 800; padding: 1px 7px; border-radius: 5px; z-index: 2;
   }
 
-  .controls-row { display: flex; gap: 12px; justify-content: center; align-items: center; max-width: 900px; margin: 0 auto; width: 100%; flex-wrap: nowrap; }
-  .controls-row .btn { margin: 0; padding: 8px 16px; font-size: 0.9rem; font-weight: 700; border-radius: 10px; flex: 1 1 120px; }
+  .controls-row { display: flex; gap: 10px; justify-content: center; align-items: center; max-width: 960px; margin: 0 auto; width: 100%; flex-wrap: nowrap; }
+  .controls-row .btn { margin: 0; padding: 8px 14px; font-size: 0.9rem; font-weight: 700; border-radius: 10px; flex: 1 1 120px; }
+  .showdown-choice-group { display: none; gap: 10px; flex: 1.3 1 240px; }
+  .showdown-choice-group.active { display: flex; }
+  .showdown-choice-group .btn { margin: 0; flex: 1; }
+  .btn-choice-active {
+    outline: 2.5px solid var(--gold-light);
+    box-shadow: 0 0 16px rgba(255, 229, 143, 0.9) !important;
+    transform: translateY(-1px);
+  }
+
   .raise-box { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(245, 185, 66, 0.75); border-radius: 10px; padding: 4px 12px; flex: 1.7 1 260px; justify-content: center; }
   .raise-input { width: 88px; padding: 6px 8px; margin: 0 !important; border-radius: 7px; border: 1px solid var(--gold); background: #071f13; color: var(--gold-light); font-size: 0.9rem; font-weight: 700; text-align: center; }
   .quick-bet-btn { padding: 6px 10px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.12); color: #fff; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
@@ -497,7 +551,6 @@
 
   .target-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; overflow-y: auto; text-align: left; }
 
-  /* Big Showcase Cards Grid (กด 1 ครั้งขยาย+โชว์สกิล / กดอีกทีพับกลับเพื่อดูการ์ดอื่น) */
   .big-skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
@@ -595,7 +648,6 @@
   .rank-num { width: 26px; height: 26px; border-radius: 999px; background: rgba(245,185,66,0.2); border: 1px solid var(--gold); color: var(--gold-light); font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .rank-sample { font-size: 0.84rem; font-weight: 700; color: #ffe58f; background: rgba(0,0,0,0.35); padding: 3px 8px; border-radius: 8px; white-space: nowrap; }
 
-  /* Rank Sample Cards Popup */
   .rank-popup-cards {
     display: flex;
     justify-content: center;
@@ -776,6 +828,10 @@
         <button class="quick-bet-btn" type="button" onclick="addRaiseAmount(100)">+100</button>
         <input type="number" id="raise-amount-input" class="raise-input" min="10" step="10" value="100" placeholder="ยอดเพิ่ม">
         <button class="btn btn-gold" id="btn-raise" onclick="playerAction('raise')">เกทับ</button>
+      </div>
+      <div class="showdown-choice-group" id="showdown-card-choices">
+        <button class="btn btn-gold" id="btn-show-cards" onclick="setOnlineShowdownCards(true)">🃏 โชว์การ์ด</button>
+        <button class="btn btn-ghost" id="btn-hide-cards" onclick="setOnlineShowdownCards(false)">🙈 ไม่โชว์การ์ด</button>
       </div>
       <button class="btn btn-green" id="btn-start-online" style="display:none;" onclick="startOnlineGame()">🚀 เริ่มแจกไพ่ (ครบคนแล้วกดเลย)</button>
       <button class="btn btn-green" id="btn-next-round" style="display:none;" onclick="startNewHand()">แจกไพ่ตาถัดไป ▶</button>
@@ -1401,8 +1457,8 @@ function applyPowerEffect(cardId, state, userIdx, targetIdx, usedCardUid = null)
   const target = (targetIdx !== null && targetIdx !== undefined) ? state.players[targetIdx] : null;
 
   if (cardId === 'swap_powers') {
-    const activeCards = (user.powerCards || []).filter(c => !c.used);
-    const countToReplace = activeCards.length;
+    const cardsToSwap = (user.powerCards || []).filter(c => !c.used || c.uid === usedCardUid);
+    const countToReplace = cardsToSwap.length;
     if (countToReplace === 0) {
       return `${user.name} ใช้ [เปลี่ยนการ์ดพลัง] แต่ไม่มีการ์ดพลังเหลือให้เปลี่ยน (ไม่มีผล)!`;
     }
@@ -1410,9 +1466,9 @@ function applyPowerEffect(cardId, state, userIdx, targetIdx, usedCardUid = null)
     for (let i = 0; i < countToReplace; i++) {
       replacementCards.push(createSinglePowerCard(['swap_powers', ...replacementCards.map(r => r.id)]));
     }
-    const usedCards = (user.powerCards || []).filter(c => c.used);
-    user.powerCards = [...replacementCards, ...usedCards];
-    return `${user.name} ใช้ [เปลี่ยนการ์ดพลัง] (นับรวมใบที่ใช้) เปลี่ยนการ์ดพลังใหม่ ${countToReplace} ใบเรียบร้อย!`;
+    const otherUsedCards = (user.powerCards || []).filter(c => c.used && c.uid !== usedCardUid);
+    user.powerCards = [...replacementCards, ...otherUsedCards];
+    return `${user.name} ใช้ [เปลี่ยนการ์ดพลัง] เปลี่ยนการ์ดพลังใหม่ ${countToReplace} ใบเรียบร้อย!`;
   }
 
   if (cardId === 'bank_lock') {
@@ -1580,9 +1636,9 @@ function startSoloBotMode() {
   getAudioContext(); isOnline = false; handCounter = 0;
   const myName = document.getElementById('player-name').value.trim() || (currentGoogleUser?.displayName || 'คุณ');
   const botNames = ['บอทสมชาย', 'บอทเจ๊ไฝ', 'บอทเสี่ยช้าง', 'บอทน้องแพรว'];
-  let players = [{ id: 'p0', name: myName, chips: STARTING_CHIPS, lockedChips: 0, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '', shieldActive: false }];
-  botNames.forEach((bName, idx) => players.push({ id: 'p' + (idx + 1), name: bName, chips: STARTING_CHIPS, lockedChips: 0, isBot: true, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '', shieldActive: false }));
-  gameState = { players, deck: [], community: [], discardPile: [], shieldUserId: null, pot: 0, currentBet: 0, dealerIndex: -1, sbIndex: -1, bbIndex: -1, turnIndex: 0, stageIndex: 0, winnerId: null, winnerIds: [], winningBoardIndices: [], logs: [], log: 'เริ่มเกม 5 คน!' };
+  let players = [{ id: 'p0', name: myName, chips: STARTING_CHIPS, lockedChips: 0, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '', shieldActive: false, showCards: false }];
+  botNames.forEach((bName, idx) => players.push({ id: 'p' + (idx + 1), name: bName, chips: STARTING_CHIPS, lockedChips: 0, isBot: true, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '', shieldActive: false, showCards: false }));
+  gameState = { players, deck: [], community: [], discardPile: [], shieldUserId: null, pot: 0, currentBet: 0, dealerIndex: -1, sbIndex: -1, bbIndex: -1, turnIndex: 0, stageIndex: 0, winnerId: null, winnerIds: [], winningBoardIndices: [], winningHandKeysByPlayer: {}, logs: [], log: 'เริ่มเกม 5 คน!' };
   appendGameLog(gameState, `เริ่มเกมโหมดทดสอบ 5 คน (ชิปตั้งต้น ${formatMoney(STARTING_CHIPS)} • SB ${SMALL_BLIND} / BB ${BIG_BLIND})`);
   document.getElementById('lobby-screen').style.display = 'none';
   document.getElementById('game-screen').style.display = 'flex';
@@ -1602,11 +1658,11 @@ function startNewHand() {
   gameState.deck = createDeck(); gameState.community = []; gameState.discardPile = []; gameState.shieldUserId = null;
   gameState.pot = 0; gameState.currentBet = 0;
   gameState.dealerIndex = dealerIdx; gameState.sbIndex = sbIdx; gameState.bbIndex = bbIdx; gameState.stageIndex = 0;
-  gameState.winnerId = null; gameState.winnerIds = []; gameState.winningBoardIndices = [];
+  gameState.winnerId = null; gameState.winnerIds = []; gameState.winningBoardIndices = []; gameState.winningHandKeysByPlayer = {};
 
   gameState.players.forEach((p, idx) => {
     if (p.chips <= 0) p.chips = STARTING_CHIPS;
-    p.bet = 0; p.folded = false; p.raisesInStage = 0; p.finalHandName = ''; p.peekedPlayers = []; p.shieldActive = false; p.lockedChips = 0;
+    p.bet = 0; p.folded = false; p.raisesInStage = 0; p.finalHandName = ''; p.peekedPlayers = []; p.shieldActive = false; p.lockedChips = 0; p.showCards = false;
     p.blindRole = idx === dealerIdx ? 'D' : (idx === sbIdx ? 'SB' : (idx === bbIdx ? 'BB' : ''));
     p.hand = [gameState.deck.pop(), gameState.deck.pop()];
     p.powerCards = drawPowerCards(2);
@@ -1620,6 +1676,16 @@ function startNewHand() {
 
   appendGameLog(gameState, `ตาที่ ${handCounter}: ${sbPlayer.name} ลง SB ${formatMoney(sbPaid)}, ${bbPlayer.name} ลง BB ${formatMoney(bbPaid)} — ตาของ ${gameState.players[firstTurnIdx].name}`);
   syncAndRender(); checkBotTurn();
+}
+
+function setOnlineShowdownCards(shouldShow) {
+  if (!gameState || gameState.stageIndex !== 4) return;
+  const me = gameState.players.find(p => p.id === myPlayerId);
+  if (!me) return;
+  me.showCards = Boolean(shouldShow);
+  playTone(shouldShow ? 740 : 420, 0.08, 'triangle', 0, 0.11);
+  appendGameLog(gameState, shouldShow ? `🃏 ${me.name} เลือก [โชว์การ์ด] บนมือ!` : `🙈 ${me.name} เลือก [ไม่โชว์การ์ด]`);
+  syncAndRender();
 }
 
 function playerAction(action) {
@@ -1682,22 +1748,24 @@ function checkBotTurn() {
     const usablePowers = currentP.powerCards.filter(c => !c.used && !(c.id === 'shield' && gameState.shieldUserId));
     const unusedPower = usablePowers.length ? usablePowers[Math.floor(Math.random() * usablePowers.length)] : null;
     if (unusedPower && Math.random() < 0.24) {
-      SFX.power(); triggerAnim('table-oval', 'anim-flash');
-      if (unusedPower.id === 'discard_one') {
-        currentP.powerCards = currentP.powerCards.filter(c => c.uid !== unusedPower.uid);
-      } else {
-        unusedPower.used = true;
-      }
       const targetPool = unusedPower.allowSelfTarget
-        ? gameState.players.map((p, i) => i).filter(i => !gameState.players[i].folded && (gameState.players[i].hand || []).length > 0)
-        : gameState.players.map((p, i) => i).filter(i => i !== gameState.turnIndex && !gameState.players[i].folded);
-      const targetIdx = targetPool.length ? targetPool[Math.floor(Math.random() * targetPool.length)] : null;
-      appendGameLog(gameState, '⚡ ' + applyPowerEffect(unusedPower.id, gameState, gameState.turnIndex, targetIdx, unusedPower.uid));
-      if (gameState.players.filter(p => !p.folded).length === 1) {
-        finishHand([gameState.players.find(p => !p.folded)], 'ชนะบาย (คนอื่นหมอบหมด)');
-        return;
+        ? gameState.players.map((p, i) => i).filter(i => !gameState.players[i].folded && !gameState.players[i].shieldActive && (gameState.players[i].hand || []).length > 0)
+        : gameState.players.map((p, i) => i).filter(i => i !== gameState.turnIndex && !gameState.players[i].folded && !gameState.players[i].shieldActive);
+      if (!(unusedPower.needTarget && targetPool.length === 0)) {
+        SFX.power(); triggerAnim('table-oval', 'anim-flash');
+        if (unusedPower.id === 'discard_one') {
+          currentP.powerCards = currentP.powerCards.filter(c => c.uid !== unusedPower.uid);
+        } else {
+          unusedPower.used = true;
+        }
+        const targetIdx = targetPool.length ? targetPool[Math.floor(Math.random() * targetPool.length)] : null;
+        appendGameLog(gameState, '⚡ ' + applyPowerEffect(unusedPower.id, gameState, gameState.turnIndex, targetIdx, unusedPower.uid));
+        if (gameState.players.filter(p => !p.folded).length === 1) {
+          finishHand([gameState.players.find(p => !p.folded)], 'ชนะบาย (คนอื่นหมอบหมด)');
+          return;
+        }
+        syncAndRender();
       }
-      syncAndRender();
     }
     setTimeout(() => {
       if (!gameState || gameState.stageIndex >= 4 || gameState.players[gameState.turnIndex]?.id !== currentP.id) return;
@@ -1738,11 +1806,19 @@ function onClickPowerCard(uid) {
       const canPickSelf = Boolean(card.allowSelfTarget) && idx === myIdx;
       const canPickOther = idx !== myIdx && !p.folded;
       if ((canPickSelf || canPickOther) && !p.folded) {
-        const btn = document.createElement('button'); btn.className = 'btn btn-gold';
-        const shieldTag = (idx !== myIdx && p.shieldActive) ? ' [🛡️ มีโล่ป้องกัน]' : '';
+        const isProtected = idx !== myIdx && Boolean(p.shieldActive);
+        const btn = document.createElement('button');
         const selfTag = idx === myIdx ? ' (ตัวเอง)' : '';
-        btn.innerText = `${p.name}${selfTag}${shieldTag} (ไพ่ ${(p.hand || []).length} ใบ • เงิน: ${formatMoney(p.chips)} ชิป)`;
-        btn.onclick = () => confirmPowerTarget(idx); list.appendChild(btn);
+        if (isProtected) {
+          btn.className = 'btn shielded-target';
+          btn.disabled = true;
+          btn.innerText = `🛡️ ${p.name} — ป้องกันอยู่ (กดใช้สกิลใส่ไม่ได้)`;
+        } else {
+          btn.className = 'btn btn-gold';
+          btn.innerText = `${p.name}${selfTag} (ไพ่ ${(p.hand || []).length} ใบ • เงิน: ${formatMoney(p.chips)} ชิป)`;
+          btn.onclick = () => confirmPowerTarget(idx);
+        }
+        list.appendChild(btn);
       }
     });
     showPopup('target-modal');
@@ -1754,6 +1830,11 @@ function onClickPowerCard(uid) {
 function confirmPowerTarget(targetIdx) {
   const myIdx = gameState.players.findIndex(p => p.id === myPlayerId);
   const me = gameState.players[myIdx];
+  const target = gameState.players[targetIdx];
+  if (targetIdx !== myIdx && target && target.shieldActive) {
+    SFX.deny();
+    return;
+  }
   const cardIdx = me.powerCards.findIndex(c => c.uid === pendingPowerCardUid);
   const card = cardIdx >= 0 ? me.powerCards[cardIdx] : null;
   if (card) {
@@ -1773,35 +1854,34 @@ function confirmPowerTarget(targetIdx) {
 function closeModal() { hidePopup('target-modal'); pendingPowerCardUid = null; }
 
 // ============================================================================
-// 🏆 6. คำนวณแต้ม + แบ่ง Pot + ไฮไลท์การ์ดกองกลางที่ชนะ
+// 🏆 6. คำนวณแต้ม + แบ่ง Pot + ไฮไลท์การ์ดที่ได้แรงค์ (ทั้งมือและกองกลาง)
 // ============================================================================
-function findWinningBoardIndices(playerHand, communityCards) {
+function findWinningRankCardKeys(playerHand, communityCards) {
   const comm = Array.isArray(communityCards) ? communityCards : [];
-  if (!comm.length) return [];
   const hand = Array.isArray(playerHand) ? playerHand : [];
   const tagged = [
-    ...hand.map(c => ({ ...c, source: 'hand' })),
-    ...comm.map((c, idx) => ({ ...c, source: 'board', boardIdx: idx }))
+    ...hand.map((c, idx) => ({ ...c, source: 'hand', slotIdx: idx, key: `hand:${idx}` })),
+    ...comm.map((c, idx) => ({ ...c, source: 'board', slotIdx: idx, key: `board:${idx}` }))
   ];
-  if (tagged.length === 0) return [];
+  if (tagged.length === 0) return { boardIndices: [], handIndices: [], keys: [] };
 
-  const matchedBoard = new Set();
-  const addBoardMatchesByRanks = (targetRanks) => {
-    comm.forEach((c, idx) => {
-      if (targetRanks.includes(c.rank)) matchedBoard.add(idx);
+  const matchedKeys = new Set();
+  const addByRanks = (targetRanks) => {
+    tagged.forEach(item => {
+      if (targetRanks.includes(item.rank)) matchedKeys.add(item.key);
     });
   };
 
   const bySuit = {};
-  tagged.forEach(c => {
-    if (!bySuit[c.suit]) bySuit[c.suit] = [];
-    bySuit[c.suit].push(c);
+  tagged.forEach(item => {
+    if (!bySuit[item.suit]) bySuit[item.suit] = [];
+    bySuit[item.suit].push(item);
   });
   const flushGroup = Object.values(bySuit).find(g => g.length >= 5);
 
   const rankMap = new Map();
-  tagged.forEach(c => {
-    if (!rankMap.has(c.rank) || c.source === 'board') rankMap.set(c.rank, c);
+  tagged.forEach(item => {
+    if (!rankMap.has(item.rank) || item.source === 'hand') rankMap.set(item.rank, item);
   });
   const sortedUniqueRanks = [...rankMap.keys()].sort((a, b) => b - a);
   let straightRanks = null;
@@ -1821,57 +1901,48 @@ function findWinningBoardIndices(playerHand, communityCards) {
   if (flushGroup && straightRanks) {
     const flushRankSet = new Set(flushGroup.map(c => c.rank));
     if (straightRanks.every(r => flushRankSet.has(r))) {
-      comm.forEach((c, idx) => {
-        if (c.suit === flushGroup[0].suit && straightRanks.includes(c.rank)) matchedBoard.add(idx);
+      tagged.forEach(item => {
+        if (item.suit === flushGroup[0].suit && straightRanks.includes(item.rank)) matchedKeys.add(item.key);
       });
-      return [...matchedBoard];
+    }
+  } else {
+    const countByRank = {};
+    tagged.forEach(item => {
+      countByRank[item.rank] = (countByRank[item.rank] || 0) + 1;
+    });
+    const freq = Object.entries(countByRank)
+      .map(([r, cnt]) => ({ rank: Number(r), count: cnt }))
+      .sort((a, b) => b.count - a.count || b.rank - a.rank);
+
+    if (freq[0]?.count >= 4) {
+      addByRanks([freq[0].rank]);
+    } else if (freq[0]?.count === 3 && freq[1]?.count >= 2) {
+      addByRanks([freq[0].rank, freq[1].rank]);
+    } else if (flushGroup) {
+      flushGroup.slice(0, 5).forEach(item => matchedKeys.add(item.key));
+    } else if (straightRanks) {
+      addByRanks(straightRanks);
+    } else if (freq[0]?.count === 3) {
+      addByRanks([freq[0].rank]);
+    } else if (freq[0]?.count === 2 && freq[1]?.count === 2) {
+      addByRanks([freq[0].rank, freq[1].rank]);
+    } else if (freq[0]?.count === 2) {
+      addByRanks([freq[0].rank]);
+    } else {
+      const highestRank = Math.max(...tagged.map(item => item.rank));
+      addByRanks([highestRank]);
     }
   }
 
-  const countByRank = {};
-  tagged.forEach(c => {
-    countByRank[c.rank] = (countByRank[c.rank] || 0) + 1;
+  const boardIndices = [];
+  const handIndices = [];
+  matchedKeys.forEach(k => {
+    const [kind, idxStr] = k.split(':');
+    const idx = Number(idxStr);
+    if (kind === 'board') boardIndices.push(idx);
+    if (kind === 'hand') handIndices.push(idx);
   });
-  const freq = Object.entries(countByRank)
-    .map(([r, cnt]) => ({ rank: Number(r), count: cnt }))
-    .sort((a, b) => b.count - a.count || b.rank - a.rank);
-
-  if (freq[0]?.count >= 4) {
-    addBoardMatchesByRanks([freq[0].rank]);
-    return [...matchedBoard];
-  }
-  if (freq[0]?.count === 3 && freq[1]?.count >= 2) {
-    addBoardMatchesByRanks([freq[0].rank, freq[1].rank]);
-    return [...matchedBoard];
-  }
-  if (flushGroup) {
-    comm.forEach((c, idx) => {
-      if (c.suit === flushGroup[0].suit) matchedBoard.add(idx);
-    });
-    return [...matchedBoard];
-  }
-  if (straightRanks) {
-    addBoardMatchesByRanks(straightRanks);
-    return [...matchedBoard];
-  }
-  if (freq[0]?.count === 3) {
-    addBoardMatchesByRanks([freq[0].rank]);
-    return [...matchedBoard];
-  }
-  if (freq[0]?.count === 2 && freq[1]?.count === 2) {
-    addBoardMatchesByRanks([freq[0].rank, freq[1].rank]);
-    return [...matchedBoard];
-  }
-  if (freq[0]?.count === 2) {
-    addBoardMatchesByRanks([freq[0].rank]);
-    return [...matchedBoard];
-  }
-
-  const highestRank = Math.max(...tagged.map(c => c.rank));
-  comm.forEach((c, idx) => {
-    if (c.rank === highestRank) matchedBoard.add(idx);
-  });
-  return [...matchedBoard];
+  return { boardIndices, handIndices, keys: [...matchedKeys] };
 }
 
 function evaluateBestCards(cards) {
@@ -1936,10 +2007,14 @@ function finishHand(winnersInput, handName = 'ชนะบาย (คนอื�
   gameState.winnerId = winners.length > 0 ? winners[0].id : null;
 
   const boardHighlightSet = new Set();
+  const handHighlightMap = {};
   winners.forEach(w => {
-    findWinningBoardIndices(w.hand || [], gameState.community || []).forEach(idx => boardHighlightSet.add(idx));
+    const info = findWinningRankCardKeys(w.hand || [], gameState.community || []);
+    info.boardIndices.forEach(idx => boardHighlightSet.add(idx));
+    handHighlightMap[w.id] = info.handIndices;
   });
   gameState.winningBoardIndices = [...boardHighlightSet];
+  gameState.winningHandKeysByPlayer = handHighlightMap;
 
   if (winners.length > 0 && potWon > 0) {
     const baseShare = Math.floor(potWon / winners.length);
@@ -1985,9 +2060,9 @@ function renderCardHTML(card, options = {}) {
   const flipStyle = flip && delayMs > 0 ? `style="animation-delay:${delayMs}ms;"` : '';
   return `<div class="flip-slot ${extraClass}"><div class="flip-inner ${flip ? 'is-flipping' : ''}" ${flipStyle}><div class="flip-face flip-front custom-img"><img src="${getPokerCardImagePath(card)}" alt="${card.val}${card.suit}" draggable="false" onerror="fallbackCardText(this, '${card.val}', '${card.suit}')"></div></div></div>`;
 }
-function renderBoardMiniCard(card, canSee, flip = false) {
-  if (canSee && card) return `<div class="board-mini-card revealed ${flip ? 'is-flipping' : ''}"><img src="${getPokerCardImagePath(card)}" alt="${card.val}${card.suit}" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.parentElement.innerHTML='<span style=\\'font-weight:800;color:#111;font-size:0.78rem;\\'>${card.val}${card.suit}</span>'; });"></div>`;
-  return `<div class="board-mini-card back-card"><img src="${POKER_CARD_BACK}" alt="back" draggable="false" onerror="tryImageCaseFallback(this, (el) => el.remove());"></div>`;
+function renderBoardMiniCard(card, canSee, flip = false, extraClass = '') {
+  if (canSee && card) return `<div class="board-mini-card revealed ${flip ? 'is-flipping' : ''} ${extraClass}"><img src="${getPokerCardImagePath(card)}" alt="${card.val}${card.suit}" draggable="false" onerror="tryImageCaseFallback(this, (el) => { el.parentElement.innerHTML='<span style=\\'font-weight:800;color:#111;font-size:0.78rem;\\'>${card.val}${card.suit}</span>'; });"></div>`;
+  return `<div class="board-mini-card back-card ${extraClass}"><img src="${POKER_CARD_BACK}" alt="back" draggable="false" onerror="tryImageCaseFallback(this, (el) => el.remove());"></div>`;
 }
 function getFallbackSVG() {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="160"><rect width="100%" height="100%" fill="#311b92"/><text x="50%" y="50%" font-size="34" text-anchor="middle" dominant-baseline="middle">⚡</text></svg>`;
@@ -2006,12 +2081,29 @@ function getLockBadgeHTML(p) {
   return (p.lockedChips && p.lockedChips > 0) ? `<span class="lock-badge">🔒 ${formatMoney(p.lockedChips)}</span>` : '';
 }
 function renderSeatBoxHTML(p, slotCls, options = {}) {
-  const { isMe = false, isTurn = false, isWinner = false, canSeeCards = false, isShowdown = false, flipCards = false } = options;
+  const { isMe = false, isTurn = false, isWinner = false, isLoserShowdown = false, canSeeCards = false, isShowdown = false, flipCards = false, winHandIndices = [] } = options;
   const handList = Array.isArray(p.hand) ? p.hand : [];
-  const cardsHTML = handList.map(card => renderBoardMiniCard(card, canSeeCards, flipCards)).join('');
+  const hasRankHighlight = isShowdown && isWinner && winHandIndices.length > 0;
+  const cardsHTML = handList.map((card, cIdx) => {
+    let miniCls = '';
+    if (hasRankHighlight && canSeeCards) {
+      miniCls = winHandIndices.includes(cIdx) ? 'win-rank-mini' : 'dimmed-mini';
+    } else if (isShowdown && !isWinner && !p.folded) {
+      miniCls = 'dimmed-mini';
+    }
+    return renderBoardMiniCard(card, canSeeCards, flipCards, miniCls);
+  }).join('');
   const turnTag = isMe ? '' : (isTurn ? 'คิด...' : '');
-  const tagText = isWinner ? 'WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag));
-  return `<div class="board-seat ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${p.folded ? 'folded' : ''}"><div class="board-seat-cards">${cardsHTML}</div><div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}${getShieldBadgeHTML(p)}${getLockBadgeHTML(p)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}</div><div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div></div>`;
+  const showBadge = (isShowdown && isOnline && !isMe && !p.folded && p.showCards) ? 'โชว์ไพ่' : '';
+  const tagText = isWinner ? 'WIN' : (p.folded ? 'หมอบ' : (showBadge || ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag)));
+  return `<div class="board-seat ${slotCls} ${isTurn ? 'active-turn' : ''} ${isWinner ? 'winner-seat' : ''} ${isLoserShowdown ? 'loser-showdown' : ''} ${p.folded ? 'folded' : ''}"><div class="board-seat-cards">${cardsHTML}</div><div class="board-seat-name">${p.name}${getBlindBadgeHTML(p.blindRole)}${getShieldBadgeHTML(p)}${getLockBadgeHTML(p)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}</div><div class="board-seat-chips">💰 ${formatMoney(p.chips)}</div></div>`;
+}
+
+function canOpponentCardsBeSeen(p, pIdx, isShowdown, peeked) {
+  if (peeked.includes(pIdx)) return true;
+  if (!isShowdown || p.folded) return false;
+  if (!isOnline) return true;
+  return Boolean(p.showCards);
 }
 
 function renderUI() {
@@ -2033,6 +2125,7 @@ function renderUI() {
   const isShowdown = gameState.stageIndex === 4;
   const winnerIds = isShowdown ? (Array.isArray(gameState.winnerIds) ? gameState.winnerIds : (gameState.winnerId ? [gameState.winnerId] : [])) : [];
   const winningBoardIndices = isShowdown && Array.isArray(gameState.winningBoardIndices) ? gameState.winningBoardIndices : [];
+  const winHandMap = (isShowdown && gameState.winningHandKeysByPlayer && typeof gameState.winningHandKeysByPlayer === 'object') ? gameState.winningHandKeysByPlayer : {};
 
   document.getElementById('round-stage').innerText = STAGES[gameState.stageIndex] || 'WAITING';
   document.getElementById('blinds-badge').innerText = `SB ${SMALL_BLIND} / BB ${BIG_BLIND}`;
@@ -2059,34 +2152,51 @@ function renderUI() {
     opponents.push({ player: gameState.players[idx], idx });
   }
   const peeked = me.peekedPlayers || [];
+  const isMeWinner = isShowdown && winnerIds.includes(me.id);
+  const myWinHandIndices = isMeWinner ? (winHandMap[me.id] || []) : [];
 
   const seatSig = [
-    me.id, (me.hand || []).map(c => `${c.val}${c.suit}`).join('-'), isNewHandStart ? handCounter : '', isShowdown ? `SD:${winnerIds.join(',')}` : '',
+    me.id, (me.hand || []).map(c => `${c.val}${c.suit}`).join('-'), isNewHandStart ? handCounter : '',
+    isShowdown ? `SD:${winnerIds.join(',')}:${myWinHandIndices.join('.')}:${me.showCards ? 1 : 0}` : '',
     ...opponents.map(({ player: p, idx }) => {
-      const canSee = (isShowdown && !p.folded) || peeked.includes(idx);
+      const canSee = canOpponentCardsBeSeen(p, idx, isShowdown, peeked);
       const count = (p.hand || []).length;
       const cardsSig = canSee ? (p.hand || []).map(c => `${c.val}${c.suit}`).join('-') : `BACK:${count}`;
-      return `${p.id}:${cardsSig}:${p.folded ? 1 : 0}:${p.shieldActive ? 1 : 0}:${p.lockedChips || 0}`;
+      const pWin = isShowdown && winnerIds.includes(p.id);
+      const pWinIdx = pWin ? (winHandMap[p.id] || []).join('.') : '';
+      return `${p.id}:${cardsSig}:${p.folded ? 1 : 0}:${p.shieldActive ? 1 : 0}:${p.lockedChips || 0}:${pWin ? 1 : 0}:${pWinIdx}:${p.showCards ? 1 : 0}`;
     })
   ].join('|');
 
   if (oppArea.dataset.seatSig !== seatSig) {
     oppArea.dataset.seatSig = seatSig;
     let seatsHTML = renderSeatBoxHTML(me, BOARD_SLOT_FOR_ME, {
-      isMe: true, isTurn: gameState.turnIndex === myIdx && !isShowdown && !isWaiting,
-      isWinner: winnerIds.includes(me.id), canSeeCards: Boolean(me.hand && me.hand.length > 0 && !me.folded), isShowdown,
-      flipCards: isNewHandStart
+      isMe: true,
+      isTurn: gameState.turnIndex === myIdx && !isShowdown && !isWaiting,
+      isWinner: isMeWinner,
+      isLoserShowdown: isShowdown && !isMeWinner && !me.folded,
+      canSeeCards: Boolean(me.hand && me.hand.length > 0 && !me.folded),
+      isShowdown,
+      flipCards: isNewHandStart,
+      winHandIndices: myWinHandIndices
     });
 
     BOARD_OPPONENT_SLOTS.forEach((slotCls, posIdx) => {
       const item = opponents[posIdx];
       if (!item) { seatsHTML += `<div class="board-seat ${slotCls}" style="opacity:0.22;"></div>`; return; }
       const { player: p, idx } = item;
-      const canSee = (isShowdown && !p.folded) || peeked.includes(idx);
+      const canSee = canOpponentCardsBeSeen(p, idx, isShowdown, peeked);
+      const pIsWinner = isShowdown && winnerIds.includes(p.id);
+      const pWinHandIndices = pIsWinner ? (winHandMap[p.id] || []) : [];
       seatsHTML += renderSeatBoxHTML(p, slotCls, {
-        isMe: false, isTurn: gameState.turnIndex === idx && !isShowdown && !isWaiting,
-        isWinner: winnerIds.includes(p.id), canSeeCards: canSee, isShowdown,
-        flipCards: justEnteredShowdown && canSee
+        isMe: false,
+        isTurn: gameState.turnIndex === idx && !isShowdown && !isWaiting,
+        isWinner: pIsWinner,
+        isLoserShowdown: isShowdown && !pIsWinner && !p.folded,
+        canSeeCards: canSee,
+        isShowdown,
+        flipCards: justEnteredShowdown && canSee,
+        winHandIndices: pWinHandIndices
       });
     });
     oppArea.innerHTML = seatsHTML;
@@ -2094,7 +2204,8 @@ function renderUI() {
     const meEl = oppArea.querySelector(`.${BOARD_SLOT_FOR_ME}`);
     if (meEl) {
       meEl.classList.toggle('active-turn', gameState.turnIndex === myIdx && !isShowdown && !isWaiting);
-      meEl.classList.toggle('winner-seat', winnerIds.includes(me.id));
+      meEl.classList.toggle('winner-seat', isMeWinner);
+      meEl.classList.toggle('loser-showdown', isShowdown && !isMeWinner && !me.folded);
       meEl.classList.toggle('folded', Boolean(me.folded));
       const chipsEl = meEl.querySelector('.board-seat-chips');
       if (chipsEl) chipsEl.innerHTML = `💰 ${formatMoney(me.chips)}`;
@@ -2103,13 +2214,15 @@ function renderUI() {
       const seatEl = oppArea.querySelector(`.${slotCls}`);
       const item = opponents[posIdx];
       if (!seatEl || !item) return;
-      const { player: p, idx } = item;
-      const isTurn = gameState.turnIndex === idx && !isShowdown && !isWaiting;
-      const isWinner = winnerIds.includes(p.id);
+      const { player: p } = item;
+      const isTurn = gameState.turnIndex === item.idx && !isShowdown && !isWaiting;
+      const isWinner = isShowdown && winnerIds.includes(p.id);
       const turnTag = isTurn ? 'คิด...' : '';
-      const tagText = isWinner ? 'WIN' : (p.folded ? 'หมอบ' : ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag));
+      const showBadge = (isShowdown && isOnline && !p.folded && p.showCards) ? 'โชว์ไพ่' : '';
+      const tagText = isWinner ? 'WIN' : (p.folded ? 'หมอบ' : (showBadge || ((p.bet > 0 && !isShowdown) ? `ลง ${formatMoney(p.bet)}` : turnTag)));
       seatEl.classList.toggle('active-turn', isTurn);
       seatEl.classList.toggle('winner-seat', isWinner);
+      seatEl.classList.toggle('loser-showdown', isShowdown && !isWinner && !p.folded);
       seatEl.classList.toggle('folded', Boolean(p.folded));
       const nameEl = seatEl.querySelector('.board-seat-name');
       if (nameEl) nameEl.innerHTML = `${p.name}${getBlindBadgeHTML(p.blindRole)}${getShieldBadgeHTML(p)}${getLockBadgeHTML(p)}${tagText ? `<span class="board-seat-tag">${tagText}</span>` : ''}`;
@@ -2142,11 +2255,26 @@ function renderUI() {
   }
 
   const myHandArea = document.getElementById('my-poker-cards');
-  const handSignature = (me.hand || []).map(c => c ? `${c.val}${c.suit}` : '').join(',');
+  const myHandDimmedAll = isShowdown && !isMeWinner && !me.folded;
+  const handSignature = [
+    ...(me.hand || []).map((c, idx) => {
+      if (!c) return '';
+      const isWinCard = isMeWinner && myWinHandIndices.includes(idx);
+      const isDimmed = (isMeWinner && myWinHandIndices.length > 0 && !isWinCard) || myHandDimmedAll;
+      return `${c.val}${c.suit}:${isWinCard ? 'W' : (isDimmed ? 'D' : 'N')}`;
+    })
+  ].join(',');
+
   if (handSignature !== lastRenderedHandSignature) {
     const shouldFlipHand = isNewHandStart || (!isNewHandStart && lastRenderedHandSignature !== '');
     lastRenderedHandSignature = handSignature;
-    myHandArea.innerHTML = (me.hand || []).map((c, idx) => renderCardHTML(c, { flip: shouldFlipHand, delayMs: shouldFlipHand ? idx * 90 : 0 })).join('');
+    myHandArea.innerHTML = (me.hand || []).map((c, idx) => {
+      if (!c) return renderCardHTML(null);
+      const isWinCard = isMeWinner && myWinHandIndices.includes(idx);
+      const isDimmed = (isMeWinner && myWinHandIndices.length > 0 && !isWinCard) || myHandDimmedAll;
+      const extraClass = isWinCard ? 'winning-rank-card' : (isDimmed ? 'dimmed-card' : '');
+      return renderCardHTML(c, { flip: shouldFlipHand, delayMs: shouldFlipHand ? idx * 90 : 0, extraClass });
+    }).join('');
   }
 
   const myPowerArea = document.getElementById('my-power-cards');
@@ -2178,9 +2306,10 @@ function renderUI() {
   }
 
   const isMyTurn = gameState.turnIndex === myIdx && gameState.stageIndex < 4 && !me.folded;
-  const isMeWinner = winnerIds.includes(me.id);
-  document.getElementById('player-area').classList.toggle('my-turn', isMyTurn);
-  document.getElementById('player-area').classList.toggle('winner-player', isMeWinner);
+  const playerAreaEl = document.getElementById('player-area');
+  playerAreaEl.classList.toggle('my-turn', isMyTurn);
+  playerAreaEl.classList.toggle('winner-player', isMeWinner);
+  playerAreaEl.classList.toggle('loser-player', myHandDimmedAll);
   if (isMeWinner) {
     rankBadge.innerText = winnerIds.length > 1
       ? `🤝 แบ่ง Pot! ${me.finalHandName ? `(${me.finalHandName})` : ''}`
@@ -2192,6 +2321,16 @@ function renderUI() {
   const raiseInput = document.getElementById('raise-amount-input');
   const quickAddBtn = raiseBox ? raiseBox.querySelector('.quick-bet-btn') : null;
   const maxExtraRaise = Math.max(0, (me.chips || 0) - toCall);
+
+  const showChoiceGroup = document.getElementById('showdown-card-choices');
+  const btnShowCards = document.getElementById('btn-show-cards');
+  const btnHideCards = document.getElementById('btn-hide-cards');
+  const showChoiceActive = Boolean(isOnline && isShowdown && !me.folded);
+  if (showChoiceGroup) {
+    showChoiceGroup.classList.toggle('active', showChoiceActive);
+    if (btnShowCards) btnShowCards.classList.toggle('btn-choice-active', Boolean(me.showCards));
+    if (btnHideCards) btnHideCards.classList.toggle('btn-choice-active', !me.showCards);
+  }
 
   document.getElementById('btn-start-online').style.display = (isWaiting && myPlayerId === 'p0') ? 'block' : 'none';
   document.getElementById('btn-fold').style.display = (isShowdown || isWaiting) ? 'none' : 'block';
@@ -2219,7 +2358,7 @@ function createOnlineRoom() {
   getAudioContext();
   const myName = document.getElementById('player-name').value.trim() || (currentGoogleUser?.displayName || 'Host');
   roomCode = Math.random().toString(36).substring(2, 6).toUpperCase(); isOnline = true; myPlayerId = 'p0'; handCounter = 0;
-  gameState = { players: [{ id: 'p0', name: myName, uid: currentGoogleUser?.uid || null, chips: STARTING_CHIPS, lockedChips: 0, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '', shieldActive: false }], deck: [], community: [], discardPile: [], shieldUserId: null, pot: 0, currentBet: 0, dealerIndex: -1, sbIndex: -1, bbIndex: -1, turnIndex: 0, stageIndex: 5, winnerId: null, winnerIds: [], winningBoardIndices: [], logs: [], log: `ห้อง ${roomCode} สร้างแล้ว!` };
+  gameState = { players: [{ id: 'p0', name: myName, uid: currentGoogleUser?.uid || null, chips: STARTING_CHIPS, lockedChips: 0, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '', shieldActive: false, showCards: false }], deck: [], community: [], discardPile: [], shieldUserId: null, pot: 0, currentBet: 0, dealerIndex: -1, sbIndex: -1, bbIndex: -1, turnIndex: 0, stageIndex: 5, winnerId: null, winnerIds: [], winningBoardIndices: [], winningHandKeysByPlayer: {}, logs: [], log: `ห้อง ${roomCode} สร้างแล้ว!` };
   appendGameLog(gameState, `สร้างห้องออนไลน์รหัส ${roomCode} โดย ${myName}`);
   document.getElementById('mode-badge').innerText = `ห้อง: ${roomCode}`;
   document.getElementById('lobby-screen').style.display = 'none'; document.getElementById('game-screen').style.display = 'flex';
@@ -2236,7 +2375,7 @@ function joinOnlineRoom() {
     if (data.players.length >= MAX_PLAYERS) return alert(`ห้องเต็มแล้ว (สูงสุด ${MAX_PLAYERS} คน)`);
     if (data.stageIndex !== 5) return alert('ห้องนี้กำลังเล่นอยู่ รอจบตาก่อนนะ!');
     roomCode = code; isOnline = true; myPlayerId = 'p' + data.players.length;
-    data.players.push({ id: myPlayerId, name: myName, uid: currentGoogleUser?.uid || null, chips: STARTING_CHIPS, lockedChips: 0, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '', shieldActive: false });
+    data.players.push({ id: myPlayerId, name: myName, uid: currentGoogleUser?.uid || null, chips: STARTING_CHIPS, lockedChips: 0, isBot: false, hand: [], powerCards: [], folded: false, bet: 0, raisesInStage: 0, peekedPlayers: [], blindRole: '', shieldActive: false, showCards: false });
     appendGameLog(data, `${myName} เข้าร่วมห้องแล้ว! (${data.players.length}/${MAX_PLAYERS} คน)`);
     document.getElementById('mode-badge').innerText = `ห้อง: ${roomCode}`;
     document.getElementById('lobby-screen').style.display = 'none'; document.getElementById('game-screen').style.display = 'flex';
