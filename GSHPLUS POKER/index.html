@@ -1493,14 +1493,14 @@ function tryImageCaseFallback(imgEl, onFinalFail) {
 }
 
 // ============================================================================
-// ⚡ 3. การ์ดพลังพิเศษ (18 ใบ รวม ทุกคนจั่วใหม่จ้า~~~~~~)
+// ⚡ 3. การ์ดพลังพิเศษ (18 ใบ รวม redraw_all_hands)
 // ============================================================================
 const POWER_CARDS_POOL = [
   { id: 'peek', name: 'แง้ม', desc: 'แอบดูไพ่บนมือของคู่แข่ง 1 คนตลอดทั้งตานี้', image: './cards/peek.png', needTarget: true },
   { id: 'swap', name: 'สลับไพ่', desc: 'สลับไพ่ 1 ใบแบบสุ่มบนมือคุณ กับไพ่ของเป้าหมาย 1 คน', image: './cards/swap.png', needTarget: true },
   { id: 'redraw_river', name: 'บือออ', desc: 'ล้างไพ่กองกลางใบล่าสุด แล้วจั่วใบใหม่จากกองมาแทน!', image: './cards/redraw.png', needTarget: false },
   { id: 'redraw_hand', name: 'มือไม่สวย', desc: 'ทิ้งไพ่บนมือตัวเองทั้ง 2 ใบ แล้วจั่วใหม่จากกองทันที', image: './cards/mulligan.png', needTarget: false },
-  { id: 'redraw_all_hands', name: 'ทุกคนจั่วใหม่จ้า~~~~~', desc: 'ทุกคนที่ยังไม่หมอบทิ้งไพ่บนมือทั้งหมด แล้วจั่วไพ่ชุดใหม่จากกองทันที!', image: './cards/redraw_all.png', needTarget: false },
+  { id: 'redraw_all_hands', name: 'ทุกคนจั่วใหม่จ้า~~~~~', desc: 'ทุกคนที่ยังไม่หมอบทิ้งไพ่บนมือทั้งหมด แล้วจั่วไพ่ชุดใหม่จากกองทันที!', image: './cards/redraw_all_hands.png', needTarget: false },
   { id: 'tax', name: 'ปล้น', desc: 'ขโมยชิปจากคู่แข่ง 1 คน 150 ชิป เข้ากองกลางทันที', image: './cards/tax.png', needTarget: true },
   { id: 'burn_board', name: 'เบิร์นกองกลาง', desc: 'เผาไพ่กองกลางใบแรกสุดทิ้ง แล้วจั่วใบใหม่จากกองมาแทน!', image: './cards/burn_board.png', needTarget: false },
   { id: 'force_fold', name: 'บังคับหมอบ', desc: 'บังคับคู่แข่ง 1 คนในรอบนี้ให้หมอบทันที!', image: './cards/force_fold.png', needTarget: true },
